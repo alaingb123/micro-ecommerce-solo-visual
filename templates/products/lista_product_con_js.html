@@ -1,0 +1,81 @@
+<div class="product-main">
+    <h2 class="title">Productos</h2>
+    <div class="product-grid" id="product-grid">
+        <!-- Los productos se añadirán aquí dinámicamente -->
+    </div>
+</div>
+
+<script>
+    const products = JSON.parse('{{ products_data|escapejs }}');
+    console.log(products); // Verifica la estructura de los productos
+
+    const productGrid = document.getElementById('product-grid');
+
+    // Iterar sobre los productos y mostrar todos sus datos
+    products.forEach(product => {
+        if (!product.pk) {
+            console.error('Product ID is missing:', product);
+            return; // Salir si no hay ID
+        }
+
+        // Crear el contenedor del producto
+        const productDiv = document.createElement('div');
+        productDiv.classList.add('showcase');
+
+        // Ajustar la ruta de la imagen
+        const imageUrl = '/media/' + product.fields.image; // Cambia '/media/' por la ruta correcta si es necesario
+
+        // Crear el contenido del producto
+        productDiv.innerHTML = `
+            <div class="showcase-banner">
+                <img src="${imageUrl}" alt="${product.fields.name}" width="300" class="product-img default">
+                <img src="${imageUrl}" alt="${product.fields.name}" width="300" class="product-img hover">
+                ${product.fields.offer ? `<p class="showcase-badge">${product.fields.offer.descuento}%</p>` : ''}
+                <div class="showcase-actions">
+                    ${product.userRole === 'cliente' ? `
+                        ${product.liked ? `
+                            <span class="btn-action">
+                                <ion-icon name="heart-dislike-outline"></ion-icon>
+                            </span>
+                        ` : `
+                            <span class="btn-action">
+                                <ion-icon name="heart-outline"></ion-icon>
+                            </span>
+                        `}
+                    ` : ''}
+                    <span class="btn-action">
+                        <ion-icon name="eye-outline"></ion-icon>
+                    </span>
+                    ${product.userRole !== 'Proveedor' ? `
+                        <button class="btn-action" onclick="addToCart(${product.pk})">
+                            <ion-icon name="bag-add-outline"></ion-icon>
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+            <div class="showcase-content">
+                ${product.fields.classification ? `
+                    <span class="showcase-category">${product.fields.classification}</span>
+                ` : ''}
+                <h3 class="showcase-title">${product.fields.name}</h3>
+                <div class="showcase-rating">
+                    ${'★'.repeat(Math.floor(product.fields.rating))}${'☆'.repeat(5 - Math.floor(product.fields.rating))}
+                </div>
+                <div class="price-box">
+                    <p class="price">$${product.fields.price}</p>
+                    ${product.fields.offer ? `<del>$${product.fields.offer.precio_viejo}</del>` : ''}
+                </div>
+            </div>
+        `;
+
+        // Añadir el contenedor al grid de productos
+        productGrid.appendChild(productDiv);
+    });
+
+    // Función para agregar al carrito
+    function addToCart(productId) {
+        // Lógica para agregar el producto al carrito
+        console.log(`Producto ${productId} agregado al carrito`);
+        // Aquí puedes hacer una solicitud AJAX o redirigir según tu lógica
+    }
+</script>

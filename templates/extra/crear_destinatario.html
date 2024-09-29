@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+
+<style>
+    .form-container {
+        background-color: #fff;
+        padding: 20px;
+        margin: 20px auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        max-width: 800px; /* Aumentamos el ancho máximo */
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-title {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+        font-size: 1.5em;
+    }
+
+    .form-row {
+        display: flex; /* Usar flexbox para las filas */
+        justify-content: space-between; /* Espacios entre campos */
+        width: 100%; /* Ocupar todo el ancho */
+        margin-bottom: 15px; /* Espacio entre filas */
+    }
+
+    .form-group {
+        flex: 1; /* Cada campo ocupará el mismo espacio */
+        margin-right: 10px; /* Espacio entre campos */
+    }
+
+    .form-group:last-child {
+        margin-right: 0; /* Eliminar margen en el último elemento */
+    }
+
+    .form-input, .form-textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 1em;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+    }
+
+    .form-button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block; /* Cambiado a inline-block */
+        margin-right: 10px; /* Espacio entre botones */
+        font-size: 1em;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-button:hover {
+        background-color: #0069d9;
+    }
+
+    .back-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+        background-color: #2980b9;
+    }
+
+    .button-container {
+        display: flex; /* Usar flexbox para alinear botones */
+        justify-content: center; /* Centrar botones */
+        width: 100%; /* Ocupar todo el ancho */
+        margin-top: 20px; /* Espacio arriba de los botones */
+    }
+
+    /* Estilos para pantallas pequeñas */
+    @media (max-width: 480px) {
+        .form-row {
+            flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
+        }
+
+        .form-group {
+            margin-right: 0; /* Eliminar margen en pantallas pequeñas */
+            margin-bottom: 10px; /* Espacio entre campos */
+        }
+
+        .form-title {
+            font-size: 1.2em;
+        }
+
+        .form-input, .form-textarea {
+            font-size: 0.9em;
+        }
+
+        .form-button, .back-button {
+            font-size: 0.9em;
+        }
+    }
+</style>
+
+<div class="form-container">
+    <h1 class="form-title">Agregar Destinatario</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group">{{ form.nombre.label }} {{ form.nombre }}</div>
+            <div class="form-group">{{ form.apellidos.label }} {{ form.apellidos }}</div>
+            <div class="form-group">{{ form.telefono.label }} {{ form.telefono }}</div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">{{ form.carnet_de_identidad.label }} {{ form.carnet_de_identidad }}</div>
+            <div class="form-group">{{ form.correo_electronico.label }} {{ form.correo_electronico }}</div>
+            <div class="form-group">{{ form.municipio.label }} {{ form.municipio }}</div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">{{ form.direccion.label }} {{ form.direccion }}</div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">{{ form.instrucciones_entrega.label }} {{ form.instrucciones_entrega }}</div>
+        </div>
+
+        <div class="button-container">
+            <button type="submit" class="form-button">Guardar</button>
+            <a href="javascript:history.back()" class="back-button">Volver</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

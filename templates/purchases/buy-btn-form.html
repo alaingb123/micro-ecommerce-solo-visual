@@ -1,0 +1,109 @@
+<style>
+ :root {
+        --salmon-pink: hsl(353, 100%, 78%);
+    }
+
+
+    .price-container {
+        display: flex;
+        align-items: baseline;
+        color: #1f2937; /* Gray-900 */
+    }
+    .price-symbol {
+        font-size: 2rem; /* text-3xl */
+        font-weight: 600; /* font-semibold */
+    }
+    .price-value {
+        font-size: 3rem; /* text-5xl */
+        font-weight: 800; /* font-extrabold */
+        letter-spacing: -0.05em; /* tracking-tight */
+    }
+    .availability {
+        margin-left: 0.5rem; /* ml-2 */
+        color: #4b5563; /* Gray-700 */
+    }
+    .form-container {
+        margin-top: 1rem; /* mb-4 */
+        display: flex; /* Asegura que los elementos dentro se alineen horizontalmente */
+        align-items: center; /* Centra verticalmente los elementos */
+    }
+    .label {
+        margin-right: 0.5rem; /* mr-2 */
+        color: #4b5563; /* Gray-700 */
+    }
+    .quantity-input {
+        background-color: #f9fafb; /* bg-gray-50 */
+        border: 1px solid #d1d5db; /* border-gray-300 */
+        color: #111827; /* text-gray-900 */
+        font-size: 0.875rem; /* text-sm */
+        border-radius: 0.375rem; /* rounded-lg */
+        padding: 0.625rem; /* p-2.5 */
+        width: 100%; /* block w-full */
+        max-width: 95px;
+        margin-right: 0.5rem; /* Espacio entre input y botón */
+    }
+    .add-to-cart-button {
+        outline: none; /* focus:outline-none */
+        color: white;
+        background-color: var(--salmon-pink); /* bg-purple-700 */
+        padding: 0.625rem 1.25rem; /* px-5 py-2.5 */
+        border-radius: 0.375rem; /* rounded-lg */
+        font-size: 0.875rem; /* text-sm */
+        transition: background-color 0.2s ease;
+    }
+    .add-to-cart-button:hover {
+        background-color: #000000; /* hover:bg-purple-800 */
+    }
+
+    .add-to-cart-button .button-text {
+        display: inline; /* Muestra el texto por defecto */
+    }
+
+    @media (max-width: 600px) { /* Ajusta el tamaño según tus necesidades */
+        .add-to-cart-button .button-text {
+            display: none; /* Oculta el texto en pantallas pequeñas */
+        }
+
+        .quantity-input {
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+    .price-symbol {
+        font-size: 1rem; /* text-3xl */
+        font-weight: 500; /* font-semibold */
+    }
+    .price-value {
+        font-size: 2rem; /* text-5xl */
+        font-weight: 700; /* font-extrabold */
+       
+    }
+    }
+</style>
+
+{% if product %}
+
+    <div class="price-container">
+        <span class="price-symbol">$</span>
+        <span class="price-value">{{ product.display_price }}</span>
+    </div>
+    <span class="availability">Disponible: {{ product.supply }}</span>
+
+    {% if object.user != request.user %}
+        {% if object.supply != 0 %}
+            <form  class="form-container" id="add-to-cart-form" onsubmit="event.preventDefault(); addToCart({{ object.id }},  document.getElementById('quantity').value );">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ object.id }}">
+
+                {% if request.user != product.user %}
+                    <input type="number" id="quantity" name="quantity" min="1" max="{{ product.supply }}" value="1" class="quantity-input" required>
+                    <button type="submit" class="add-to-cart-button" style="display: flex; align-items: center;">
+                        <ion-icon name="cart" style="margin-right: 5px; font-size: 1.2em;"></ion-icon>
+                        <span class="button-text">Agregar al carro</span>
+                    </button>
+                {% endif %}
+                
+            </form>
+        {% endif %}
+    {% endif %}
+{% endif %}

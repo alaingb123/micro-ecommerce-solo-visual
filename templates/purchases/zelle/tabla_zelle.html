@@ -1,0 +1,127 @@
+<div class="container mx-auto my-8">
+    <h1 class="text-2xl font-bold mb-4">Listado de Solicitudes Zelle</h1>
+    <div class="overflow-x-auto">
+        <table class="w-full table-auto">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="px-4 py-2">Usuario</th>
+                    <th class="px-4 py-2">Email</th>
+                    <th class="px-4 py-2">Teléfono</th>
+                    <th class="px-4 py-2">Codigo</th>
+                    <th class="px-4 py-2">Monto</th>
+                    <th class="px-4 py-2">Estado</th>
+                    <th class="px-4 py-2">Entrega</th>
+                    <th class="px-4 py-2">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for solicitud in solicitudes %}
+                <tr class="border-b">
+                    <td class="px-4 py-2"><a href="{% url 'purchases:ver_solicitud' solicitud.id %}" >{{ solicitud.user.username }} </a></td>
+                    <td class="px-4 py-2"> <a href="{% url 'purchases:ver_solicitud' solicitud.id %}">{{ solicitud.email }} </a></td>
+                    <td class="px-4 py-2"> <a href="{% url 'purchases:ver_solicitud' solicitud.id %}" >{{ solicitud.phone }} </a></td>
+                    <td class="px-4 py-2"> <a href="{% url 'purchases:ver_solicitud' solicitud.id %}" >{{ solicitud.payment_verification_code }} </a></td>
+                    <td class="px-4 py-2"> <a href="{% url 'purchases:ver_solicitud' solicitud.id %}" >{{ solicitud.amount }} </a></td>
+                    <td class="px-4 py-2"> <a href="{% url 'purchases:ver_solicitud' solicitud.id %}">{{ solicitud.get_status_display }} </a></td>
+
+                    <td class="px-4 py-2"> {% if solicitud.status == 'accepted' %}{{ solicitud.get_entrega_display }} {% endif %}</td>
+
+                   <td class="my-custom-class">
+
+      {% if request.user.usuario.rol.nombre == 'admin' %}
+
+  <div class="flex gap-2">
+  {% if solicitud.status == 'pending'  %}
+    <a href="{% url 'purchases:aceptar_solicitud' id_solicitud=solicitud.pk %}" >Aceptar</a>
+    <a href="{% url 'purchases:cancelar_solicitud' id_solicitud=solicitud.pk %}" >Cancelar</a>
+  </div>
+            {% endif %}
+  {% endif %}
+
+</td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4 flex justify-center">
+        <div class="btn-group">
+            {% if solicitudes.has_previous %}
+            <a href="?page=1" class="btn">Primero</a>
+            <a href="?page={{ solicitudes.previous_page_number }}" class="btn">Anterior</a>
+            {% endif %}
+
+            <span class="btn disabled">Página {{ solicitudes.number }} de {{ solicitudes.paginator.num_pages }}</span>
+
+            {% if solicitudes.has_next %}
+            <a href="?page={{ solicitudes.next_page_number }}" class="btn">Siguiente</a>
+            <a href="?page={{ solicitudes.paginator.num_pages }}" class="btn">Último</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+    <style>
+
+
+.my-custom-class {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.my-custom-class .flex {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.my-custom-class .flex a {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  background-color: #6b7280;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.my-custom-class .flex a:hover {
+  background-color: #4b5563;
+}
+
+.my-custom-class .flex a.bg-green-500 {
+  background-color: #16a34a;
+}
+
+.my-custom-class .flex a.bg-green-500:hover {
+  background-color: #15803d;
+}
+
+.my-custom-class .flex a.bg-red-500 {
+  background-color: #dc2626;
+}
+
+.my-custom-class .flex a.bg-red-500:hover {
+  background-color: #b91c1c;
+}
+
+.my-custom-class a {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  background-color: #6b7280;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.my-custom-class a:hover {
+  background-color: #4b5563;
+}
+
+
+
+</style>

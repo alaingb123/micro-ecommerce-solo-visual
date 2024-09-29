@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    {% include 'base/css.html' %}
+    {% include 'base/js.html' %}
+    <title>{% block head_title %}Micro eCommerce{% endblock head_title %}</title>
+   
+    <head>
+{#  <script src="https://www.google.com/recaptcha/enterprise.js?render={{ site_key }}"></script>#}
+</head>
+</head>
+
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+    <div class="d-flex flex-column min-vh-100">
+        <div class="container-fluid mt-4 flex-grow-1">
+            <div class="row">
+                <div class="col-md-3 p-0 position-fixed" > 
+                    {% include 'base/navbar1.html' %}
+                </div>
+                
+                <div class="col-md-9 offset-md-3" id="mainContent"> <!-- Ajusta el margen y el ancho -->
+                    <div class="min-vh-100 d-flex flex-column">
+                        {% block content %}
+                        <!-- Aquí va el contenido dinámico -->
+                        {% endblock %}
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+     {% include 'base/footer.html' %}
+    </div>
+
+   <!-- {% include 'base/js.html' %} -->
+
+    <script>
+        $(document).ready(function(){
+            $('[data-bs-toggle="tooltip"]').tooltip(); 
+        });
+
+        
+    </script>
+
+<script src="./assets/js/script.js"></script>
+
+<!--- ionicon link-->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+
+
+
+</html>

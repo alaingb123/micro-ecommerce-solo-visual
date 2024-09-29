@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitud de compra aceptada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .cta {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .cta:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Excelente noticia!</h1>
+        <p>Nos complace informarte que tu solicitud de compra ha sido aceptada. Estamos emocionados de poder atender tus necesidades y brindarte un excelente servicio.</p>
+        <p>Tu pedido se encuentra en proceso de preparación y envío. Puedes seguir el estado de tu pedido a través de tu cuenta en nuestra plataforma.</p>
+        <p>Si tienes alguna pregunta o necesitas asistencia adicional, no dudes en comunicarte con nuestro equipo de atención al cliente. Estaremos encantados de ayudarte.</p>
+        <a href="{% url 'purchases:ver_solicitud' id_solicitud=id %}" class="cta">Ver mi pedido</a>
+    </div>
+</body>
+</html>

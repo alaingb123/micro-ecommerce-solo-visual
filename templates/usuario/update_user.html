@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    :root {
+          --spanish-gray: hsl(0, 0%, 60%);
+          --sonic-silver: hsl(0, 0%, 47%);
+          --eerie-black: hsl(0, 0%, 13%);
+          --salmon-pink: hsl(353, 100%, 78%);
+          --sandy-brown: hsl(29, 90%, 65%);
+          --bittersweet: hsl(0, 100%, 70%);
+          --ocean-green: hsl(152, 51%, 52%);
+          --davys-gray: hsl(0, 0%, 33%);
+          --cultured: hsl(0, 0%, 93%);
+          --white: hsl(0, 100%, 100%);
+          --onyx: hsl(0, 0%, 27%);
+      }
+      
+      .edit-profile-container {
+          width: 60em;
+          margin: 6em auto;
+          border-radius: 10px;
+          padding: 2rem;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+          background-color: var(--cultured);
+      }
+  
+      .title {
+          text-align: center;
+          font-size: 2.25rem;
+          font-weight: 600;
+          margin-bottom: 2rem;
+          color: var(--onyx);
+      }
+  
+      .input, .btn {
+          width: 90%;
+          height: 3.125rem;
+          font-size: 1em;
+          border-radius: 5px;
+          padding-left: 20px;
+          border: 1px solid var(--davys-gray);
+          margin-bottom: 20px;
+          box-sizing: border-box;
+      }
+  
+      .input:hover {
+          border: 2px solid black;
+      }
+  
+      .btn {
+          background-color: var(--salmon-pink);
+          border-color: var(--salmon-pink);
+          color: white;
+          cursor: pointer;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+      }
+  
+      .btn:hover {
+          background-color: black;
+          border-color: black;
+      }
+  
+      .inputs-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 24px;
+      }
+  
+      @media screen and (max-width: 1000px) {
+          .edit-profile-container {
+              width: 70%;
+          }
+      }
+  
+      @media screen and (max-width: 650px) {
+          .edit-profile-container {
+              width: 90%;
+          }
+      }
+  </style>
+  
+  <div class="edit-profile-container">
+      <h1 class="title">Editar Perfil</h1>
+      <form method="post" class="inputs-container">
+          {% csrf_token %}
+          <div>
+              {{ form.as_p }}
+{#{{ form.password.help_text }}#}
+          </div>
+          <button type="submit" class="btn">Guardar Cambios</button>
+      </form>
+  </div>
+  
+{% endblock %}

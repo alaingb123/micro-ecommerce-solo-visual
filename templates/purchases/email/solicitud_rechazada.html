@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitud de compra rechazada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #dc3545;
+            margin-top: 0;
+        }
+        .cta {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .cta:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lo sentimos, tu solicitud ha sido rechazada</h1>
+        <p>Lamentamos informarte que tu solicitud de compra ha sido rechazada debido a que el pago nunca fue realizado.</p>
+        <p>Entendemos que esto puede ser decepcionante, pero es importante que todos los pagos se procesen correctamente para poder procesar y enviar tus pedidos.</p>
+        <p>Si tienes alguna duda o necesitas asistencia adicional, no dudes en comunicarte con nuestro equipo de atención al cliente. Estaremos encantados de ayudarte.</p>
+        <a href="{% url 'purchases:ver_solicitud' id_solicitud=id %}" class="cta">Ver mi solicitud</a>
+    </div>
+</body>
+</html>

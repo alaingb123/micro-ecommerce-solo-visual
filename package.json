@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "flowbite": "^2.5.1"
+  },
+  "scripts": {
+  
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "bootstrap": "^5.3.3",
+    "postcss": "^8.4.41"
+  }
+}

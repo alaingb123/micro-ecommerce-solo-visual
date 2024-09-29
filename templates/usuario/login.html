@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<style>
+    :root {
+        --spanish-gray: hsl(0, 0%, 60%);
+        --sonic-silver: hsl(0, 0%, 47%);
+        --eerie-black: hsl(0, 0%, 13%);
+        --salmon-pink: hsl(353, 100%, 78%);
+        --sandy-brown: hsl(29, 90%, 65%);
+        --bittersweet: hsl(0, 100%, 70%);
+        --ocean-green: hsl(152, 51%, 52%);
+        --davys-gray: hsl(0, 0%, 33%);
+        --cultured: hsl(0, 0%, 93%);
+        --white: hsl(0, 100%, 100%);
+        --onyx: hsl(0, 0%, 27%);
+    }
+    
+
+    .login-container {
+        height: 38.75em;
+        width: 60em;
+        margin: 6em auto;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
+    }
+    
+    .login-info-container {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding-top: 0.5rem;
+        background-color: var(--login-bg);
+    }
+    
+    .image-container {
+        padding: 2rem;
+        width: 50%;
+        background-color: var(--image-bg);
+        box-sizing: border-box;
+    }
+    
+    .title {
+        margin-top: 10%;
+        text-transform: capitalize;
+        font-size: 2.25rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: var(--title-bg);
+    }
+    
+    .social-login {
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        cursor: pointer;
+    }
+    
+    .social-login-element {
+        width: 12.5rem;
+        height: 3.75rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-radius: 5px;
+        border: 1px solid var(--button-bg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .social-login-element img {
+        width: 1.875rem;
+        height: 1.875rem;
+        position: relative;
+        left: -0.625rem;
+    }
+    
+    .social-login-element:hover {
+        background-color: #fff;
+    }
+    
+    .login-info-container > p {
+        font-size: 1.25em;
+        margin-top: 1.5em;
+    }
+    
+    .inputs-container {
+        height: 55%;
+        width: 85%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+    
+    .input, .btn {
+        width: 90%;
+        height: 3.125rem;
+        font-size: 1em;
+    }
+    
+    .input {
+        padding-left: 20px;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        box-sizing: border-box;
+        border-color: var(--davys-gray);
+        margin-bottom: 20px;
+    }
+    
+    .input:hover {
+        border: 2px solid black;
+    }
+    
+    .btn {
+        width: 53%;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--salmon-pink);
+        cursor: pointer;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .btn:hover {
+        background-color: black;
+    }
+    
+    .inputs-container p {
+        margin: 0;
+        margin-top: 10px;
+        display: inline; 
+    }
+    
+    .span {
+        color: var(--onyx);
+        font-weight: 600;
+        cursor: pointer;
+    }
+    
+    .span:hover {
+        color: var(--salmon-pink);
+    }
+  
+    .divcontain{
+    display: flex;
+     justify-content: center;
+      width: 114%;
+    }
+    @media screen and (max-width: 1000px) {
+    .login-container {
+        width: 70%;
+        margin-top: 3rem;
+    }
+    .login-info-container {
+        width: 100%;
+        border-radius: 5px;
+    }
+    .span {
+        color: var(--salmon-pink);
+      
+    }
+    
+    .image-container {
+        display: none;
+    }  
+
+   
+    .btn{
+       min-height: 35px;
+    }
+
+
+}
+
+
+
+@media screen and (max-width: 650px) {
+    .login-container {
+        width: 90%;
+    }
+   
+}
+
+
+@media screen and (max-width: 500px) {
+    .login-container {
+        height: 90%;
+    }
+
+    .social-login {
+        flex-direction: column;
+        align-items: center;
+        height: 30%;
+    }
+
+    .login-info-container > p {
+        margin: 0;
+    }
+
+   
+}
+    </style>
+
+<!--LOGIN para pantallas grandes-->
+<div class="login-container">
+    <div class="login-info-container">
+        <h1 class="title">Iniciar sesión</h1>
+        <form class="inputs-container" id="login" action="{% url 'usuario:login' %}" method="post">
+            {% csrf_token %}
+         <input type="hidden" name="g-recaptcha-response" id='recaptcha'>
+            {% for field in formulario %}
+            <div style="position: relative;">
+                <label for="{{ field.id_for_label }}" style="display: block; margin-bottom: 4px; font-size: 14px; color: #333;">{{ field.label }}</label>
+                <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%;" {% if field.field.widget.is_hidden %}hidden{% endif %} />
+            </div>
+              {% endfor %}
+           
+            <button class="btn" type="submit">Autenticarse</button>
+            <p style="color: #555; margin-top: 16px;">
+                ¿No tienes una cuenta? <a href="{% url 'usuario:create' %}" class="span" style=" text-decoration: none; font-weight: bold;">Regístrate</a>
+            </p>
+            <p style="color: #555; margin-top: 8px;">
+                <a href="{% url 'password_reset' %}" class="span" style=" text-decoration: none; font-weight: bold;">¿Olvidaste tu contraseña?</a>
+            </p>
+            {% if messages %}
+                <div style="margin-top: 16px;">
+                    {% for message in messages %}
+                        <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 8px 16px; border-radius: 4px; margin-bottom: 8px;">
+                            <strong style="font-weight: bold;">¡Atención!</strong>
+                            <span style="display: block;">{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+           
+        </form>
+    </div>
+    <img class="image-container" src="{% static 'img/nana.png' %}" alt="">
+
+    
+    </form>
+  </div>
+
+</div>
+
+
+
+{#      <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="#}
+{#  crossorigin="anonymous"></script>#}
+{##}
+{##}
+{#        <script src="https://www.google.com/recaptcha/api.js?render={{ site_key }}"></script>#}
+{#        <script>#}
+{##}
+{#          grecaptcha.ready(function() {#}
+{##}
+{#              $('#login').submit(function(e){#}
+{#                  var form = this;#}
+{##}
+{#                  e.preventDefault()#}
+{#                  grecaptcha.execute('{{ site_key }}', {action: 'login'}).then(function(token) {#}
+{##}
+{#                      $('#recaptcha').val(token)#}
+{##}
+{#                      form.submit()#}
+{#                  });#}
+{#              })#}
+{##}
+{#          });#}
+{#         </script>#}
+{##}
+{%endblock%}

@@ -1,0 +1,164 @@
+ <!--
+      - PRODUCT
+    -->
+
+    <div class="product-container">
+
+        <div class="container">
+  
+  
+          <!--
+            - SIDEBAR
+          -->
+  
+          <div class="sidebar  has-scrollbar" data-mobile-menu>
+  
+            <div class="sidebar-category">
+  
+              <div class="sidebar-top">
+                <h2 class="sidebar-title">Categorias</h2>
+
+                <button class="sidebar-close-btn" data-mobile-menu-close-btn>
+                  <ion-icon name="close-outline"></ion-icon>
+                </button>
+              </div>
+
+              <ul class="sidebar-menu-category-list">
+                {% for clasification in classifications %}
+                    {% if clasification.productos_padre.count > 0 %}
+                        <li class="sidebar-menu-category">
+                            <div>
+                                <button class="sidebar-accordion-menu" data-accordion-btn>
+                                    <div class="menu-title-flex">
+                                        {% if clasification.image %}
+                                            <img src="{{ clasification.image.url }}" alt="{{ clasification.nombre }}" width="20" height="20" class="menu-title-img">
+                                        {% endif %}
+                                        <a href="{% url 'products:list' %}?classification_id_padre={{ clasification.id }}">
+                                            <p class="menu-title">{{ clasification.nombre }}</p>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <ion-icon name="add-outline" class="add-icon"></ion-icon>
+                                        <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
+                                    </div>
+                                </button>
+                                {% if clasification.hijos.all %}
+                                <ul class="sidebar-submenu-category-list" data-accordion>
+                                    {% for child_classification in clasification.hijos.all %}
+                                        {% if child_classification.pro.exists %}
+                                            <li class="sidebar-submenu-category">
+                                                <a href="{% url 'products:list' %}?classification_id={{ child_classification.id }}" class="sidebar-submenu-title">
+                                                    <p class="product-name">{{ child_classification.nombre }}</p>
+                                                    {% with product_count=child_classification.pro.count %}
+                                                        <data value="300" class="stock" title="Available Stock">{{ product_count }}</data>
+                                                    {% endwith %}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+            </div>
+
+            <div class="product-showcase">
+
+              <h3 class="showcase-heading">Más vendidos</h3>
+
+              <div class="showcase-wrapper">
+
+                <div class="showcase-container">
+
+                    {% for top in top_products %}
+                  <div class="showcase">
+
+                    <a href="{% url 'products:detail' top.handle %}" class="showcase-img-box">
+                      <img src="{{top.image.url}}" alt="{{ top.name }}" width="75" height="75"
+                        class="showcase-img">
+                    </a>
+
+                    <div class="showcase-content">
+
+                      <a href="{% url 'products:detail' top.handle %}">
+                        <h4 class="showcase-title">{{ top.name }}</h4>
+                      </a>
+
+                      <div class="showcase-rating">
+                          {% for i in "12345"|make_list %}
+                              {% with j=i|add:-1 %}
+
+                              {% if i|add:0  <= top.rating_product.average_rating %}
+                        <ion-icon name="star"></ion-icon>
+
+
+
+                              {% endif %}
+
+                              {% if i|add:0  > top.rating_product.average_rating and j|add:0  < top.rating_product.average_rating  %}
+                                      <ion-icon name="star-half"></ion-icon>  <!-- Estrella media -->
+                        {% else %}
+
+                                      {% endif %}
+
+                             {% if i|add:0  >= top.rating_product.average_rating and j|add:0  >= top.rating_product.average_rating %}
+                              <ion-icon name="star-outline"></ion-icon>
+                                  {% endif %}
+{% endwith %}
+                              {% endfor %}
+
+
+                      </div>
+
+                      <div class="price-box">
+                          {% if top.offer %}
+                        <del>{{ top.offer.precio_viejo }} </del>
+                          {% endif %}
+                        <p class="price">$ {{ top.price }}</p>
+                      </div>
+
+                    </div>
+
+                  </div>
+{% endfor %}
+
+
+                </div>
+
+              </div>
+              <script>
+                // Variables del acordeón
+                const accordionBtn = document.querySelectorAll('[data-accordion-btn]');
+                const accordion = document.querySelectorAll('[data-accordion]');
+    
+                for (let i = 0; i < accordionBtn.length; i++) {
+                    accordionBtn[i].addEventListener('click', function () {
+                        const clickedAccordion = this.nextElementSibling;
+    
+                        // Verifica si el acordeón está activo
+                        const isActive = clickedAccordion.classList.contains('active');
+    
+                        // Cierra todos los acordeones
+                        for (let j = 0; j < accordion.length; j++) {
+                            accordion[j].classList.remove('active');
+                            accordionBtn[j].classList.remove('active');
+                        }
+    
+                        // Si el acordeón no estaba activo, ábrelo
+                        if (!isActive) {
+                            clickedAccordion.classList.add('active');
+                            this.classList.add('active');
+                        }
+                    });
+                }
+            </script>
+            </div>
+  
+          </div>
+
+          
+            

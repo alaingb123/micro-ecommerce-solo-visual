@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+
+    .modern-card {
+        border: 1px solid #e0e0e0;
+        padding: 16px;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 95%; /* Ampliado para ocupar más espacio */
+        max-width: 1000px; /* Ampliado el ancho máximo */
+        margin: 20px auto; /* Añadido margen superior e inferior */
+        display: flex;
+        flex-direction: column;
+        background-color: #ffffff;
+        align-items: center; /* Centrar elementos horizontalmente */
+    }
+
+    .modern-card {
+        padding: 16px;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 95%; /* Ampliado para ocupar más espacio */
+        max-width: 1000px; /* Ampliado el ancho máximo */
+        margin: 20px auto; /* Añadido margen superior e inferior */
+        display: flex;
+        flex-direction: column;
+        background-color: #ffffff;
+        align-items: center; /* Centrar elementos horizontalmente */
+    }
+
+    .modern-card h2 {
+        margin-top: 0;
+        font-weight: 600;
+        color: #3498db; /* Color atractivo */
+        border-bottom: 2px solid #3498db; /* Línea debajo del título */
+        padding-bottom: 8px;
+        text-align: center; /* Centrar el texto del título */
+    }
+
+    .modern-card p {
+        color: #666;
+        margin: 4px 0;
+        text-align: center; /* Centrar el texto de los párrafos */
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Mínimo 200px por columna */
+        gap: 16px; /* Espacio entre los elementos */
+        width: 100%; /* Asegurar que ocupe todo el ancho */
+    }
+
+    .product-item {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 12px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s; /* Animación al pasar el mouse */
+    }
+
+    .product-item:hover {
+        transform: scale(1.05); /* Efecto de zoom */
+    }
+
+    .product-item h4 {
+        font-weight: 600;
+        margin: 0 0 8px;
+        color: #333;
+        text-align: center; /* Centrar el texto del título del producto */
+    }
+
+    .recipient-info {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+        align-items: center; /* Centrar el contenido */
+    }
+
+    .recipient-info h3 {
+        color: #3498db;
+        margin-bottom: 10px;
+        text-align: center; /* Centrar el texto del título */
+    }
+
+    .recipient-list {
+        list-style-type: none;
+        padding: 0;
+        background-color: #f1f1f1; /* Fondo suave para la lista */
+        border-radius: 8px;
+        padding: 12px;
+        width: 100%; /* Asegurar que ocupe todo el ancho */
+    }
+
+    .recipient-list li {
+        margin-bottom: 10px;
+        text-align: center; /* Centrar el texto de la lista */
+    }
+
+
+    .actions {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+        width: 100%; /* Asegurar que ocupe todo el ancho */
+    }
+
+    .action-button {
+        background-color: #3498db;
+        color: white;
+        padding: 10px 15px;
+        margin: 0 4px;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s, transform 0.2s; /* Animación de botón */
+        font-weight: 500;
+    }
+
+    .action-button:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px); /* Efecto de elevación */
+    }
+
+    @media (max-width: 768px) {
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ajuste para pantallas más pequeñas */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .modern-card {
+            width: 95%; /* Ampliado para pantallas pequeñas */
+        }
+
+        .products-grid {
+            grid-template-columns: 1fr; /* Una columna en pantallas muy pequeñas */
+        }
+    }
+
+    .order-details {
+    background-color: transparent; /* Sin fondo para eliminar el efecto de borde */
+    padding: 16px; /* Espaciado interno */
+    width: 100%; /* Asegurar que ocupe todo el ancho */
+    margin-top: 10px; /* Espacio superior */
+    /* No se necesita borde */
+    box-shadow: none; /* Quitar sombra si la hubiera */
+}
+
+.order-details p {
+    margin: 8px 0; /* Espaciado entre párrafos */
+    text-align: left; /* Alinear a la izquierda */
+}
+
+.order-details strong {
+    color: #3498db; /* Color para las etiquetas */
+}
+</style>
+
+
+
+
+
+
+
+
+
+<div class="modern-card">
+
+
+<div class="modern-card2">
+    <h2>Pedido #{{ purchase.pk }}</h2>
+
+    <div class="order-details">
+        <p><strong>Usuario:</strong> {{ purchase.user.username }}</p>
+
+        {% if purchase.completed %}
+        <p><strong>Estado de entrega:</strong> {{ purchase.get_entrega_display }}</p>
+        {% endif %}
+
+        <p><strong>Completado:</strong> {% if purchase.completed %}Sí{% else %}No{% endif %}</p>
+        <p><strong>Total:</strong> ${{ purchase.stripe_price }}</p>
+    </div>
+</div>
+
+    {% if solicitud_items %}
+    <h3>Productos</h3>
+    <div class="products-grid">
+        {% for item in solicitud_items %}
+        <div class="product-item">
+            <h4>{{ item.product_name_snapshot }}</h4>
+            <p>Cantidad: {{ item.quantity }}</p>
+            <p>Precio unitario: ${{ item.product_price_snapshot }}</p>
+            <p>Subtotal: ${{ item.total_price }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="recipient-info">
+        <h3>Destinatario:</h3>
+        <ul class="recipient-list">
+            <li data-nombre="{{ purchase.nombre|lower }}">
+                <strong>{{ purchase.nombre }} {{ purchase.apellidos }}</strong>
+                <p>Teléfono: {{ purchase.telefono }}</p>
+                <p>Carnet de Identidad: {{ purchase.carnet_de_identidad }}</p>
+                <p>Correo Electrónico: {{ purchase.correo_electronico }}</p>
+                <p>Dirección: {{ purchase.direccion }}</p>
+                <p>Municipio: {{ purchase.municipio }}</p>
+                <p>Instrucciones de Entrega: {{ purchase.instrucciones_entrega }}</p>
+            </li>
+        </ul>
+    </div>
+</div>
+
+{% if user.is_staff %}
+<div class="actions">
+    {% if purchase.entrega == 'pending' %}
+    <a href="{% url 'pedidos_stripe:aceptar' purchase.id %}" class="action-button">Aceptar</a>
+    <a href="{% url 'pedidos_stripe:cancelar' purchase.id %}" class="action-button">Cancelar</a>
+    {% elif purchase.entrega == 'onway' %}
+    <a href="{% url 'pedidos_stripe:entregar' purchase.id %}" class="action-button">Entregar</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

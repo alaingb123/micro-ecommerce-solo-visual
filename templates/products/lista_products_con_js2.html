@@ -1,0 +1,91 @@
+<div class="product-main">
+    <h2 class="title">Productos</h2>
+    <div class="product-grid" id="product-grid">
+        <!-- Los productos se agregarán aquí dinámicamente -->
+    </div>
+</div>
+
+<script id="product-template" type="text/template">
+    <div class="showcase">
+        <div class="showcase-banner">
+            <img src="{{imagen}}" alt="{{nombre}}" width="300" class="product-img default">
+            <img src="{{imagen}}" alt="{{nombre}}" width="300" class="product-img hover">
+            <p class="showcase-badge">{{descuento}}%</p>
+            <div class="showcase-actions">
+                <a href="ruta/a/dislike/{{id}}" class="btn-action">
+                    <ion-icon name="heart-dislike-outline"></ion-icon>
+                </a>
+                <a href="ruta/a/like/{{id}}" class="btn-action">
+                    <ion-icon name="heart-outline"></ion-icon>
+                </a>
+                <a href="ruta/a/detalle/{{id}}" class="btn-action">
+                    <ion-icon name="eye-outline"></ion-icon>
+                </a>
+                <form action="ruta/a/agregar/{{id}}" method="POST">
+                    <button type="submit" class="btn-action">
+                        <ion-icon name="bag-add-outline"></ion-icon>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="showcase-content">
+            <a href="ruta/a/categoría/{{categoriaId}}" class="showcase-category">{{categoria}}</a>
+            <a href="ruta/a/detalle/{{id}}">
+                <h3 class="showcase-title">{{nombre}}</h3>
+            </a>
+            <div class="showcase-rating">
+                {{ratingStars}}
+            </div>
+            <div class="price-box">
+                <p class="price">$ {{precio}}</p>
+                <del>$ {{precioAnterior}}</del>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const renderProduct = (producto) => {
+        const template = document.getElementById('product-template').innerHTML;
+        const ratingStars = '★'.repeat(producto.rating) + '☆'.repeat(5 - producto.rating);
+        return template
+            .replace(/{{image}}/g, producto.imagen)
+            .replace(/{{name}}/g, producto.nombre)
+            .replace(/{{offer}}/g, producto.descuento)
+            .replace(/{{id}}/g, producto.id)
+            .replace(/{{clasificacion}}/g, producto.categoriaId)
+            .replace(/{{categoria}}/g, producto.categoria)
+            .replace(/{{ratingStars}}/g, ratingStars)
+            .replace(/{{price}}/g, producto.precio)
+            .replace(/{{precioAnterior}}/g, producto.precioAnterior);
+    };
+
+    const listarProductos = async () => {
+        try {
+            const response = await fetch("./productos");
+            const data = await response.json();
+
+            if (data.message === 'Success') {
+                const productGrid = document.getElementById('product-grid');
+                productGrid.innerHTML = ''; // Limpiar el contenedor
+
+                data.productos.forEach(producto => {
+                    const productHTML = renderProduct(producto);
+                    productGrid.insertAdjacentHTML('beforeend', productHTML);
+                });
+            } else {
+                alert('Productos no encontrados');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const cargaInicial = async () => {
+        await listarProductos();
+    }
+
+    window.addEventListener("load", async () => {
+        await cargaInicial();
+    });
+</script>

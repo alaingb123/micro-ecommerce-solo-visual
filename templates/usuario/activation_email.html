@@ -1,0 +1,5 @@
+
+<h1>Hola {{ user.username }},</h1>
+    <p>Gracias por registrarte. Por favor, activa tu cuenta haciendo clic en el siguiente enlace:</p>
+    <a href="http://{{ domain }}{% url 'usuario:activate'  uidb64=uidb64 token=token %}">Activar cuenta</a>
+    <p>¡Esperamos verte pronto!</p>

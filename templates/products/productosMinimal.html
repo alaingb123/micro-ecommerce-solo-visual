@@ -1,0 +1,193 @@
+<div class="product-box">
+
+    <!--
+      - PRODUCT MINIMAL
+    -->
+
+    <div class="product-minimal">
+
+        {% if new_products %}
+      <div class="product-showcase">
+
+        {% if no_nuevos == False %}
+        <h2 class="title">Nuevos</h2>
+            {% else %}
+            <h2 class="title">Más like</h2>
+            {% endif %}
+
+        <div class="showcase-wrapper  has-scrollbar ">
+
+          <div class="showcase-container">
+       {% for product in new_products %}
+            <div class="showcase">
+
+              <a href="{% url 'products:detail' product.handle %}" class="showcase-img-box">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" width="70" class="showcase-img">
+              </a>
+
+              <div class="showcase-content">
+
+                <a href="{% url 'products:detail' product.handle %}">
+                  <h4 class="showcase-title">{{ product.name}}</h4>
+                </a>
+
+                {% if product.clasificacion.all %}
+
+              {% for clasi in product.clasificacion.all|slice:":1" %}
+
+                <a href="{% url 'products:list' %}?classification_id={{ clasi.id }}" class="showcase-category">{{ clasi.nombre }}</a>
+                    {% endfor %}
+                    {% else %}
+                     {% if product.clasificaciones_padre %}
+
+                     <a href="{% url 'products:list' %}?classification_id_padre={{ product.clasificaciones_padre.id }}" class="showcase-category">{{ product.clasificaciones_padre.nombre }}</a>
+
+                         {% endif %}
+                  {% endif %}
+
+
+                <div class="price-box">
+
+                  <p class="price">${{ product.price }}</p>
+    {% if product.offer %}
+                  <del>${{ product.offer.precio_viejo }}</del>
+                     {% endif %}
+                </div>
+
+              </div>
+
+            </div>
+              {% endfor %}
+
+          </div>
+
+
+
+        </div>
+
+      </div>
+        {% endif %}
+
+      <div class="product-showcase">
+
+        <h2 class="title">Tendencia</h2>
+
+        <div class="showcase-wrapper  has-scrollbar">
+
+          <div class="showcase-container">
+
+            {% for product in trending_products %}
+
+            <div class="showcase">
+
+              <a href="{% url 'products:detail' product.handle %}" class="showcase-img-box">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="showcase-img"
+                  width="70">
+              </a>
+
+              <div class="showcase-content">
+
+                <a href="{% url 'products:detail' product.handle %}">
+                  <h4 class="showcase-title">{{ product.name }}</h4>
+                </a>
+
+               {% if product.clasificacion.all %}
+
+              {% for clasi in product.clasificacion.all|slice:":1" %}
+
+                <a href="{% url 'products:list' %}?classification_id={{ clasi.id }}" class="showcase-category">{{ clasi.nombre }}</a>
+                    {% endfor %}
+                    {% else %}
+                     {% if product.clasificaciones_padre %}
+
+                     <a href="{% url 'products:list' %}?classification_id_padre={{ product.clasificaciones_padre.id }}" class="showcase-category">{{ product.clasificaciones_padre.nombre }}</a>
+
+                         {% endif %}
+                  {% endif %}
+
+                <div class="price-box">
+
+                  <p class="price">${{ product.price }}</p>
+    {% if product.offer %}
+                  <del>${{ product.offer.precio_viejo }}</del>
+                     {% endif %}
+                </div>
+
+              </div>
+
+            </div>
+
+          {% endfor %}
+
+
+
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+      <div class="product-showcase">
+
+        <h2 class="title">Mejor Calificación</h2>
+
+        <div class="showcase-wrapper  has-scrollbar">
+
+          <div class="showcase-container">
+
+              {% for product in top_rated %}
+
+            <div class="showcase">
+
+              <a href="{% url 'products:detail' product.handle %}" class="showcase-img-box">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="showcase-img"
+                  width="70">
+              </a>
+
+              <div class="showcase-content">
+
+                <a href="{% url 'products:detail' product.handle %}">
+                  <h4 class="showcase-title">{{ product.name }}</h4>
+                </a>
+
+               {% if product.clasificacion.all %}
+
+              {% for clasi in product.clasificacion.all|slice:":1" %}
+
+                <a href="{% url 'products:list' %}?classification_id={{ clasi.id }}" class="showcase-category">{{ clasi.nombre }}</a>
+                    {% endfor %}
+                    {% else %}
+                     {% if product.clasificaciones_padre %}
+
+                     <a href="{% url 'products:list' %}?classification_id_padre={{ product.clasificaciones_padre.id }}" class="showcase-category">{{ product.clasificaciones_padre.nombre }}</a>
+
+                         {% endif %}
+                  {% endif %}
+
+                <div class="price-box">
+
+                  <p class="price">${{ product.price }}</p>
+    {% if product.offer %}
+                  <del>${{ product.offer.precio_viejo }}</del>
+                     {% endif %}
+                </div>
+
+              </div>
+
+            </div>
+
+              {% endfor %}
+
+
+
+          </div>
+
+
+
+        </div>
+
+      </div>
+
+    </div>

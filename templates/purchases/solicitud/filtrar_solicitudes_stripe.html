@@ -1,0 +1,33 @@
+<div>
+  <h2>Filtrar Pedidos</h2>
+  <form method="GET" action="{% url 'pedidos_stripe:purchases_stripe' %}">
+      {% if request.user.usuario.rol.nombre == 'admin' %}
+    <div>
+      <label for="usuario">Usuario:</label>
+      <input type="text" id="usuario" name="usuario">
+    </div>
+      {% endif %}
+    <div>
+      <label for="estado">Estado:</label>
+      <select id="estado" name="estado">
+        <option value="">Todos</option>
+        <option value="pending">En espera</option>
+        <option value="accepted">Aceptada</option>
+        <option value="canceled">Cancelada</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="completado">Completado:</label>
+      <select id="completado" name="completado">
+        <option value="">Todos</option>
+        <option value="true">Sí</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom: 12px;"> <!-- Espacio adicional arriba del botón -->
+      <button type="submit" style="background-color: #3498db; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; font-size: 1rem;">Filtrar</button>
+    </div>
+  </form>
+</div>

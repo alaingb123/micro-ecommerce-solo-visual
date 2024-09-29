@@ -1,0 +1,58 @@
+{%load static%}
+
+<style>
+   .responsive-banner {
+    width: 100%;
+    overflow: hidden; /* Evitar el desbordamiento */
+}
+
+.responsive-container {
+    max-width: 1200px; /* Ajusta según el diseño deseado */
+    margin: 0 auto; /* Centra el contenedor */
+    padding: 0 15px; /* Espaciado lateral */
+}
+
+.responsive-slider {
+    display: flex; /* Permite que los elementos se dispongan en línea */
+    overflow-x: auto; /* Permite desplazamiento horizontal si es necesario */
+}
+
+.responsive-item {
+    flex: 0 0 auto; /* Evita que los elementos se reduzcan */
+    width: 100%; /* Cada elemento ocupa el 100% del contenedor */
+}
+
+.responsive-image {
+    width: 100%; /* La imagen ocupará el 100% del contenedor */
+    height: auto; /* Mantiene la relación de aspecto */
+    object-fit: cover; /* Asegura que la imagen cubra el contenedor */
+}
+</style>
+
+<div class="responsive-banner">
+
+    <div class="responsive-container">
+
+        <div class="responsive-slider has-scrollbar">
+
+            {% for promocion in promociones %}
+                {% if promocion.imagen_peque and promocion.imagen %}
+                    <div class="responsive-item">
+                        <a href="{% url 'products:promotion' promocion.pk %}">
+                            <img
+                                src="{{ promocion.imagen_peque.url }}"
+                                srcset="{{ promocion.imagen_peque.url }} 600w, {{ promocion.imagen.url }} 1200w"
+                                sizes="(max-width: 425px) 100vw, (max-width: 600px) 100vw, 100vw"
+                                alt="{{ promocion.nombre }}"
+                                class="responsive-image"
+                            >
+                        </a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>

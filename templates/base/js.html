@@ -1,0 +1,113 @@
+{% load static %}
+
+
+
+<script>
+        function addToCart(productId, quantity) {
+    console.log("Este es el ID del producto: ", productId);
+    console.log("La cantidad es: ", quantity);
+
+    fetch(`/carro/agregar/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ product_id: productId, quantity: quantity })
+    })
+    .then(response => {
+        console.log("Estado de la respuesta:", response.status);
+        if (response.ok) {
+            return response.json();
+        } else {
+            return response.text().then(text => {
+                throw new Error(`Error al agregar el producto: ${text}`);
+            });
+        }
+    })
+    .then(data => {
+       const countElement = document.getElementById('cart-count1');
+       const countElement2 = document.getElementById('cart-count2');
+        const currentCount = parseInt(countElement.innerText, 10); // Obtener el conteo actual
+        const currentCount2 = parseInt(countElement2.innerText, 10); // Obtener el conteo actual
+        countElement.innerText = currentCount + 1; // Incrementar el contador
+        countElement2.innerText = currentCount2 + 1; // Incrementar el contador
+        alert(data.message); // Ahora muestra el mensaje del servidor
+    })
+    .catch(error => {
+        console.error(error);
+        alert('Hubo un problema al agregar el producto');
+    });
+}
+        function getCookie(name) {
+            const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return cookieValue ? cookieValue.pop() : '';
+        }
+
+        {#-------------------------------------- Like y dislike -------------------------------------------------#}
+
+
+
+       document.addEventListener('DOMContentLoaded', function() {
+    const likeButtons = document.querySelectorAll('[id^="like-btn-"]');
+
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Evita el comportamiento por defecto del enlace
+            const productId = this.id.split('-')[2]; // Obtiene el ID del producto
+            const isLike = this.querySelector('ion-icon').getAttribute('name') === 'heart-outline'; // Determina si es like o dislike
+
+            toggleLike(productId, isLike, this); // Pasa el botón actual
+        });
+    });
+});
+
+function toggleLike(productId, isLike, button) {
+    const url = isLike ? `/like_product/${productId}/` : `/dislike_product/${productId}/`;
+    const method = isLike ? 'POST' : 'DELETE'; // Cambia el método según corresponda
+
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            return response.text().then(text => {
+                throw new Error(`Error al ${isLike ? 'dar like' : 'quitar like'}: ${text}`);
+            });
+        }
+    })
+    .then(data => {
+        // Actualiza el contador de gustados
+        const likeCountElement = document.getElementById('like-count');
+        let currentCount = parseInt(likeCountElement.innerText, 10); // Obtener el conteo actual
+
+        likeCountElement.innerText = isLike ? currentCount + 1 : currentCount - 1; // Sumar o restar
+
+        // Si tienes otro contador, actualízalo aquí
+        const likeCountElement2 = document.getElementById('like-count2');
+        let currentCount2 = parseInt(likeCountElement2.innerText, 10); // Obtener el conteo actual
+
+        likeCountElement2.innerText = isLike ? currentCount2 + 1 : currentCount2 - 1; // Sumar o restar
+
+        // Actualiza el icono
+        const icon = button.querySelector('ion-icon');
+        icon.setAttribute('name', isLike ? 'heart-dislike-outline' : 'heart-outline'); // Cambia el ícono
+
+        // Muestra el mensaje del servidor
+        alert(data.message);
+    })
+    .catch(error => {
+        console.error(error);
+        alert('Hubo un problema al actualizar los gustados');
+    });
+}
+    </script>
+
+
+<link rel="stylesheet" href="{% static 'js/javascritImp.js' %}" />

@@ -1,0 +1,56 @@
+<style>
+    
+    .category-cell {
+      position: relative;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+          -ms-flex-align: center;
+              align-items: center;
+      gap: 30px;
+    }
+</style>
+
+
+
+<div class="container">
+    <ul class="category'cell">
+        <li class="menu-category">
+            <a href="{% url 'products:list' %}" class="menu-title">
+                Todo
+            </a>
+        </li>
+
+        {% for classification in classifications %}
+            {% if classification.productos_padre.count > 0 %}
+                <li class="menu-category">
+                    <a class="menu-title" href="{% url 'products:list' %}?classification_id_padre={{ classification.pk }}">
+                        {{ classification.nombre }}
+                    </a>
+                    {% if not classification.parent %}
+                        {% if classification.hijos.exists %}
+                            <ul class="dropdown-list">
+                                {% for child_classification in classification.hijos.all %}
+                                    {% if child_classification.pro.exists %}
+                                        <li class="dropdown-item">
+                                            <a href="{% url 'products:list' %}?classification_id={{ child_classification.pk }}">
+                                                {{ child_classification.nombre }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>

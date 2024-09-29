@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  
+    .card {
+        background-color: #ffffff;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        padding: 20px;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .search-bar {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    .search-input {
+        width: 60%;
+        padding: 10px 15px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        margin-right: 20px;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+    .search-input:focus {
+        border-color: black;
+    }
+
+    .button {
+        padding: 10px 20px;
+        background-color: var(--salmon-pink);
+        border: none;
+        color: white;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+
+    .button:hover {
+        background-color: black;
+        transform: translateY(-2px);
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .table th, .table td {
+        padding: 14px 20px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
+    }
+
+    .table th {
+        background-color: #f3f4f6;
+        color: #4b5563;
+        font-weight: 600;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f9fafb;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f5f9;
+        cursor: pointer;
+    }
+
+    .table img {
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 9999px;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+
+    .pending {
+        background-color: #fef3c7;
+        color: #eab308;
+    }
+
+    .canceled {
+        background-color: #fee2e2;
+        color: #dc2626;
+    }
+
+    .delivered {
+        background-color: #d1fae5;
+        color: #22c55e;
+    }
+
+
+
+
+    /* Adaptaciones para pantallas pequeñas */
+    @media (max-width: 768px) {
+        .search-input {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .button {
+            margin: 10px 0;
+        }
+
+        .table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .table th, .table td {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .table img {
+            width: 48px;
+            height: 36px;
+        }
+
+        .status {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .search-input {
+            padding: 8px 10px;
+            font-size: 14px;
+        }
+
+        .button {
+            font-size: 12px;
+            padding: 8px 12px;
+        }
+
+        .table th, .table td {
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        .status {
+            font-size: 10px;
+            padding: 2px 6px;
+        }
+    }
+</style>
+
+<section class="container">
+    <div class="card">
+        <div class="header">
+            <div class="search-bar">
+                <input type="text" id="simple-search" class="search-input" placeholder="Buscar producto..." required>
+            </div>
+            <div>
+                <button class="button">Acciones</button>
+                <button class="button">Filtrar</button>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Producto</th>
+                        <th>Clasificación</th>
+                        <th>Cliente</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                        <th>Fecha</th>
+                        <th>Entrega</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venta in ventas %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'pedidos_stripe:ver_venta' venta.id %}" class="text-indigo-600 hover:text-indigo-800">{{ venta.handle }}</a>
+                        </td>
+                        <td style="display: flex; align-items: center;">
+                            <img src="{{ venta.product.image.url }}" alt="{{ venta.product.name }}" style="width: 64px; height: 48px; margin-right: 12px;">
+                            {{ venta.product_name_snapshot }}
+                        </td>
+                        <td>{% for clasi in venta.product.clasificaciones_padre.all %}{{ clasi.nombre }} {% endfor %}</td>
+                        <td>{% if venta.solicitud.user.email %}{{ venta.solicitud.user.email }} {% else %}{{ venta.solicitud.user.username }}{% endif %}</td>
+                        <td>${{ venta.product_price_snapshot }}</td>
+                        <td>{{ venta.quantity }}</td>
+                        <td>${{ venta.total_price }}</td>
+                        <td>{{ venta.solicitud.timestamp|date:"d. M, Y" }}</td>
+                        <td>
+                            {% if venta.solicitud.entrega == 'pending' %}
+                                <span class="status pending">Pendiente</span>
+                            {% elif venta.solicitud.entrega == 'canceled' %}
+                                <span class="status canceled">Cancelado</span>
+                            {% elif venta.solicitud.entrega == 'accepted' %}
+                                <span class="status delivered">Entregado</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

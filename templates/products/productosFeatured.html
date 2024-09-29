@@ -1,0 +1,136 @@
+ <!--
+            - PRODUCT FEATURED
+          -->
+
+          <div class="product-featured">
+
+            <h2 class="title">Ofertas Premium</h2>
+
+            <div class="showcase-wrapper has-scrollbar">
+
+                {% for offer in  premium_offer %}
+
+              <div class="showcase-container">
+
+                <div class="showcase">
+                  
+                  <div class="showcase-banner">
+                      <a href="{% url 'products:detail' offer.product.handle %}">
+                    <img src="{{ offer.product.image.url }}" alt="{{ offer.product.name }}" class="showcase-img">
+                      </a>
+                  </div>
+
+                  <div class="showcase-content">
+                    
+                   <div class="showcase-rating">
+                          {% for i in "12345"|make_list %}
+                              {% with j=i|add:-1 %}
+
+                              {% if i|add:0  <= offer.product.rating_product.average_rating %}
+                        <ion-icon name="star"></ion-icon>
+
+
+
+                              {% endif %}
+
+                              {% if i|add:0  > offer.product.rating_product.average_rating and j|add:0  < offer.product.rating_product.average_rating  %}
+                                      <ion-icon name="star-half"></ion-icon>  <!-- Estrella media -->
+                        {% else %}
+
+                                      {% endif %}
+
+                             {% if i|add:0  >= offer.product.rating_product.average_rating and j|add:0  >= offer.product.rating_product.average_rating %}
+                              <ion-icon name="star-outline"></ion-icon>
+                                  {% endif %}
+{% endwith %}
+                              {% endfor %}
+
+
+                      </div>
+
+                    <a href="{% url 'products:detail' offer.product.handle %}">
+                      <h3 class="showcase-title">{{ offer.product.name }}</h3>
+                    </a>
+
+                  {% if offer.product.short_description %}
+                    <p class="showcase-desc">
+                      {{ offer.product.short_description }}
+                    </p>
+                  {% endif %}
+
+                    <div class="price-box">
+                      <p class="price">${{ offer.product.price }}</p>
+
+                      <del>${{ offer.precio_viejo }}</del>
+                    </div>
+<form id="add-to-cart-form2" onsubmit="event.preventDefault(); addToCart({{ offer.product.id }}, 1);">
+      {% csrf_token %}
+                    <button type="submit" class="add-cart-btn">Agregar al carro</button>
+ </form>
+
+                    <div class="showcase-status">
+                      <div class="wrapper">
+{#                        <p>#}
+{#                          already sold: <b>20</b>#}
+{#                        </p>#}
+
+                        <p>
+                          Disponibles: <b>{{ offer.product.supply }}</b>
+                        </p>
+                      </div>
+
+{#                      <div class="showcase-status-bar"></div>#}
+                    </div>
+
+                    <div class="countdown-box">
+
+                      <p class="countdown-desc">
+                        Rapido! la oferta termina en:
+                      </p>
+
+                      <div class="countdown">
+    {% if offer.get_time_remaining == "Oferta sin fecha de finalización definida" or offer.get_time_remaining.minutes == None %}
+        <p class="no-end-date-text">Esta oferta puede terminar en cualquier momento</p>
+    {% else %}
+
+        <div class="countdown-content">
+            <p class="display-number">{{ offer.get_time_remaining.days }}</p>
+            <p class="display-text">Days</p>
+        </div>
+        <div class="countdown-content">
+            <p class="display-number">{{ offer.get_time_remaining.hours }}</p>
+            <p class="display-text">Hours</p>
+        </div>
+        <div class="countdown-content">
+            <p class="display-number">{{ offer.get_time_remaining.minutes }}</p>
+            <p class="display-text">Min</p>
+        </div>
+    {% endif %}
+</div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+                {% endfor %}
+
+
+            </div>
+
+          </div>
+
+<style>
+    .no-end-date-text {
+    background-color: #ffc107; /* Color de fondo amarillo */
+    color: #333; /* Color del texto oscuro */
+    padding: 10px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    font-weight: bold; /* Texto en negrita */
+    text-align: center; /* Alineación centrada */
+}
+</style>
+

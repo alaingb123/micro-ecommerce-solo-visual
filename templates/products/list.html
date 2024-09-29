@@ -1,0 +1,73 @@
+{% extends "../base.html" %}
+
+{% block content %}
+
+{%load static%}
+
+{% if filtrado == False %}
+{% if promociones %}
+{% include 'products/prueba2.html' with promociones=promociones %}
+    {% endif %}
+    {% endif %}
+
+
+
+
+{% if classifications %}
+{% include 'products/category2.html' with classifications=classifications %}
+    {% endif %}
+
+{% if classifications %}
+{% include 'products/productos.html' with classifications=classifications top_products=top_products %}
+    {% endif %}
+
+{% if filtrado == False %}
+{% include 'products/productosMinimal.html' %}
+
+
+{% include 'products/productosFeatured.html' with classifications=classifications %}
+    {% endif %}
+
+{% include 'products/productosGrid.html' %}
+
+{% include 'products/tcs.html' with classifications=classifications %}
+
+{#{% include 'products/blog.html' with classifications=classifications %}#}
+
+{#<section class="bg-white dark:bg-gray-900">#}
+{#    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">#}
+{#        <div class="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">#}
+{#            <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Productos</h2>#}
+{#            <p class="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">Explora toda la colección de productos y el comercio electrónico</p>#}
+{#        </div>#}
+{##}
+{#        <div class="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">#}
+{#            {% for object in object_list %}#}
+{#                {% if object.supply != 0 %}#}
+{#                    {% include 'products/list-card.html' with object=object %}#}
+{#                {% else %}#}
+{#                    {% if object.user == request.user %}#}
+{#                        {% include 'products/list-card.html' with object=object %}#}
+{#                    {% endif %}#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
+{#</section>#}
+{##}
+{#<div class="mt-4 flex justify-center">#}
+{#    <div class="btn-group">#}
+{#        {% if object_list.has_previous %}#}
+{#            <a href="?page=1" class="btn">Primero</a>#}
+{#            <a href="?page={{ object_list.previous_page_number }}" class="btn">Anterior</a>#}
+{#        {% endif %}#}
+{##}
+{#        <span class="btn disabled">Página {{ object_list.number }} de {{ object_list.paginator.num_pages }}</span>#}
+{##}
+{#        {% if object_list.has_next %}#}
+{#            <a href="?page={{ object_list.next_page_number }}" class="btn">Siguiente</a>#}
+{#            <a href="?page={{ object_list.paginator.num_pages }}" class="btn">Último</a>#}
+{#        {% endif %}#}
+{#    </div>#}
+{#</div>#}
+{% endblock %}

@@ -1,0 +1,146 @@
+<style>
+  /* Estilos para la tabla */
+  table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Encabezado de la tabla */
+  th {
+      background-color: #f3f4f6; /* Color de fondo suave */
+      color: #4b5563; /* Color del texto */
+      padding: 1rem;
+      text-align: left;
+      font-weight: bold;
+      border-bottom: 2px solid #e5e7eb; /* Línea inferior */
+  }
+
+  /* Celdas de la tabla */
+  td {
+      padding: 1rem;
+      border-bottom: 1px solid #e5e7eb; /* Línea inferior */
+      color: #6b7280; /* Color del texto */
+  }
+
+  /* Estilo para las filas en hover */
+  tr:hover {
+      background-color: #f9fafb; /* Color de fondo al pasar el mouse */
+  }
+
+  /* Estilo para los enlaces */
+  a {
+      text-decoration: none; /* Sin subrayado */
+      color: #676a6e; /* Color de enlace */
+      transition: color 0.3s; /* Transición suave */
+  }
+
+  a:hover {
+      color: #f0769b; /* Color de enlace al pasar el mouse */
+  }
+
+  /* Flexbox para cantidad */
+  .flex {
+      display: flex;
+      align-items: center;
+  }
+
+  /* Icono de eliminar */
+  svg {
+      width: 20px;
+      height: 20px;
+      cursor: pointer; /* Cambia el cursor al pasar el mouse */
+  }
+
+  /* Mensaje de carrito vacío */
+  .font-light {
+      color: #9ca3af; /* Color más claro para el texto */
+  }
+
+  /* Estilo para el card */
+  .card {
+    max-width: 600px; /* Ancho máximo del card */
+      margin: 5px auto; /* Centrar el card horizontalmente */
+      padding: 1rem; /* Espaciado interno */
+      text-align: center; /* Alinear texto al centro */
+      border: 1px solid #e5e7eb; /* Borde del card */
+      border-radius: 8px; /* Bordes redondeados */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra del card */
+  }
+
+  /* Responsividad */
+  @media (max-width: 768px) {
+    table {
+      width: 80%; /* Reducir el ancho de la tabla */
+      font-size: 0.8rem; /* Reducir aún más el tamaño de fuente */
+    }
+
+    th, td {
+      padding: 0.3rem; /* Reducir padding */
+    }
+
+    tr {
+      margin-bottom: 0.5rem; /* Reducir espaciado entre filas */
+      border: 1px solid #e5e7eb; /* Añadir borde a las filas */
+    }
+
+    /* Ocultar la columna "Precio" en la vista móvil */
+    th:nth-child(3), td:nth-child(3) {
+        display: none; /* Ocultar el encabezado y las celdas de Precio */
+    }
+
+    td {
+      text-align: left; /* Alinear texto a la izquierda */
+    }
+
+    /* Eliminar el pseudo-elemento para evitar la repetición del encabezado */
+    td[data-label] {
+        position: relative; /* Mantener posición relativa si se necesita para otros estilos */
+    }
+}
+</style>
+
+<div class="card">
+{% if request.session.carro.items %}
+<table class="w-4/5 border-collapse rounded-lg overflow-hidden"> 
+    <thead>
+      <tr class="bg-gray-200 text-gray-700">
+        <th class="px-4 py-3 text-left">Producto</th>
+        <th class="px-4 py-3 text-left">Cantidad</th>
+        <th class="px-4 py-3 text-left">Precio</th>
+        <th class="px-4 py-3 text-left">Subtotal</th>
+        <th class="px-4 py-3 text-left">Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for key, value in request.session.carro.items %}
+      <tr class="border-b border-gray-200 hover:bg-gray-100">
+        <td class="px-4 py-3" data-label="Producto">{{ value.name }}</td>
+        <td class="px-4 py-3 flex items-center" data-label="Cantidad">
+          <a href="{% url 'carro:restar' value.product_id %}" class="mr-2 text-gray-500 hover:text-gray-700">-</a>
+          {{ value.cantidad }}
+          <a href="{% url 'carro:agregar_carro' value.product_id %}" class="ml-2 text-gray-500 hover:text-gray-700">+</a>
+        </td>
+        <td class="px-4 py-3" data-label="Precio">${{ value.price }}</td>
+        <td class="px-4 py-3" data-label="Subtotal">${{ value.subtotal|floatformat:2 }}</td>
+        <td class="px-4 py-3" data-label="Eliminar">
+          <a href="{% url 'carro:eliminar' value.product_id %}" class="text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="px-4 py-3 text-center font-light text-gray-500 dark:text-gray-400">
+
+  Tu carrito de compras está vacío.
+</div>
+{% endif %}
+</div>

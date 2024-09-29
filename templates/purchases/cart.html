@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+* {
+    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho total */
+}
+
+.container-333 {
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Estilos generales para las tarjetas */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    
+}
+
+/* Alertas */
+.alert {
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Títulos */
+h2 {
+    color: #333;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+h3 {
+    color: #333;
+    font-size: 1.5rem;
+}
+
+/* Texto */
+.font-light {
+    color: #666;
+}
+
+/* Botones */
+button {
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+/* Estilos de botones específicos */
+.bg-green-500 {
+    background-color: #28a745;
+}
+
+.text-gray-700 {
+    color: #495057;
+}
+
+/* Flexbox */
+.flex {
+    display: flex;
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+}
+
+/* Espaciado */
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mb-6 {
+    margin-bottom: 1.5rem;
+}
+
+
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .container-333 {
+        padding: 1rem; /* Reducir padding en móviles */
+        width: 100%; /* Asegurar que el contenedor ocupe el ancho completo */
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    .flex {
+        flex-direction: column; /* Cambiar a columna en móviles */
+        align-items: center; /* Centrar elementos en modo móvil */
+        width: 100%; /* Asegurar que el contenedor flex ocupe el ancho completo */
+        overflow-x: hidden; /* Evitar el desbordamiento horizontal */
+    }
+
+    .card {
+        width: 90%; /* Hacer que las tarjetas ocupen el 90% del ancho */
+        margin: 10px 0; /* Ajustar márgenes superior e inferior */
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .total-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%; /* Asegurar que ocupe el ancho completo */
+    }
+
+    button {
+        width: 100%; /* Botones ocupan el ancho completo */
+        height: 40px;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center; /* Centra el botón horizontalmente */
+        margin-top: 10px; /* Espaciado opcional */
+    }
+}
+
+</style>
+
+<section class="bg-white dark:bg-gray-900">
+   {% if stock_error %}
+   <div class="alert" role="alert">
+       <strong style="font-weight: bold;">¡Atención!</strong>
+       <span>{{ stock_error }}</span>
+   </div>
+   {% endif %}
+
+   <div class="container-333">
+    <div class="text-center mb-8">
+        <h2 class="mb-4">Carrito de compras</h2>
+        <p class="font-light text-gray-500 mb-16" style="text-align: center;margin-bottom: 10px">Revisa los productos que has agregado a tu carrito.</p>
+
+    </div>
+
+    <div class="flex flex-center mb-6">
+        <!-- Tarjeta para la tabla del carrito -->
+            {% include 'purchases/cart-table.html' %}
+     
+
+        {% if importe_total_carro %}
+        <div class="card" id="card-333">
+            <!-- Total del carrito -->
+            <div class="total-container mb-4">
+                <span style="font-weight: bold; color: #333;">Total:</span>
+                <span style="font-weight: bold; color: #333;">${{ importe_total_carro|floatformat:2 }}</span>
+            </div>
+
+            <!-- Botón para limpiar el carrito -->
+            <div class="mb-4 flex justify-center">
+                <a href="{% url 'carro:limpiar' %}" class="bg-white hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center">
+                    <ion-icon name="trash-outline" style="margin-right: 8px;"></ion-icon>
+                    Limpiar Carrito
+                </a>
+            </div>
+            
+
+            <!-- Sección para comprar -->
+            <div>
+               
+
+                <!-- Formulario para comprar con Stripe -->
+                <div class="button-container">
+                    <!-- Formulario para comprar con Stripe -->
+                    <form method="POST" action="{% url 'extra:list_destinatario' %}" class="mb-2">
+                        {% csrf_token %}
+                        <button type="submit" class="banner-btn">
+                            COMPRAR
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Formulario para comprar con Zelle -->
+                {# <form method="POST" action="{% url 'purchases:create_solicitud_zelle' %}"> #}
+                {#     {% csrf_token %} #}
+                {#     <button type="submit" class="banner-btn"> #}
+                {#         Comprar con Zelle #}
+                {#     </button> #}
+                {# </form> #}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+   </div>
+</section>
+
+{% endblock %}

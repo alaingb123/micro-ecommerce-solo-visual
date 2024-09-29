@@ -1,0 +1,560 @@
+
+<div class="header-top">
+
+    <div class="container">
+
+      <ul class="header-social-container">
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-facebook"></ion-icon>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-twitter"></ion-icon>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-instagram"></ion-icon>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-linkedin"></ion-icon>
+          </a>
+        </li>
+
+      </ul>
+
+      <div class="header-alert-news">
+        <p>
+          <b>Envio Gratis!</b>
+          Esta semana para un pedido sobre - $55
+        </p>
+      </div>
+
+      <div class="header-top-actions">
+
+       <!-- <select name="currency">
+
+          <option value="usd">USD &dollar;</option>
+          <option value="eur">EUR &euro;</option>
+
+        </select>
+
+        <select name="language">
+
+          <option value="en-US">English</option>
+          <option value="es-ES">Espa&ntilde;ol</option>
+          <option value="fr">Fran&ccedil;ais</option>
+
+        </select> -->
+
+      
+{#        {% if request.user.username %}#}
+{#        <select name="pedidos" class="form-select" aria-label="Opciones" onchange="location = this.value;">#}
+{#          <option value="" disabled selected>Pedidos</option>#}
+{#         #}
+{#              <option value="{% url 'pedidos_stripe:purchases_stripe' %}">Pedidos Stripe</option>#}
+{#      </select>#}
+{#      {% endif %}#}
+
+       {% if request.user.username %}
+
+
+              <a class="form-select" href="{% url 'pedidos_stripe:purchases_stripe' %}" style="font-size: 14px;color: gray;">PEDIDOS</a>
+      {% endif %}
+
+      {% if request.user.usuario.rol.nombre == 'Proveedor' %}
+      <select name="pedidos" class="form-select" aria-label="Opciones" onchange="location = this.value;">
+        <option value="" disabled selected>Productos</option>
+
+        {% if request.user.usuario.rol.nombre == 'Proveedor' %}
+            <option value="{% url 'products:create' %}">Nuevo Producto</option>
+            <option value="{% url 'products:mis_productos' %}">Mis Productos</option> 
+            <option value="{% url 'pedidos_stripe:ventas' %}">Ventas</option>
+        {% endif %}
+    </select>
+    {% endif %}
+    
+      
+    
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="header-main">
+
+    <div class="container">
+      {% load static %}
+
+      <a href="#" class="header-logo">
+        <img src="{% static 'img/logo.png' %}" alt="Anon's logo" width="150" height="56">
+      </a>
+
+<div class="header-search-container">
+    <input type="search" id="search-input" class="search-field" placeholder="Introduce el nombre del producto...">
+    <a href="#" class="search-btn" id="search-link">
+        <ion-icon name="search-outline"></ion-icon>
+    </a>
+</div>
+
+
+
+
+      <div class="header-user-actions">
+
+       
+
+        <a href="{% url 'products:list' %}" class="action-btn">
+          <ion-icon name="home-outline"></ion-icon>
+      </a>
+      
+     {% if  request.user.usuario.rol.nombre != "Proveedor" %}
+      <a class="action-btn" href="{% url 'carro:ver_carro' %}">
+        <ion-icon name="bag-handle-outline"></ion-icon>
+        <span id="cart-count2" class="count">{{ request.session.carro|length }} </span>
+      </a>
+{% if  request.user.is_authenticated %}
+      <a class="action-btn" href="{% url 'products:list' %}?liked_product=fdijvef79vr8y38y3121321}">
+        <ion-icon name="heart-outline"></ion-icon>
+        <span id="like-count" class="count">{{ cantidad_like }}</span>
+      </a>
+
+      {% endif %}
+      {% endif %}
+      
+
+       
+
+        {% if request.user.is_authenticated %}
+        <a class="action-btn" href="{% url 'usuario:update_user' %}">
+            {{ request.user.username }}
+        </a>
+    
+        <a class="action-btn" href="{% url 'usuario:logout' %}">
+            <ion-icon name="log-out-outline"></ion-icon>
+        </a>
+    {% else %}
+        <a class="action-btn" href="{% url 'usuario:login' %}">
+            <ion-icon name="person-outline"></ion-icon>
+        </a>
+    {% endif %}
+    
+      </div>
+
+    </div>
+
+  </div>
+
+<style>
+   #button-link{
+      color: var(--sonic-silver);
+      font-size: var(--fs-7);
+      text-transform: capitalize;
+      -webkit-transition: var(--transition-timing);
+      -o-transition: var(--transition-timing);
+      transition: var(--transition-timing);
+    }
+
+    #button-link:hover{
+      color: var(--salmon-pink); 
+    }
+
+    #conten-horizontal{
+     display: flex ;
+     flex-direction: row;
+    }
+
+    #cont-hijos{
+      display: flex;
+      flex-direction: column;
+      margin-right: 45px;
+      justify-items: center;
+    }
+
+
+
+
+
+
+
+
+    .container-cell {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: visible; /* Asegúrate de que no haya desplazamiento en pantallas pequeñas */
+}
+
+
+
+.category-cell {
+
+  list-style: none;
+    padding: 0;
+    margin: 0; /* Asegúrate de que no haya margen por defecto */
+
+}
+
+.menu-category-cell {
+ 
+  display: inline-block; /* Cambia a inline-block para que se alineen horizontalmente */
+  margin-right: 20px; /* Espaciado entre los elementos */
+}
+
+.menu-category-cell:last-child {
+    margin-right: 10px; /* Elimina el margen del último elemento */
+}
+
+
+.dropdown-list-cell {
+    display: none; /* Oculta los submenús por defecto */
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 200px;
+}
+
+.menu-category-cell:hover .dropdown-list-cell {
+    display: block; /* Muestra el submenú al pasar el ratón */
+}
+
+.dropdown-item-cell {
+    list-style: none;
+}
+
+.dropdown-item-cell a {
+    display: block;
+    padding: 10px 15px;
+    color: #555;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item-cell a:hover {
+    background-color: #f0f0f0;
+}
+
+
+
+.menu-title-cell{
+  color: gray;
+}
+
+.menu-title-cell:hover{
+  color: pink;
+}
+
+</style>
+
+  <div style="overflow-x: auto; white-space: nowrap; margin-bottom: 10px;">
+    <ul class="category-cell" style="margin-left: 20px;margin-right: 20px; margin-bottom: 20px;margin-top: 20px; ">
+        <li class="menu-category-cell">
+            <a href="{% url 'products:list' %}" class="menu-title-cell">
+                Todo
+            </a>
+        </li>
+
+        {% for classification in classifications %}
+            {% if classification.productos_padre.count > 0 %}
+            <li class="menu-category-cell">
+              <a class="menu-title-cell" >
+                <a class="menu-title-cell" href="{% url 'products:list' %}?classification_id_padre={{ classification.id }}" > {{ classification.nombre }}</a>
+                    </a>
+          </li>
+          
+     
+          
+            {% endif %}
+        {% endfor %}
+
+        <li class="menu-category-cell">
+          <a href="{% url 'products:list' %}?descuento=True" class="menu-title-cell">
+              Descuentos
+          </a>
+      </li>
+
+    </ul>
+
+  </div>
+
+
+{% if classifications %}
+
+  <nav class="desktop-navigation-menu">
+
+    <div class="container">
+
+      <ul class="desktop-menu-category-list">
+
+        <li class="menu-category">
+          <a href="{% url 'products:list' %}" class="menu-title">
+              Todo
+          </a>
+      </li>
+
+
+  <li class="menu-category">
+
+      </li>
+
+
+
+{% for classification in classifications %}
+    {% if classification.productos_padre.count > 0 %}
+        <li class="menu-category">
+            <a class="menu-title" href="{% url 'products:list' %}?classification_id_padre={{ classification.pk }}">
+        {{ classification.nombre }}
+            </a>
+            {% if not classification.parent %}
+                {% if classification.hijos.all %}
+                    <ul class="dropdown-list">
+                        {% for child_classification in classification.hijos.all %}
+                            {% if child_classification.pro.exists %}
+                                <li class="dropdown-item">
+                                    <a href="{% url 'products:list' %}?classification_id={{ child_classification.pk  }}" > {{ child_classification.nombre }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %}
+        </li>
+    {% endif %}
+{% endfor %}
+
+
+
+      <li class="menu-category">
+          <a href="{% url 'products:list' %}?descuento=True" class="menu-title">
+              Descuentos
+          </a>
+      </li>
+
+
+
+      </ul>
+
+    </div>
+
+  </nav>
+
+<!--Aqui termina-->
+{% endif %}
+
+
+<!--Empieza la vista telefono-->
+
+
+  <div class="mobile-bottom-navigation">
+
+    <button class="action-btn" data-mobile-menu-open-btn>
+      <ion-icon name="menu-outline"></ion-icon>
+  </button>
+  
+  <a class="action-btn" href="{% url 'carro:ver_carro' %}">
+      <ion-icon name="bag-handle-outline"></ion-icon>
+      <span id="cart-count1" class="count">{{ request.session.carro|length }}</span>
+  </a>
+  
+  <a class="action-btn" href="{% url 'products:list' %}">
+      <ion-icon name="home-outline"></ion-icon>
+  </a>
+  
+  <a class="action-btn" href="{% url 'products:list' %}?liked_product={{ cantidad_like }}">
+      <ion-icon name="heart-outline"></ion-icon>
+      <span id="like-count2" class="count">{{ cantidad_like }}</span>
+  </a>
+
+  
+    {% if request.user.is_authenticated %}
+    <a class="action-btn" data-mobile-menu-open-btn href="{% url 'usuario:logout' %}">
+      <ion-icon name="log-out-outline"></ion-icon>
+  </a>
+  {% else %}
+  <a class="action-btn" data-mobile-menu-open-btn href="{% url 'usuario:login' %}">
+    <ion-icon name="person-outline"></ion-icon>
+  </a>
+  {% endif %}
+  
+
+  </div>
+
+
+  <nav class="mobile-navigation-menu  has-scrollbar" data-mobile-menu>
+
+    <div class="menu-top">
+      <h2 class="menu-title">Menu</h2>
+
+      <button class="menu-close-btn" data-mobile-menu-close-btn>
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <ul class="mobile-menu-category-list">
+
+      <li class="menu-category">
+        <a href="{% url 'products:list' %}" class="menu-title">Home</a>
+      </li>
+
+     
+
+      <li class="menu-category">
+        {% for clasification in classifications %}
+            {% if clasification.productos_padre.count > 0 %}
+                <div class="accordion-menu" data-accordion-btn>
+                    <a href="{% url 'products:list' %}?classification_id_padre={{ clasification.id }}" class="menu-title">
+                        <p>{{ clasification.nombre }}</p>
+                    </a>
+                    <div>
+                        <ion-icon name="add-outline" class="add-icon"></ion-icon>
+                        <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
+                    </div>
+                </div>
+    
+                {% if clasification.hijos.all %}
+                    <ul class="submenu-category-list" data-accordion>
+                        {% for child_classification in clasification.hijos.all %}
+                            {% if child_classification.pro.exists %}
+                                <li class="submenu-category">
+                                    <a href="{% url 'products:list' %}?classification_id={{ child_classification.id }}" class="sidebar-submenu-title submenu-title">
+                                        {{ child_classification.nombre }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </li>
+    
+ 
+      {% if request.user.username %}
+      <li class="menu-category">
+          <a href="{% url 'pedidos_stripe:purchases_stripe' %}" class="menu-title">Pedidos</a>
+      </li>
+  {% endif %}
+  
+    </ul>
+
+    <div class="menu-bottom">
+      {% if request.user.username %}
+      {% if request.user.usuario.rol.nombre == 'Proveedor' %}
+      <ul class="menu-category-list">
+
+        <li class="menu-category">
+          <button class="accordion-menu" data-accordion-btn>
+            <p class="menu-title">Productos</p>
+            <ion-icon name="caret-back-outline" class="caret-back"></ion-icon>
+          </button>
+
+          <ul class="submenu-category-list" data-accordion>
+            <li class="submenu-category">
+              <a href="{% url 'products:create' %}" class="submenu-title">Nuevo Producto </a>
+            </li>
+
+            <li class="submenu-category">
+              <a href="{% url 'products:mis_productos' %}" class="submenu-title">Mis Productos</a>
+            </li>
+
+            <li class="submenu-category">
+              <a href="{% url 'pedidos_stripe:ventas' %}" class="submenu-title">Ventas</a>
+            </li>
+          </ul>
+        </li>
+
+
+
+      </ul>
+      {% endif %}
+      {% endif %}
+
+      <ul class="menu-social-container">
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-facebook"></ion-icon>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-twitter"></ion-icon>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-instagram"></ion-icon>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="social-link">
+            <ion-icon name="logo-linkedin"></ion-icon>
+          </a>
+        </li>
+
+      </ul>
+
+    </div>
+
+  <script>
+      document.getElementById('search-link').onclick = function(e) {
+    e.preventDefault();  // Evitar que el enlace navegue
+    const searchValue = document.getElementById('search-input').value;
+    const url = "{% url 'products:list' %}?search=" + encodeURIComponent(searchValue);
+    window.location.href = url;  // Redirigir a la URL de búsqueda
+};
+  </script>
+<script>
+// mobile menu variables
+const mobileMenuOpenBtn = document.querySelectorAll('[data-mobile-menu-open-btn]');
+const mobileMenu = document.querySelectorAll('[data-mobile-menu]');
+const mobileMenuCloseBtn = document.querySelectorAll('[data-mobile-menu-close-btn]');
+const overlay = document.querySelector('[data-overlay]');
+
+for (let i = 0; i < mobileMenuOpenBtn.length; i++) {
+
+  // mobile menu function
+  const mobileMenuCloseFunc = function () {
+    mobileMenu[i].classList.remove('active');
+    overlay.classList.remove('active');
+  }
+
+  mobileMenuOpenBtn[i].addEventListener('click', function () {
+    mobileMenu[i].classList.add('active');
+    overlay.classList.add('active');
+  });
+
+  mobileMenuCloseBtn[i].addEventListener('click', mobileMenuCloseFunc);
+  overlay.addEventListener('click', mobileMenuCloseFunc);
+
+}
+
+
+
+
+
+
+</script>
+
+
+  </nav>

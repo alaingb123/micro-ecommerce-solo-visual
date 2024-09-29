@@ -1,0 +1,334 @@
+{% extends "../base.html" %}
+
+
+{% block content %}
+
+
+ {% if conexion_error %}
+   <div class="alert" role="alert">
+       <strong style="font-weight: bold;">¡Atención!</strong>
+       <span>{{ conexion_error }}</span>
+   </div>
+   {% endif %}
+
+<style>
+
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+}
+
+.form-group label {
+    flex: 1 0 30%; /* Ancho de las etiquetas */
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+:root {
+    --salmon-pink: hsl(353, 100%, 78%);
+}
+
+.btn-submit {
+    background-color: var(--salmon-pink);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.btn-submit:hover {
+    background-color: #000000;
+}
+
+.btn-submit2 {
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.btn-submit2:hover {
+    background-color: #000000;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.form-container {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.form-row input[type="text"],
+.form-row input[type="number"],
+.form-row select,
+.form-row input[type="file"] { /* Agregado para el campo de imagen */
+    flex: 1.5; /* Ajustar según lo necesario */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-row label {
+    margin-bottom: 5px; /* Reduce el margen inferior de los labels */
+    display: block; /* Asegura que el label ocupe toda la línea */
+}
+
+.form-row .column {
+    margin-bottom: 15px; /* Ajusta el margen entre filas */
+}
+
+.column {
+    flex: 1;
+    margin-right: 10px; /* Espacio entre columnas */
+}
+
+.column:last-child {
+    margin-right: 0; /* Eliminar margen derecho en la última columna */
+}
+
+.form-row .column:last-child {
+    margin-right: 0; /* Eliminar margen derecho en la última columna */
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
+    }
+
+    .form-row label,
+    .form-row input[type="text"],
+    .form-row input[type="number"],
+    .form-row select,
+    .form-row input[type="file"] { /* Agregado para el campo de imagen */
+        width: 100%;
+        margin-right: 0; /* Eliminar margen derecho */
+    }
+
+    .column {
+        margin-right: 0; /* Eliminar margen derecho en columnas */
+        margin-bottom: 10px; /* Espacio entre columnas en móviles */
+    }
+}
+
+    
+</style>
+
+
+
+<div class="form-container">
+    {% if conexion_error %}
+    <div class="alert" role="alert">
+        <strong style="font-weight: bold;">¡Atención!</strong>
+        <span>{{ conexion_error }}</span>
+    </div>
+    {% endif %}
+    <h2 class="form-title">Gestionar</h2>
+
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+
+    <div class="form-row">
+        <div class="column full-width">
+            <label for="image">Imagen:</label>
+            {{ form.image }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="column">
+            <label for="name">Nombre:</label>
+            {{ form.name }}
+        </div>
+        <div class="column">
+            <label for="handle">Handle:</label>
+            {{ form.handle }}
+        </div>
+    </div>
+    <div class="form-row">
+    <div class="column">
+        <label for="clasificaciones_padre">Clasificaciones Padre:</label>
+        <select name="clasificaciones_padre" id="clasificaciones_padre" onchange="cargarHijas()">
+            <option value="">Seleccione una clasificación padre</option>
+            {% for clasificacion in form.clasificaciones_padre.field.queryset %}
+                <option value="{{ clasificacion.id }}" {% if padre == clasificacion.id %} selected {% endif %}>{{ clasificacion }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="column">
+        <label for="clasificacion">Clasificación:</label>
+        <select name="clasificacion" id="clasificacion">
+            <option value="">Seleccione una clasificación</option>
+        </select>
+    </div>
+</div>
+    <div class="form-row">
+        <div class="column">
+            <label for="price">Precio:</label>
+            {{ form.price }}
+        </div>
+        <div class="column">
+            <label for="supply">Suministro:</label>
+            {{ form.supply }}
+        </div>
+    </div>
+    <div class="form-row">
+    <div class="column">
+        <label for="description">Descripción corta:</label>
+         {{ form.short_description }}
+    </div>
+</div>
+    <div class="form-row">
+        <div class="column">
+            <label for="description">Descripción:</label>
+            {{ form.description }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="column">
+            {{ form.active.label_tag }}
+            {{ form.active }}
+        </div>
+     
+    </div>
+    <div class="form-row">
+        <div class="column">
+            <button type="submit" class="btn-submit">Guardar</button>
+        </div>
+        <div class="column">
+           <button type="submit" name="action" value="save_and_add" class="btn-submit2">Guardar y agregar otro</button>
+        </div>
+    </div>
+</form>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const selectedId = '{{ hija }}'; // Obtener el ID desde el contexto
+    cargarHijas(selectedId); // Pasar el ID a la función
+
+    // Añadir el evento al selector de clasificaciones padre
+    const clasificacionesPadreSelect = document.getElementById('clasificaciones_padre');
+    clasificacionesPadreSelect.addEventListener('change', () => {
+        cargarHijas(); // Llamar a cargarHijas sin el selectedId
+    });
+});
+
+function cargarHijas(selectedId) {
+    const padreId = document.getElementById('clasificaciones_padre').value;
+    console.log(padreId);
+    const clasificacionSelect = document.getElementById('clasificacion');
+
+    clasificacionSelect.innerHTML = '<option value="">Seleccione una clasificación</option>'; // Limpiar opciones
+
+    if (padreId) {
+        fetch(`/get_hijas/?padre_id=${padreId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(hija => {
+                    const option = document.createElement('option');
+                    option.value = hija.id;
+                    option.textContent = hija.nombre; // Cambia 'nombre' por el campo adecuado
+
+                    // Convertir ambos a cadenas para la comparación
+                    if (String(hija.id) === String(selectedId)) {
+                        option.selected = true;
+                    }
+
+                    clasificacionSelect.appendChild(option);
+                });
+            });
+    }
+}
+
+// Funcionalidad para añadir adjuntos
+const blankFormEl = document.querySelector("#blank-form");
+const attachmentContainer = document.querySelector("#attachments");
+const addAttachmentBtn = document.querySelector("#add-attachment-btn");
+const managementFormInputEl = document.querySelector("#id_form-TOTAL_FORMS");
+
+if (addAttachmentBtn) {
+    addAttachmentBtn.addEventListener("click", handleAttachmentBtnClick);
+}
+
+function cloneBlankForm() {
+    if (blankFormEl) {
+        const newBlankForm = blankFormEl.cloneNode(true);
+        const totalFormValue = parseInt(managementFormInputEl.value);
+        const formRegex = new RegExp(`__prefix__`, 'g');
+        newBlankForm.innerHTML = newBlankForm.innerHTML.replace(formRegex, totalFormValue);
+        managementFormInputEl.value = totalFormValue + 1;
+        newBlankForm.classList.add("attachment-form");
+        newBlankForm.classList.remove("hidden");
+        newBlankForm.removeAttribute("id");
+        return newBlankForm;
+    }
+}
+
+function handleAttachmentBtnClick(event) {
+    if (event) {
+        event.preventDefault();
+    }
+    const newForm = cloneBlankForm();
+    attachmentContainer.appendChild(newForm);
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,164 @@
+  <!--
+            - PRODUCT GRID
+          -->
+<style>
+    .product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas en pantallas pequeñas */
+    gap: 16px; /* Espacio entre los productos */
+}
+
+@media (max-width: 768px) { /* Ajustes para pantallas más pequeñas */
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+    }
+}
+
+@media (min-width: 769px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr); /* Tres columnas en pantallas más grandes */
+    }
+}
+</style>
+
+
+
+
+
+
+          <div class="product-main ">
+
+            <h2 class="title">Productos</h2>
+
+            <div class="product-grid">
+
+                {% for object in object_list %}
+              <div class="showcase">
+
+                <div class="showcase-banner">
+
+                  <img src="{{ object.image.url }}" alt="{{ object.name }}" width="300" class="product-img default">
+                  <img src="{{ object.image.url }}" alt="{{ object.name }}" width="300" class="product-img hover">
+
+                    {% if object.offer %}
+                  <p class="showcase-badge">{{ object.offer.descuento }}%</p>
+                    {% endif %}
+
+                  <div class="showcase-actions">
+
+                     {% if request.user.usuario.rol.nombre == 'cliente' %}
+    {% if request.user in object.usuarios_que_dieron_like %}
+        <a href="#" id="like-btn-{{ object.pk }}" class="btn-action">
+            <ion-icon name="heart-dislike-outline"></ion-icon>
+        </a>
+    {% else %}
+        <a href="#" id="like-btn-{{ object.pk }}" class="btn-action">
+            <ion-icon name="heart-outline"></ion-icon>
+        </a>
+    {% endif %}
+{% endif %}
+                  
+
+
+                    <a  href="{% url 'products:detail' object.handle %}" class="btn-action">
+
+                      <ion-icon name="eye-outline"></ion-icon>
+
+                    </a>
+
+{#                    <button class="btn-action">#}
+{#                      <ion-icon name="repeat-outline"></ion-icon>#}
+{#                    </button>#}
+                    {% if not request.user.usuario.rol.nombre == 'Proveedor' %}
+     <form id="add-to-cart-form" onsubmit="event.preventDefault(); addToCart({{ object.id }}, 1);">
+        {% csrf_token %}
+        <button type="submit" class="btn-action">
+            <ion-icon name="bag-add-outline"></ion-icon>
+        </button>
+    </form>
+                  {% endif %}
+
+                  </div>
+
+                </div>
+
+                <div class="showcase-content">
+
+
+                    {% if object.clasificacion.all %}
+
+              {% for clasi in object.clasificacion.all|slice:":1" %}
+
+                <a href="{% url 'products:list' %}?classification_id={{ clasi.id }}" class="showcase-category">{{ clasi.nombre }}</a>
+                    {% endfor %}
+                    {% else %}
+                     {% if object.clasificaciones_padre %}
+
+
+                                 <a href="{% url 'products:list' %}?classification_id_padre={{ object.clasificaciones_padre.id }}" class="showcase-category">{{ object.clasificaciones_padre.nombre }}</a>
+
+                         {% endif %}
+                  {% endif %}
+
+
+                  <a href="{% url 'products:detail' object.handle %}">
+                    <h3 class="showcase-title">{{ object.name }}</h3>
+                  </a>
+
+                  <div class="showcase-rating">
+                          {% for i in "12345"|make_list %}
+                              {% with j=i|add:-1 %}
+
+                              {% if i|add:0  <= object.rating_product.average_rating %}
+                        <ion-icon name="star"></ion-icon>
+
+
+
+                              {% endif %}
+
+                              {% if i|add:0  > object.rating_product.average_rating and j|add:0  < object.rating_product.average_rating  %}
+                                      <ion-icon name="star-half"></ion-icon>  <!-- Estrella media -->
+                        {% else %}
+
+                                      {% endif %}
+
+                             {% if i|add:0  >= object.rating_product.average_rating and j|add:0  >= object.rating_product.average_rating %}
+                              <ion-icon name="star-outline"></ion-icon>
+                                  {% endif %}
+{% endwith %}
+                              {% endfor %}
+
+
+                      </div>
+
+                  <div class="price-box">
+
+                  <p class="price">${{ object.price }}</p>
+    {% if object.offer %}
+                  <del>${{ object.offer.precio_viejo }}</del>
+                     {% endif %}
+                </div>
+
+                </div>
+
+              </div>
+                {% endfor %}
+
+
+
+
+
+
+
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+

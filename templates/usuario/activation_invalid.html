@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Activación Inválida</h4>
+        <p>El enlace de activación que has utilizado es inválido o ha expirado. Por favor, verifica que el enlace sea correcto.</p>
+        <hr>
+        <p class="mb-0">Si necesitas ayuda, no dudes en contactarnos.</p>
+    </div>
+    <a href="{% url 'usuario:login' %}" class="btn btn-primary">Volver a la página de inicio de sesión</a>
+</div>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+    }
+    .main-content {
+        flex: 3;
+        margin-right: 20px; /* Espaciado entre columnas */
+    }
+    .sidebar {
+        flex: 1;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+    .title {
+        font-size: 2.5rem; /* Equivalente a text-4xl */
+        font-weight: bold;
+        color: #fff; /* Color para dark mode */
+    }
+    .description {
+        margin-bottom: 12px;
+        font-weight: 300;
+        color: #6B7280; /* Color gris */
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+    .first-letter {
+        font-size: 4rem; /* Equivalente a text-7xl */
+        font-weight: bold;
+        color: #1F2937; /* Color gris oscuro */
+        float: left;
+        margin-right: 8px;
+    }
+    .img-container {
+        display: grid;
+        gap: 16px;
+    }
+    .img {
+        max-width: 100%;
+        border-radius: 8px; /* Equivalente a rounded-lg */
+    }
+    .btn-primary, .btn-submit {
+        background-color: #3B82F6; /* Color de fondo del botón */
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .btn-submit {
+        margin-top: 8px; /* Espaciado superior */
+    }
+</style>
+
+<div class="container">
+    <div class="main-content">
+        <!-- main content-->
+        <div class="header">
+            <h2 class="title">{{ object.name }}</h2>
+            <div>
+                <a href="{% url 'products:filter_by_provider' object.user.pk %}" class="btn-primary">Filtrar por proveedor</a>
+            </div>
+        </div>
+        {% if object.description %}
+        <p class="description">
+            <span class="first-letter">{{ object.description|linebreaksbr|slice:":1" }}</span>{{ object.description|linebreaksbr|slice:"1:" }}
+        </p>
+        {% endif %}
+        {% include 'products/attachments-table.html' with attachments=attachments is_owner=is_owner %}
+    </div>
+
+    <div class="sidebar">
+        <!-- sidebar -->
+        <div>
+            {% include 'purchases/buy-btn-form.html' with product=object %}
+        </div>
+        {% if object.image %}
+        <div class="img-container">
+            <div>
+                <img class="img" src="{{ object.image.url }}" alt="">
+            </div>
+        </div>
+        {% endif %}
+
+        {% if form %}
+        <div>
+            <h3>Update Product</h3>
+            <form method="POST" action="." enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn-submit">Submit</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if request.user == object.user %}
+        <div>
+            <a href="{% url 'products:manage' object.handle %}" class="btn-submit">Manage Product</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

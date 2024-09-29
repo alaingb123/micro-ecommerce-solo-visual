@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto my-8">
+    <h1 class="text-2xl font-bold mb-4">Detalles de la Solicitud de Zelle</h1>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="px-6 py-4">
+            <h2 class="text-lg font-medium mb-2">Solicitante: {{ solicitud.user.username }}</h2>
+            <div class="text-gray-700 leading-relaxed">
+                <p class="mb-2"><strong>Estado:</strong> {{ solicitud.get_status_display }}</p>
+            {% if solicitud.status == 'accepted' %}
+                <p class="mb-2"><strong>Estado:</strong> {{ solicitud.get_entrega_display }}</p>
+            {% endif %}
+                <p class="mb-2"><strong>Correo electrónico:</strong> {{ solicitud.email }}</p>
+                <p class="mb-2"><strong>Teléfono:</strong> {{ solicitud.phone }}</p>
+                <p class="mb-2"><strong>Monto:</strong> ${{ solicitud.amount }}</p>
+                <p class="mb-2"><strong>Código de verificación de pago:</strong> {{ solicitud.payment_verification_code }}</p>
+                <p class="mb-2"><strong>Archivo:</strong> {% if solicitud.file %}<a href="{{ solicitud.file.url }}" class="text-blue-500 hover:text-blue-700">Ver archivo</a>{% else %}No se ha cargado ningún archivo{% endif %}</p>
+                <p class="mb-2"><strong>Fecha de creación:</strong> {{ solicitud.created_at }}</p>
+                <p class="mb-2"><strong>Última actualización:</strong> {{ solicitud.updated_at }}</p>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-xl font-bold mt-8 mb-4">Productos</h2>
+    {% if solicitud.products.all %}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="px-6 py-4">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="py-2 px-4 text-left">Nombre</th>
+                        <th class="py-2 px-4 text-left">Precio</th>
+                        <th class="py-2 px-4 text-left">Cantidad</th>
+                        <th class="py-2 px-4 text-left">SubTotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in solicitud_items  %}
+                    <tr class="border-b">
+                        <td class="py-2 px-4">{{ item.product.name }}</td>
+                        <td class="py-2 px-4">${{ item.product.price }}</td>
+                        <td class="py-2 px-4">{{ item.quantity  }}</td>
+                        <td class="py-2 px-4">${{ item.total_price }}  </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <p class="text-gray-700">No se han encontrado productos asociados a esta solicitud.</p>
+    {% endif %}
+
+<style>
+  .admin-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .admin-actions a {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 0.25rem;
+    margin-left: 0.5rem;
+  }
+
+  .admin-actions a:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+{% if request.user.usuario.rol.nombre == 'admin' %}
+
+  <div class="admin-actions">
+  {% if solicitud.status == 'canceled' %}
+    <a href="{% url 'purchases:aceptar_solicitud' solicitud.id %}">
+      Aceptar solicitud
+    </a>
+      {% endif %}
+   {% if solicitud.status == 'accepted' %}
+    <a href="{% url 'purchases:cancelar_solicitud' solicitud.id %}">
+      Cancelar solicitud
+    </a>
+       {% endif %}
+  </div>
+{% endif %}
+</div>
+{% endblock %}

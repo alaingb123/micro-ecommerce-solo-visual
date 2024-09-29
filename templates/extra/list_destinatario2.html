@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+{#<link rel="stylesheet" href="{% static 'css/extra/list_destinatario.css' %}">#}
+<style>
+
+
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+
+
+.search-input:focus {
+    border-color: #4CAF50; /* Color de borde al enfocar */
+    outline: none; /* Elimina el contorno */
+}
+
+
+
+.search-button:hover {
+    background-color: #45a049;
+}
+
+
+
+
+.destinatarios-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Apila los cards verticalmente */
+    align-items: center; /* Centra los cards */
+}
+
+.card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px 0; /* Espacio entre los cards */
+    width: 90%; /* Ocupa el 90% del contenedor */
+    max-width: 350px; /* Ancho máximo del card */
+    transition: transform 0.2s ease; /* Transición para el efecto hover */
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Levanta el card al pasar el ratón */
+}
+
+.card h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #2c3e50; /* Color del texto */
+}
+
+.card p {
+    color: #666; /* Color de texto más suave para descripciones */
+}
+
+.purchase-button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #e67e22; /* Color naranja */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.purchase-button:hover {
+    background-color: #d35400; /* Naranja más oscuro */
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between; /* Espacio entre botones */
+    margin-top: 10px;
+}
+
+.edit-button, .delete-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.edit-button:hover {
+    background-color: #45a049;
+}
+
+.delete-button {
+    background-color: #e74c3c; /* Color rojo */
+}
+
+.delete-button:hover {
+    background-color: #c0392b; /* Rojo más oscuro */
+}
+
+.search-bar {
+    display: flex; /* Usar flexbox para alinear elementos */
+    justify-content: center; /* Centrar horizontalmente */
+    margin-bottom: 20px; /* Espacio debajo de la barra de búsqueda */
+}
+
+.search-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 300px;
+    transition: border-color 0.3s ease;
+}
+
+.search-button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px; /* Espacio entre el botón de búsqueda y el de agregar */
+    transition: background-color 0.3s ease;
+}
+
+.add-button {
+    margin-left: 10px; /* Espacio entre el botón de búsqueda y el de agregar */
+    padding: 8px 15px; /* Tamaño más pequeño */
+    background-color: #3498db; /* Color azul */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px; /* Tamaño de fuente más pequeño */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+    background-color: #2980b9; /* Azul más oscuro al pasar el ratón */
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 480px) {
+    .card {
+        width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+    }
+}
+</style>
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<h1 class="page-title">Lista de Destinatarios</h1>
+
+<div class="search-bar">
+    <form method="get" style="display: flex; align-items: center;">
+        <input type="text" name="q" placeholder="Buscar por nombre..." class="search-input">
+        <button type="submit" class="search-button">Buscar</button>
+        <a href="{% url 'extra:crear_destinatario' %}" class="add-button">
+            Agregar Destinatario
+        </a>
+    </form>
+</div>
+
+<ul id="destinatarios-list" class="destinatarios-list">
+    {% for destinatario in destinatarios %}
+    <li class="card" data-nombre="{{ destinatario.nombre|lower }}">
+        <div class="card-content">
+            <input type="radio" name="destinatario_id" id="destinatario-{{ destinatario.id }}" value="{{ destinatario.id }}" class="destinatario-radio">
+            <label for="destinatario-{{ destinatario.id }}">
+                <h2 class="destinatario-name">{{ destinatario.nombre }} {{ destinatario.apellidos }}</h2>
+                <p class="destinatario-address">{{ destinatario.direccion }}</p>
+            </label>
+        </div>
+        <form method="post" action="{% url 'pedidos_stripe:buy_cart' destinatario.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="selected_destinatario_id" id="destinatario_id" value="">
+            <button type="submit" class="purchase-button">Realizar Compra</button>
+        </form>
+        <div class="action-buttons">
+            <a href="{% url 'extra:editar_destinatario' destinatario.id %}" class="edit-button">Editar</a>
+            <a href="{% url 'extra:eliminar_destinatario' destinatario.id %}" class="delete-button">
+                <i class="fas fa-times"></i>Eliminar
+            </a>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<script src="{% static 'js/extra/list_destinatario.js' %}"></script>
+
+
+{% endblock %}

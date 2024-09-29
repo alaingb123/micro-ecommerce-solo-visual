@@ -1,0 +1,493 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    :root {
+        --salmon-pink: hsl(353, 100%, 78%);
+    }
+
+    strong{
+        font-size: 12px;
+    }
+
+    #detailp{
+        font-size: 12px;
+    }
+
+
+
+    .div-all {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .div-all2 {
+        width: 80%;
+        max-width: 800px;
+    }
+
+    .div-card {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .name-filter {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    h2 {
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .a-sec {
+        background-color: var(--salmon-pink);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .a-sec .link-text {
+        display: inline; /* Muestra el texto por defecto */
+    }
+
+
+    .a-sec:hover {
+        background-color: black;
+    }
+
+    .button-submit,
+    .button-sec {
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .button-submit {
+        background-color: var(--salmon-pink);
+    }
+
+    .button-submit:hover,
+    .button-sec:hover {
+        background-color: black;
+    }
+
+    .button-sec {
+        background-color: #6c757d;
+    }
+
+    p {
+        margin-bottom: 15px;
+        color: #6c757d;
+        text-transform: uppercase;
+    }
+
+    .div-image1 {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .div-image2 {
+        flex: 1;
+        margin-right: 20px;
+        max-width: 250px;
+    }
+
+    .main-image {
+        width: 100%;
+        border-radius: 8px;
+    }
+
+    .span {
+        color: var(--onyx);
+        font-weight: 600;
+        cursor: pointer;
+    }
+    
+    .span:hover {
+        color: var(--salmon-pink);
+    }
+
+    @media (max-width: 768px) {
+
+
+        .span{
+            font-size: small;
+        }
+
+        .div-all {
+            padding: 10px;
+            width: 100%;
+            max-width: 760px;
+
+        }
+
+        .name-filter {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .div-image1 {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .div-image2 {
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: small;
+        }
+
+        .a-sec {
+            justify-content: flex-end; /* Alinea el contenido a la derecha */  
+    }
+
+    }
+
+    @media (max-width: 600px) { /* Ajusta el tamaño según tus necesidades */
+        .a-sec .link-text {
+            display: none; /* Oculta el texto en pantallas pequeñas */
+        }
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+<div class="div-all">
+    <div class="div-all2">
+        <div class="div-card">
+            <div class="name-filter">
+                <h2>{{ object.name }}</h2>
+                <a class="a-sec" href="{% url 'products:filter_by_provider' object.user.pk %}" style="display: flex; align-items: center;">
+                    <ion-icon name="funnel" style="margin-right: 5px; font-size: 1.2em;"></ion-icon>
+                    <span class="link-text">Filtrar por proveedor</span>
+                </a>
+                </div>
+
+       
+        
+        <div style="display: flex; justify-content: space-between;">
+            <div style="flex: 3; margin-right: 20px;">
+                <div class="div-image1" style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+                    {% if object.image %}
+                        <div class="div-image2" style="margin-right: 20px;">
+                            <img class="main-image" src="{{ object.image.url }}" alt="">
+                        </div>
+                    {% endif %}
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                        <!-- Sidebar -->
+                        <div style="margin-bottom: 20px;">
+                            {% include 'purchases/buy-btn-form.html' with product=object %}
+                        </div>
+
+                        {% if object.description %}
+                        <button class="span" style="margin-bottom: 20px; display: flex; align-items: center;" onclick="toggleDescription()">
+                            <ion-icon id="toggle-icon" name="chevron-down" style="margin-right: 5px;"></ion-icon>
+                            Ver descripción
+                        </button>
+                        <p id="description" style="display: none;">{{ object.description|linebreaksbr }}</p>
+                    {% endif %}
+
+
+                    {% if object.offer %}
+                    <button class="span" style="margin-bottom: 20px; display: flex; align-items: center;" onclick="toggleOferta()">
+                        <ion-icon id="toggle-icon2" name="chevron-down" style="margin-right: 5px;"></ion-icon>
+                        Ver detalles de oferta
+                    </button>
+                    <div id="offer-details" style="padding: 15px; border-radius: 8px; flex: 1; display: none;  grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <h3 style="grid-column: span 2; font-weight: bold; margin-bottom: 15px;">Detalles de la Oferta</h3>
+                        <p id="detailp"><strong>Precio Anterior:</strong> {{ object.offer.precio_viejo }}</p>
+                        <p id="detailp"><strong>Fecha de Inicio:</strong> {{ object.offer.start_date|date:"d. M, Y" }}</p>
+                        <p id="detailp"><strong>Fecha de Fin:</strong> {{ object.offer.end_date|date:"d. M, Y" }}</p>
+                        <p id="detailp"><strong>Descuento:</strong> {{ object.offer.descuento }}%</p>
+                        <p id="detailp"><strong>¿Oferta Activa?:</strong> {% if object.offer.is_offer_active %} Sí {% else %} No {% endif %}</p>
+                    </div>
+                {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+ 
+
+
+    <!-- Botón para abrir el modal -->
+{% if request.user.usuario.rol.nombre == "cliente" %}
+<button id="openModalButton" class="span" style="margin-bottom: 20px;">Evalúa este producto</button>
+{%endif%}
+</div>
+
+
+<!-- Modal -->
+<div id="evaluationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+    <div style="position: absolute; top: 50%; left: 50  %; transform: translate(-50%, -50%); width: 80%; max-width: 500px; background-color: white; padding: 20px; border-radius: 8px; text-align: center;">
+        <span id="closeModalButton" style="cursor: pointer; position: absolute; top: 10px; right: 15px; font-size: 1.5em;">&times;</span>
+        
+        <h3 style="font-weight: bold; margin-bottom: 15px;">Evalúa este producto</h3>
+        <form method="POST" id="contactform" action="{% url 'products:rate_product' object.pk %}" style="display: inline-block;">
+    {% csrf_token %}
+    <input type="hidden" name="g-recaptcha-response" id='recaptcha'>
+    <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 15px;">
+        <div style="display: flex; margin-bottom: 10px;" id="star-rating">
+            {% for i in "12345" %}
+            <label style="margin-right: 10px; cursor: pointer;">
+                <input type="radio" name="score" value="{{ i }}" style="display: none;"
+                    {% if user_rating and user_rating.score|stringformat:"d" == i %} checked {% endif %} required>
+                <ion-icon name="star" class="star" style="font-size: 2em; color: {% if user_rating and user_rating.score|stringformat:"d" == i %} #ffcc00 {% else %} #ccc {% endif %};" data-value="{{ i }}"></ion-icon>
+            </label>
+            {% endfor %}
+        </div>
+        <div id="face-icon" style="text-align: center; display: none; margin-top: 15px;">
+            <ion-icon id="satisfaction-face" name="happy-outline" style="font-size: 3em; color: #ffcc00; display: block; margin: 0 auto;"></ion-icon>
+            <div id="satisfaction-message" style="font-size: 1.2em; color: #333; display: block; margin: 0 auto;"></div>
+        </div>
+        <button class="button-submit" type="submit" style="margin-top: 15px;">Enviar Evaluación</button>
+    </div>
+</form>
+    </div>
+</div>
+
+
+                    {% if request.user == object.user %}
+                    <div style="margin-bottom: 20px;">
+                        <a href="{% url 'products:manage' object.handle %}" class="a-sec">Administrar Producto</a>
+                    </div>
+
+                    {% if not object.offer %}
+                    <form method="POST" action="{% url 'products:crear_oferta' object.pk %}">
+                        {% csrf_token %}
+                        <div>
+                            <button class="button-sec" type="submit">Crear Oferta</button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <form method="POST" action="{% url 'products:eliminar_oferta' object.pk %}">
+                        {% csrf_token %}
+                        <div>
+                            <button class="button-sec" type="submit">Eliminar Oferta</button>
+                        </div>
+                    </form>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{#<script src="https://www.google.com/recaptcha/api.js?render={{ site_key }}"></script>#}
+<script>
+
+
+   const stars = document.querySelectorAll('.star');
+const faceIconContainer = document.getElementById('face-icon');
+const faceIcon = document.getElementById('satisfaction-face');
+const satisfactionMessage = document.getElementById('satisfaction-message');
+
+stars.forEach(star => {
+    star.addEventListener('click', function() {
+        const value = this.getAttribute('data-value');
+        updateStars(value);
+        updateFaceIcon(value);
+        faceIconContainer.style.display = 'block'; // Mostrar el ícono de la carita
+        updateSatisfactionMessage(value); // Actualizar el mensaje de satisfacción
+    });
+
+    star.addEventListener('mouseover', function() {
+        const value = this.getAttribute('data-value');
+        highlightStars(value);
+    });
+
+    star.addEventListener('mouseout', function() {
+        const checkedStar = document.querySelector('input[name="score"]:checked');
+        if (checkedStar) {
+            updateStars(checkedStar.value); // Mantener el color de las estrellas seleccionadas
+        } else {
+            resetStars(); // Restablecer si no hay selección
+        }
+    });
+});
+
+function updateStars(value) {
+    stars.forEach(s => {
+        s.style.color = s.getAttribute('data-value') <= value ? '#ffcc00' : '#ccc';
+        if (s.getAttribute('data-value') === value) {
+            s.previousElementSibling.checked = true; // Marcar el radio button
+        }
+    });
+}
+
+function highlightStars(value) {
+    stars.forEach(s => {
+        s.style.color = s.getAttribute('data-value') <= value ? '#ffcc00' : '#ccc';
+    });
+}
+
+function resetStars() {
+    stars.forEach(s => {
+        s.style.color = '#ccc'; // Restablecer color a gris
+    });
+}
+
+function updateFaceIcon(value) {
+    switch (value) {
+        case '1':
+            faceIcon.setAttribute('name', 'sad-outline');
+            faceIcon.style.color = 'red';
+            break;
+        case '2':
+            faceIcon.setAttribute('name', 'sad-outline');
+            faceIcon.style.color = 'orange';
+            break;
+        case '3':
+            faceIcon.setAttribute('name', 'remove-circle-outline');
+            faceIcon.style.color = 'yellow';
+            break;
+        case '4':
+            faceIcon.setAttribute('name', 'happy-outline');
+            faceIcon.style.color = 'yellowgreen';
+            break;
+        case '5':
+            faceIcon.setAttribute('name', 'happy-outline');
+            faceIcon.style.color = 'green';
+            break;
+        default:
+            faceIcon.setAttribute('name', 'happy-outline');
+            faceIcon.style.color = 'green';
+    }
+}
+
+function updateSatisfactionMessage(value) {
+    let message = '';
+    switch (value) {
+        case '1':
+            message = 'Muy Insatisfecho';
+            break;
+        case '2':
+            message = 'Insatisfecho';
+            break;
+        case '3':
+            message = 'Neutral';
+            break;
+        case '4':
+            message = 'Satisfecho';
+            break;
+        case '5':
+            message = 'Muy Satisfecho';
+            break;
+    }
+    satisfactionMessage.textContent = message;
+    satisfactionMessage.style.display = 'block'; // Mostrar el mensaje
+}
+
+// Ocultar el ícono de la carita y el mensaje al cargar la página
+window.onload = function() {
+    faceIconContainer.style.display = 'none';
+    satisfactionMessage.style.display = 'none';
+};
+
+// Funciones para abrir y cerrar el modal
+const modal = document.getElementById("evaluationModal");
+const openModalButton = document.getElementById("openModalButton");
+const closeModalButton = document.getElementById("closeModalButton");
+
+openModalButton.onclick = function() {
+    modal.style.display = "block";
+}
+
+closeModalButton.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+}
+
+
+
+    function toggleDescription() {
+        var description = document.getElementById('description');
+        var icon = document.getElementById('toggle-icon');
+        
+        if (description.style.display === 'none') {
+            description.style.display = 'block'; // Muestra la descripción
+            icon.setAttribute('name', 'chevron-up'); // Cambia el icono a flecha arriba
+        } else {
+            description.style.display = 'none'; // Oculta la descripción
+            icon.setAttribute('name', 'chevron-down'); // Cambia el icono a flecha abajo
+        }
+    }
+
+    function toggleOferta() {
+        var offerDetails = document.getElementById('offer-details');
+        var icon = document.getElementById('toggle-icon2');
+        
+        if (offerDetails.style.display === 'none') {
+            offerDetails.style.display = 'block'; // Muestra los detalles de la oferta
+            icon.setAttribute('name', 'chevron-up'); // Cambia el icono a flecha arriba
+        } else {
+            offerDetails.style.display = 'none'; // Oculta los detalles de la oferta
+            icon.setAttribute('name', 'chevron-down'); // Cambia el icono a flecha abajo
+        }
+    }
+
+    function addToCart(productId, quantity) {
+    console.log("Este es el ID del producto: ", productId);
+    console.log("La cantidad es: ", quantity);
+
+    fetch(`/carro/agregar_cantidad/${productId}/${quantity}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ product_id: productId, quantity: quantity })
+    })
+    .then(response => {
+        console.log("Estado de la respuesta:", response.status);
+        if (response.ok) {
+            return response.json();
+        } else {
+            return response.text().then(text => {
+                throw new Error(`Error al agregar el producto: ${text}`);
+            });
+        }
+    })
+    .then(data => {
+       const countElement = document.getElementById('cart-count1');
+       const countElement2 = document.getElementById('cart-count2');
+        const currentCount = parseInt(countElement.innerText, 10); // Obtener el conteo actual
+        const currentCount2 = parseInt(countElement2.innerText, 10); // Obtener el conteo actual
+        countElement.innerText = currentCount + 1; // Incrementar el contador
+        countElement2.innerText = currentCount2 + 1; // Incrementar el contador
+        alert(data.message); // Ahora muestra el mensaje del servidor
+    })
+    .catch(error => {
+        console.error(error);
+        alert('Hubo un problema al agregar el producto');
+    });
+}
+        function getCookie(name) {
+            const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return cookieValue ? cookieValue.pop() : '';
+        }
+
+</script>
+
+{% endblock %}

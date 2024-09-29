@@ -1,0 +1,54 @@
+
+
+<style>
+.category-img-box {
+    width: 90px; /* Ajusta según tus necesidades */
+    height: 70px; /* Ajusta según tus necesidades */
+    background-size: cover; /* Para que la imagen cubra todo el contenedor */
+    background-position: center; /* Centra la imagen */
+    overflow: hidden; /* Oculta cualquier contenido que sobresalga */
+}
+
+</style>
+
+<div class="category">
+
+    <div class="container">
+
+        <div class="category-item-container has-scrollbar">
+
+            {% for clasification in classifications %}
+                {% if clasification.productos_padre.count > 0 %}
+                    <div class="category-item">
+
+
+                        <div class="category-img-box" style="{% if clasification.image %} background-image: url('{{ clasification.image.url }}'); {% endif %}">
+                            <a href="{% url 'products:list' %}?classification_id_padre={{ clasification.id }}">
+                                <!-- Contenido adicional si es necesario -->
+                            </a>
+                        </div>
+                        
+
+                        <div class="category-content-box">
+
+                            <div class="category-content-flex">
+                                <h3 class="category-item-title">{{ clasification.nombre }}</h3>
+
+                                {% with product_count=clasification.productos_padre.count %}
+                                    <p class="category-item-amount">{{ product_count }}</p>
+                                {% endwith %}
+                            </div>
+
+                            <a href="{% url 'products:list' %}?classification_id_padre={{ clasification.id }}" class="category-btn">Mostrar</a>
+
+                        </div>
+
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>

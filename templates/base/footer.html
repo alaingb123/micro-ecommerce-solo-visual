@@ -1,0 +1,304 @@
+<footer class="bg-white rounded shadow-sm mt-3 mb-4">
+   <!--- <div class="container d-flex justify-content-between align-items-center py-3">
+        <span class="text-muted" style="font-size: 14px;">
+            © 2023 <a href="/static" class="text-decoration-underline text-primary">Micro eCommerce</a>. All Rights Reserved.
+        </span>
+        <ul class="nav list-unstyled flex-wrap mb-0" style="font-size: 14px; color: #6b7280;">
+            <li class="nav-item me-3">
+                <a href="#" class="nav-link text-muted" onmouseover="this.style.color='#0056b3'" onmouseout="this.style.color='#6b7280'">About</a>
+            </li>
+            <li class="nav-item me-3">
+                <a href="#" class="nav-link text-muted" onmouseover="this.style.color='#0056b3'" onmouseout="this.style.color='#6b7280'">Privacy Policy</a>
+            </li>
+            <li class="nav-item me-3">
+                <a href="#" class="nav-link text-muted" onmouseover="this.style.color='#0056b3'" onmouseout="this.style.color='#6b7280'">Licensing</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link text-muted" onmouseover="this.style.color='#0056b3'" onmouseout="this.style.color='#6b7280'">Contact</a>
+            </li>
+        </ul>
+    </div>-->
+
+
+
+    <div class="footer-category">
+{% if classifications %}
+        <div class="container">
+
+          <h2 class="footer-category-title">Directorio</h2>
+
+
+{% for classification in classifications %}
+    {% if classification.productos_padre.count > 0 %}
+  
+          <div class="footer-category-box">
+  
+         <a href="{% url 'products:list' %}?classification_id_padre={{ classification.id }}" > <h3 class="category-box-title">{{ classification.nombre }} :</h3> </a>
+
+              {% if not classification.parent %}
+            {% if classification.hijos.all %}
+                {% for child_classification in classification.hijos.all %}
+                {% if child_classification.pro.exists %}
+            <a href="{% url 'products:list' %}?classification_id={{ child_classification.id }}" class="footer-category-link">{{ child_classification.nombre }}</a>
+
+                    {% endif %}
+                {% endfor %}
+                 {% endif %}
+                   {% endif %}
+
+
+  
+          </div>
+
+        {% endif %}
+        {% endfor %}
+  
+
+
+        </div>
+  {% endif %}
+      </div>
+
+      <div class="footer-nav">
+  
+        <div class="container">
+  
+          <ul class="footer-nav-list">
+  
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Popular Categories</h2>
+            </li>
+  
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Fashion</a>
+            </li>
+  
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Electronic</a>
+            </li>
+  
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Cosmetic</a>
+            </li>
+  
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Health</a>
+            </li>
+  
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Watches</a>
+            </li>
+  
+          </ul>
+  
+          <ul class="footer-nav-list">
+          
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Products</h2>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Prices drop</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">New products</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Best sales</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Contact us</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Sitemap</a>
+            </li>
+          
+          </ul>
+  
+          <ul class="footer-nav-list">
+          
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Our Company</h2>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Delivery</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Legal Notice</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Terms and conditions</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">About us</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Secure payment</a>
+            </li>
+          
+          </ul>
+  
+          <ul class="footer-nav-list">
+          
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Services</h2>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Prices drop</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">New products</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Best sales</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Contact us</a>
+            </li>
+          
+            <li class="footer-nav-item">
+              <a href="#" class="footer-nav-link">Sitemap</a>
+            </li>
+          
+          </ul>
+  
+          <ul class="footer-nav-list">
+  
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Contact</h2>
+            </li>
+  
+            <li class="footer-nav-item flex">
+              <div class="icon-box">
+                <ion-icon name="location-outline"></ion-icon>
+              </div>
+  
+              <address class="content">
+                Dirección
+              </address>
+            </li>
+  
+            <li class="footer-nav-item flex">
+              <div class="icon-box">
+                <ion-icon name="call-outline"></ion-icon>
+              </div>
+  
+              <a href="tel:+607936-8058" class="footer-nav-link">(555) 555-5555</a>
+            </li>
+  
+            <li class="footer-nav-item flex">
+              <div class="icon-box">
+                <ion-icon name="mail-outline"></ion-icon>
+              </div>
+  
+              <a href="mailto:example@gmail.com" class="footer-nav-link">example@gmail.com</a>
+            </li>
+  
+          </ul>
+  
+          <ul class="footer-nav-list">
+  
+            <li class="footer-nav-item">
+              <h2 class="nav-title">Follow Us</h2>
+            </li>
+  
+            <li>
+              <ul class="social-link">
+  
+                <li class="footer-nav-item">
+                  <a href="#" class="footer-nav-link">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                  </a>
+                </li>
+  
+                <li class="footer-nav-item">
+                  <a href="#" class="footer-nav-link">
+                    <ion-icon name="logo-twitter"></ion-icon>
+                  </a>
+                </li>
+  
+                <li class="footer-nav-item">
+                  <a href="#" class="footer-nav-link">
+                    <ion-icon name="logo-linkedin"></ion-icon>
+                  </a>
+                </li>
+  
+                <li class="footer-nav-item">
+                  <a href="#" class="footer-nav-link">
+                    <ion-icon name="logo-instagram"></ion-icon>
+                  </a>
+                </li>
+  
+              </ul>
+            </li>
+  
+          </ul>
+  
+        </div>
+  
+      </div>
+  
+      <div class="footer-bottom">
+  
+        <div class="container">
+
+{% load static %}
+  
+           <img class="payment-method" src="{% static 'img/metodos/1.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/2.png'%}" alt="payment method">
+          <img class="payment-method" src="{% static 'img/metodos/3.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/4.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/5.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/6.png'%}" alt="payment method">
+          <img class="payment-method" src="{% static 'img/metodos/7.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/8.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/9.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/10.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/11.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/12.png'%}" alt="payment method">
+           <img class="payment-method" src="{% static 'img/metodos/13.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/14.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/15.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/16.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/17.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/18.png'%}" alt="payment method">
+          <img class="payment-method" src="{% static 'img/metodos/19.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/20.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/21.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/22.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/23.png'%}" alt="payment method">
+        <img class="payment-method" src="{% static 'img/metodos/24.png'%}" alt="payment method">
+
+
+          <p class="copyright">
+            Copyright &copy; <a href="#">E-commerce</a> all rights reserved.
+          </p>
+  
+        </div>
+  
+      </div>
+  
+    </footer>
+
+<style>
+.payment-method {
+    display: inline-block; /* Muestra las imágenes en línea */
+    margin-right: 10px; /* Ajusta el margen derecho según sea necesario */
+    /* Agrega más estilos específicos para las imágenes de los métodos de pago aquí */
+}
+
+</style>
+

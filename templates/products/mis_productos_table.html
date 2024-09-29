@@ -1,0 +1,505 @@
+{% extends "../base.html" %}
+
+{% block content %}
+<style>
+
+
+.card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #f9fafb;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-item {
+    color: #6b7280;
+}
+
+.count, .total {
+    font-weight: bold;
+}
+
+.card-actions {
+    display: flex;
+}
+.card-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px; /* Reducir el padding */
+    font-size: 12px;   /* Reducir el tamaño de la fuente */
+    font-weight: 500;
+    border-radius: 5px;
+    margin-left: 5px;  /* Reducir el margen entre botones */
+    text-decoration: none;
+}
+
+.card-actions .icon {
+    width: 16px;  /* Reducir el tamaño de los íconos */
+    height: 16px;
+    margin-right: 4px; /* Mantener un pequeño margen entre el ícono y el texto */
+}
+
+
+
+:root {
+    
+        --salmon-pink: hsl(353, 100%, 78%);
+    
+    }
+    
+
+.btn-primary {
+    color: white;
+    background-color: var(--salmon-pink);
+}
+
+.btn-primary:hover {
+    background-color: black;
+}
+
+.btn-secondary {
+    color: #111827;
+    background-color: white;
+    border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+    background-color: #f3f4f6;
+}
+
+.btn-export {
+    color: #111827;
+    background-color: white;
+    border: 1px solid #d1d5db;
+}
+
+.filter-container {
+    display: flex;
+    gap: 20px;
+}
+
+.search-container {
+    flex: 1;
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    color: #111827;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+}
+
+.category-container {
+    flex: 1;
+}
+
+.category-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    color: #111827;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+}
+
+.product-table {
+    width: 100%;
+    font-size: 14px;
+    text-align: left;
+    color: #6b7280;
+    margin-top: 20px;
+}
+
+.product-table th {
+    background-color: #f3f4f6;
+    color: #374151;
+    text-transform: uppercase;
+    padding: 10px;
+}
+
+.product-row {
+    border-bottom: 1px solid #ced4da;
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.product-name {
+    display: flex;
+    align-items: center;
+}
+
+.product-image {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.category-cell {
+    padding: 12px;
+}
+
+.category-badge {
+    background-color: #e2f2ff;
+    color: var(--salmon-pink);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.stock-info {
+    display: flex;
+    align-items: center;
+}
+
+.stock-indicator {
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    border-radius: 50%;
+}
+
+.sales-info {
+    display: flex;
+    align-items: center;
+}
+
+.sales-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+    color: #6c757d;
+}
+
+.status-active {
+    background-color: #28a745;
+    color: #fff;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.status-inactive {
+    background-color: #dc3545;
+    color: #fff;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+}
+
+.pagination-info {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6c757d;
+}
+
+.pagination-count,
+.pagination-total {
+    font-weight: 600;
+    color: #212529;
+}
+
+.pagination-list {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.pagination-link {
+    padding: 8px 12px;
+    color: #6c757d;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.pagination-link.active {
+    font-weight: 400;
+    color: var(--salmon-pink);
+    background-color: #e2f2ff;
+}
+
+.pagination-icon {
+    width: 20px;
+    height: 20px;
+}
+
+
+
+/* Para pantallas pequeñas */
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-item {
+    margin-bottom: 10px;
+  }
+
+  .card-actions {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  /* Hacer que la tabla se desplace horizontalmente */
+  .product-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Ajustar la búsqueda y el selector de categoría en una columna */
+  .filter-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .category-container, .search-container {
+    width: 100%;
+  }
+
+  /* Ajustar la tabla en modo tarjetas para pantallas muy pequeñas */
+  .product-row {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fff;
+  }
+
+  .product-name, .category-cell, .stock-info, .sales-info {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .product-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  /* Ocultar elementos de la tabla menos importantes en pantallas muy pequeñas */
+  .product-table th:nth-child(4), /* Precio */
+  .product-table th:nth-child(5), /* Stock */
+  .product-table th:nth-child(6), /* Ventas/Día */
+  .product-table th:nth-child(7), /* Ventas/Mes */
+  .product-table th:nth-child(8), /* Ventas */
+  .product-table th:nth-child(9), /* Ingresos */
+  .product-table th:nth-child(10), /* Estado */
+  .product-table th:nth-child(11), /* Última Actualización */
+  .product-table td:nth-child(4),
+  .product-table td:nth-child(5),
+  .product-table td:nth-child(6),
+  .product-table td:nth-child(7),
+  .product-table td:nth-child(8),
+  .product-table td:nth-child(9),
+  .product-table td:nth-child(10),
+  .product-table td:nth-child(11) {
+    display: none;
+  }
+
+  /* Paginación centrada y ajustada para pantallas pequeñas */
+  .pagination {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pagination-list {
+    gap: 5px;
+  }
+}
+
+
+</style>
+<section>
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <div class="header-item">
+            <h5>Mis Productos:</h5>
+            <h5 class="count">{{ productos.paginator.count }}</h5>
+          </div>
+          <div class="header-item">
+            <h5>Ingreso Total:</h5>
+            <h5 class="total">${{ total_sales|floatformat:2 }}</h5>
+          </div>
+          <div class="card-actions">
+            <a href="{% url 'products:create' %}" class="btn btn-primary">
+              <svg class="icon" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+              </svg>
+              Nuevo Producto
+            </a>
+            <a href="{% url 'products:mis_productos' %}" class="btn btn-secondary">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+              Actualizar stocks
+            </a>
+            <button type="button" class="btn btn-export">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+              Export
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="filter-container">
+            <div class="search-container">
+              <label for="search-input" style="display: none;">Buscar</label>
+              <div class="search-wrapper">
+                <input type="text" id="search-input" name="search_term" class="search-input" placeholder="Buscar producto">
+              </div>
+            </div>
+            <div class="category-container">
+              <label for="category-select" style="display: none;">Categoría</label>
+              <select id="category-select" class="category-select">
+                <option value="">Todas las categorías</option>
+                {% for category in categories %}
+                  <option value="{{ category.name }}">{{ category.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th>
+                  <input id="checkbox-all" type="checkbox" class="checkbox-all" />
+                </th>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Ventas/Día</th>
+                <th>Ventas/Mes</th>
+                <th>Ventas</th>
+                <th>Ingresos</th> <!-- Cambié este encabezado aquí -->
+                <th>Estado</th> <!-- Este encabezado debería estar después de "Ingresos" -->
+                <th>Última Actualización</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for producto in productos %}
+                <tr class="product-row" data-href="{% url 'products:manage' producto.handle %}">
+                  <td>
+                    <input id="checkbox-table-search-1" type="checkbox" onclick="event.stopPropagation()" class="checkbox-table" />
+
+                  </td>
+                  <th scope="row" class="product-name">
+                      {% if producto.image %}
+                    <img src="{{ producto.image.url }}" alt="{{ producto.name }}" class="product-image">
+                      {% endif %}
+                    <a href="{% url 'products:manage' producto.handle %}">{{ producto.name }}</a>
+                  </th>
+                  <td >
+
+                      <span class="category-badge">{{ producto.clasificaciones_padre }}</span>
+
+                  </td>
+                  <td>${{ producto.price }}</td>
+                  <td>
+                    <div class="stock-info">
+                      <div class="stock-indicator" style="background-color: {% if producto.porcentaje < 50 %} #48bb78 {% elif producto.porcentaje > 50 and producto.porcentaje <= 95 %} #facc15 {% else %} #f56565 {% endif %};"></div>
+                      {{ producto.supply }}
+                    </div>
+                  </td>
+                  <td>{{ producto.ventas_dia|floatformat:2 }}</td>
+                  <td>{{ producto.ventas_mes|floatformat:2 }}</td>
+                  <td>
+                    <div class="sales-info">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="sales-icon">
+                        <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
+                      </svg>
+                      {{ producto.cantidad }}
+                    </div>
+                  </td>
+                  <td>${{ producto.total_sales|floatformat:2 }}</td>
+                  <td>
+                    {% if producto.active %}
+                      <span class="status-active">Activo</span>
+                    {% else %}
+                      <span class="status-inactive">Inactivo</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ producto.updated|date:"d. M, Y" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          
+        </div>
+
+        <nav class="pagination">
+          <span class="pagination-info">
+            Mostrando
+            <span class="pagination-count">{{ productos.start_index }}-{{ productos.end_index }}</span>
+            de
+            <span class="pagination-total">{{ productos.paginator.count }}</span>
+          </span>
+          <ul class="pagination-list">
+            {% if productos.has_previous %}
+              <li>
+                <a href="?page={{ productos.previous_page_number }}" class="pagination-link">
+                  <span class="sr-only">Previous</span>
+                  <svg class="pagination-icon" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </a>
+              </li>
+            {% endif %}
+
+            {% for page_num in productos.paginator.page_range %}
+              <li>
+                {% if page_num == productos.number %}
+                  <a href="?page={{ page_num }}" class="pagination-link active">{{ page_num }}</a>
+                {% else %}
+                  <a href="?page={{ page_num }}" class="pagination-link">{{ page_num }}</a>
+                {% endif %}
+              </li>
+            {% endfor %}
+
+            {% if productos.has_next %}
+              <li>
+                <a href="?page={{ productos.next_page_number }}" class="pagination-link">
+                  <span class="sr-only">Next</span>
+                  <svg class="pagination-icon" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+</section>
+
+{% load static %}
+<script src="{% static 'js/productos/mis_productos_table.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'css/productos/mis_productos.css' %}">
+{%endblock%}

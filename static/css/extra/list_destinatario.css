@@ -1,0 +1,151 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4; /* Color de fondo suave */
+    color: #333;
+    margin: 0;
+    padding: 20px; /* Padding alrededor del contenido */
+}
+
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px; /* Espacio debajo de la barra de búsqueda */
+}
+
+.search-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 300px;
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #4CAF50; /* Color de borde al enfocar */
+    outline: none; /* Elimina el contorno */
+}
+
+.search-button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #45a049;
+}
+
+.add-button {
+    display: block;
+    margin: 20px auto; /* Margen superior e inferior */
+    padding: 10px 20px;
+    background-color: #3498db; /* Color azul */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+    background-color: #2980b9; /* Azul más oscuro */
+}
+
+.destinatarios-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Apila los cards verticalmente */
+    align-items: center; /* Centra los cards */
+}
+
+.card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px 0; /* Espacio entre los cards */
+    width: 90%; /* Ocupa el 90% del contenedor */
+    max-width: 350px; /* Ancho máximo del card */
+    transition: transform 0.2s ease; /* Transición para el efecto hover */
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Levanta el card al pasar el ratón */
+}
+
+.card h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #2c3e50; /* Color del texto */
+}
+
+.card p {
+    color: #666; /* Color de texto más suave para descripciones */
+}
+
+.purchase-button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #e67e22; /* Color naranja */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.purchase-button:hover {
+    background-color: #d35400; /* Naranja más oscuro */
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between; /* Espacio entre botones */
+    margin-top: 10px;
+}
+
+.edit-button, .delete-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.edit-button:hover {
+    background-color: #45a049;
+}
+
+.delete-button {
+    background-color: #e74c3c; /* Color rojo */
+}
+
+.delete-button:hover {
+    background-color: #c0392b; /* Rojo más oscuro */
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 480px) {
+    .card {
+        width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+    }
+}
