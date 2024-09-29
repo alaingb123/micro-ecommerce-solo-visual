@@ -64,11 +64,11 @@
 {#      </select>#}
 {#      {% endif %}#}
 
-       {% if request.user.username %}
-
-
-              <a class="form-select" href="{% url 'pedidos_stripe:purchases_stripe' %}" style="font-size: 14px;color: gray;">PEDIDOS</a>
-      {% endif %}
+{#       {% if request.user.username %}#}
+{##}
+{##}
+{#              <a class="form-select" href="{% url 'pedidos_stripe:purchases_stripe' %}" style="font-size: 14px;color: gray;">PEDIDOS</a>#}
+{#      {% endif %}#}
 
       {% if request.user.usuario.rol.nombre == 'Proveedor' %}
       <select name="pedidos" class="form-select" aria-label="Opciones" onchange="location = this.value;">
@@ -77,7 +77,7 @@
         {% if request.user.usuario.rol.nombre == 'Proveedor' %}
             <option value="{% url 'products:create' %}">Nuevo Producto</option>
             <option value="{% url 'products:mis_productos' %}">Mis Productos</option> 
-            <option value="{% url 'pedidos_stripe:ventas' %}">Ventas</option>
+{#            <option value="{% url 'pedidos_stripe:ventas' %}">Ventas</option>#}
         {% endif %}
     </select>
     {% endif %}
@@ -446,11 +446,11 @@
     </li>
     
  
-      {% if request.user.username %}
-      <li class="menu-category">
-          <a href="{% url 'pedidos_stripe:purchases_stripe' %}" class="menu-title">Pedidos</a>
-      </li>
-  {% endif %}
+{#      {% if request.user.username %}#}
+{#      <li class="menu-category">#}
+{#          <a href="{% url 'pedidos_stripe:purchases_stripe' %}" class="menu-title">Pedidos</a>#}
+{#      </li>#}
+{#  {% endif %}#}
   
     </ul>
 
@@ -474,9 +474,9 @@
               <a href="{% url 'products:mis_productos' %}" class="submenu-title">Mis Productos</a>
             </li>
 
-            <li class="submenu-category">
-              <a href="{% url 'pedidos_stripe:ventas' %}" class="submenu-title">Ventas</a>
-            </li>
+{#            <li class="submenu-category">#}
+{#              <a href="{% url 'pedidos_stripe:ventas' %}" class="submenu-title">Ventas</a>#}
+{#            </li>#}
           </ul>
         </li>
 

@@ -20,7 +20,7 @@ from .form import ProductUpdateForm, ProductAttachmentInlineFormSet, ProductOffe
 from .models import Product, ProductImage, ClasificacionPadre, ProductView, Rating, ProductOffer, Rating_product, Likes, \
     ClasificacionHija
 
-from pedidos_stripe.models import SolicitudStripeItem
+
 from django.db.models import Sum, Count
 from django.utils import timezone
 from datetime import datetime, timedelta
@@ -48,15 +48,6 @@ def product_create_view(request):
                     if not hasattr(obj, 'rating_product'):
                         Rating_product.objects.create(product=obj)
                     form.save_m2m()
-                except APIConnectionError:
-                    # Manejo de error de conexión con Stripe
-                    conexion_error = 'Error de conexión con Stripe. Por favor, intenta más tarde.'
-                    context = {
-                        'conexion_error':conexion_error,
-                        'form':form
-                    }
-                    return render(request, 'products/create.html', context )
-
                 except Exception as e:
                     # Manejo de otras excepciones
                     conexion_error =  f'Ocurrió un error inesperado: {str(e)}'
@@ -100,10 +91,10 @@ def product_list_view(request,provider_id=None,promotion_id=None):
 
 
     # productos mas vendidos
-    top_products = (
-        Product.objects.filter(active=True).annotate(total_sold=Sum('solicitudstripeitem__quantity'))
-        .order_by('-total_sold')[:10]
-    )
+    # top_products = (
+    #     Product.objects.filter(active=True).annotate(total_sold=Sum('solicitudstripeitem__quantity'))
+    #     .order_by('-total_sold')[:10]
+    # )
     #------------------------------------------------------------------------------
 
 
@@ -218,7 +209,7 @@ def product_list_view(request,provider_id=None,promotion_id=None):
         'carro': carro,
         'classifications': classifications,
         'promociones': promociones,
-        'top_products': top_products,
+        # 'top_products': top_products,
         'new_products': new_products,
         'trending_products': trending_products,
         'top_rated': top_rated,
@@ -389,29 +380,29 @@ def mis_productos_table(request):
 
 
 
-    ventas = SolicitudStripeItem.objects.filter(product__in=productos,solicitud__completed=True)
+    # ventas = SolicitudStripeItem.objects.filter(product__in=productos,solicitud__completed=True)
 
-    total_sales = ventas.aggregate(
-        total=Sum('total_price')
-    )['total'] or 0
+    # total_sales = ventas.aggregate(
+    #     total=Sum('total_price')
+    # )['total'] or 0
 
     product_sales = {}
     product_quantities = {}
     ventas_dia= {}
 
-    for product in productos:
-        #ingreso total de las ventasd de un producto
-        product_ventas = SolicitudStripeItem.objects.filter(product=product, solicitud__completed=True).aggregate(
-            total_price=Sum('total_price')
-        )
-        #cantidad de productos vendidos
-        product_cantidad = SolicitudStripeItem.objects.filter(product=product, solicitud__completed=True).aggregate(
-            quantity=Sum('quantity')
-        )
-
-
-        product_sales[product.id] = product_ventas['total_price'] or 0
-        product_quantities[product.id] = product_cantidad['quantity'] or 0
+    # for product in productos:
+    #     #ingreso total de las ventasd de un producto
+    #     product_ventas = SolicitudStripeItem.objects.filter(product=product, solicitud__completed=True).aggregate(
+    #         total_price=Sum('total_price')
+    #     )
+    #     #cantidad de productos vendidos
+    #     product_cantidad = SolicitudStripeItem.objects.filter(product=product, solicitud__completed=True).aggregate(
+    #         quantity=Sum('quantity')
+    #     )
+    #
+    #
+    #     product_sales[product.id] = product_ventas['total_price'] or 0
+    #     product_quantities[product.id] = product_cantidad['quantity'] or 0
 
     for product in page_solicitudes:
         product.total_sales = product_sales.get(product.id, 0)
@@ -450,24 +441,24 @@ def mis_productos_table(request):
     context = {
         'productos': page_solicitudes,
         'carro': carro,
-        'total_sales': total_sales,
+        # 'total_sales': total_sales,
     }
     return render(request, 'products/mis_productos_table.html',context)
 
 
 
-def get_monthly_sales(product):
-    today = timezone.now().date()
-    start_of_month = datetime(today.year, today.month, 1).date()
-    monthly_sales = SolicitudStripeItem.objects.filter(
-        product=product,
-        solicitud__completed=True,
-        solicitud__timestamp__date__gte=start_of_month
-    ).aggregate(
-        total_quantity=Sum('quantity')
-    )
-    print(monthly_sales["total_quantity"])
-    return monthly_sales
+# def get_monthly_sales(product):
+#     today = timezone.now().date()
+#     start_of_month = datetime(today.year, today.month, 1).date()
+#     monthly_sales = SolicitudStripeItem.objects.filter(
+#         product=product,
+#         solicitud__completed=True,
+#         solicitud__timestamp__date__gte=start_of_month
+#     ).aggregate(
+#         total_quantity=Sum('quantity')
+#     )
+#     print(monthly_sales["total_quantity"])
+#     return monthly_sales
 
 #
 # @csrf_exempt

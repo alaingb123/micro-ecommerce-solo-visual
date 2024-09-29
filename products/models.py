@@ -92,29 +92,7 @@ class Product(models.Model):
 
 
     def save(self, *args, **kwargs):
-        if self.name:
-            stripe_product_r = stripe.Product.create(name=self.name)
-            self.stripe_product_id = stripe_product_r.id
-        if not self.stripe_price_id:
-            stripe_price_obj = stripe.Price.create(
-                product=self.stripe_product_id,
-                unit_amount=self.stripe_price,
-                currency="usd",
-            )
-            self.stripe_price_id = stripe_price_obj.id
-        if self.price != self.og_price:
-            # price changed
-            self.og_price = self.price
-            # trigger an API request for the price
-            self.stripe_price = int(self.price * 100)
-            if self.stripe_product_id:
-                stripe_price_obj = stripe.Price.create(
-                    product=self.stripe_product_id,
-                    unit_amount=self.stripe_price,
-                    currency="usd",
-                )
-                self.stripe_price_id = stripe_price_obj.id
-            self.price_changed_timestamp = timezone.now()
+        self.price_changed_timestamp = timezone.now()
         if self.keywords:
             self.keywords = ', '.join([keyword.strip().lower() for keyword in self.keywords.split(',')])
         super().save(*args, **kwargs)
