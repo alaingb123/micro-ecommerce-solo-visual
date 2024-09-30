@@ -228,6 +228,7 @@ def product_manage_detail_view(request,handle=None):
     obj = get_object_or_404(Product,handle=handle)
     # attachments = ProductImage.objects.filter(product=obj)
     is_manager = False
+    clasificacion_hija = None
 
     if request.user.is_authenticated:
         is_manager = obj.user == request.user
@@ -239,15 +240,24 @@ def product_manage_detail_view(request,handle=None):
 
     # formset = ProductAttachmentInlineFormSet(request.POST or None,request.FILES or None,queryset=attachments)
     if request.method == 'POST':
-        clasi = int(request.POST.get('clasificacion'))
-        clasificacion_hija = ClasificacionHija.objects.get(id=clasi)
+        if request.POST.get('clasificacion'):
+            clasi = int(request.POST.get('clasificacion'))
+            clasificacion_hija = ClasificacionHija.objects.get(id=clasi)
         if form.is_valid():
             instance = form.save(commit=False)
-            print("el form es valido")
+            try:
+                price_changed = instance.price != obj.offer.precio_viejo  # Compara el nuevo precio con el actual
+                if price_changed and obj.offer:  # Suponiendo que tienes un método para verificar ofertas
+                    context['conexion_error'] = 'Debes eliminar la oferta activa antes de cambiar el precio.'
+                    context['form'] = form
+                    return render(request, 'products/manager.html', context)
+            except:
+                pass
             try:
                 instance.save()
                 instance.clasificacion.clear()
-                instance.clasificacion.add(clasificacion_hija)
+                if clasificacion_hija:
+                    instance.clasificacion.add(clasificacion_hija)
                 instance.save()
                 form.save_m2m()  # Guarda las relaciones ManyToMany
             except APIConnectionError:
