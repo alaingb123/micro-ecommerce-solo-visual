@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Listado de Ventas</h1>
+
+    <form method="GET" class="filter-form">
+        {{ form.as_p }}
+        <div class="button-group">
+            <button type="submit" class="btn">Filtrar</button>
+            <a href="{% url 'ventas:listar_ventas' %}" class="btn btn-clear">Limpiar filtro</a>
+        </div>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Total Venta</th>
+                <th>Fecha de Venta</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venta in ventas %}
+                <tr>
+                    <td>{{ venta.producto.name }}</td>
+                    <td>{{ venta.cantidad }}</td>
+                    <td>${{ venta.precio }}</td>
+                    <td>${{ venta.total_venta }}</td>
+                    <td>{{ venta.fecha_venta|date:"d. M, Y" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No hay ventas disponibles.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Paginación -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if ventas.has_previous %}
+                <a href="?page=1">&laquo; Primera</a>
+                <a href="?page={{ ventas.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            <span class="current">
+                Página {{ ventas.number }} de {{ ventas.paginator.num_pages }}.
+            </span>
+
+            {% if ventas.has_next %}
+                <a href="?page={{ ventas.next_page_number }}">Siguiente</a>
+                <a href="?page={{ ventas.paginator.num_pages }}">Última &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <style>
+        h1 {
+            color: #333;
+        }
+
+        .filter-form {
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-clear {
+            background-color: #6c757d;
+        }
+
+        .btn-clear:hover {
+            background-color: #5a6268;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination .step-links a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .pagination .current {
+            margin: 0 5px;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}

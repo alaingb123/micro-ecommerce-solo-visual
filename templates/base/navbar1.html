@@ -77,7 +77,8 @@
         {% if request.user.usuario.rol.nombre == 'Proveedor' %}
             <option value="{% url 'products:create' %}">Nuevo Producto</option>
             <option value="{% url 'products:mis_productos' %}">Mis Productos</option> 
-{#            <option value="{% url 'pedidos_stripe:ventas' %}">Ventas</option>#}
+            <option value="{% url 'ventas:registrar_ventas' %}">Registrar Ventas</option>
+            <option value="{% url 'ventas:listar_ventas' %}">Listar Ventas</option>
         {% endif %}
     </select>
     {% endif %}
@@ -445,12 +446,12 @@
         {% endfor %}
     </li>
     
- 
-{#      {% if request.user.username %}#}
-{#      <li class="menu-category">#}
-{#          <a href="{% url 'pedidos_stripe:purchases_stripe' %}" class="menu-title">Pedidos</a>#}
-{#      </li>#}
-{#  {% endif %}#}
+
+      {% if request.user.usuario.rol.nombre == 'Proveedor' %}
+      <li class="menu-category">
+          <a href="{% url 'ventas:registrar_ventas' %}" class="menu-title">Ventas</a>
+      </li>
+  {% endif %}
   
     </ul>
 
@@ -475,10 +476,10 @@
             </li>
 
 {#            <li class="submenu-category">#}
-{#              <a href="{% url 'pedidos_stripe:ventas' %}" class="submenu-title">Ventas</a>#}
+{#              <a href="{% url 'ventas:registrar_ventas' %}" class="submenu-title">Ventas</a>#}
 {#            </li>#}
-          </ul>
-        </li>
+{#          </ul>#}
+{#        </li>#}
 
 
 

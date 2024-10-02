@@ -10,11 +10,8 @@ import stripe
 
 from django.utils import timezone
 
-
 # Create your models here.
 
-STRIPE_SECRET_KEY = "sk_test_51PbVREDUVZyD9P5hMx44bCmUwBMlf0xjyLHEGrCliSwPrcyADzuH7RtHmfmtDWacsjoYuUcHgauWBrFTHFZHx6lP00yxOBc8hs"
-stripe.api_key = STRIPE_SECRET_KEY
 
 
 PROTECTED_MEDIA_ROOT = settings.PROTECTED_MEDIA_ROOT
@@ -76,8 +73,14 @@ class Product(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    def total_ingresos(self):
+        return sum(venta.total_venta() for venta in self.venta_set.all())
     def usuarios_que_dieron_like(self):
         return [like.user for like in self.like.all()]
+
+    def total_ventas(self):
+        return Venta.objects.filter(producto=self).aggregate(total=models.Sum('cantidad')).get('total',
+                                                                                               0)  # Devuelve 0 si no hay ventas
 
     @property
     def display_name(self):
@@ -155,7 +158,7 @@ class ProductOffer(models.Model):
 
     def is_offer_active(self):
         now = timezone.now()
-        print(self.product)
+
         if self.start_date <= now and (self.end_date is None or self.end_date >= now) and not self.is_active:
             # La oferta está activa, actualiza los precios del producto
             self.product.price = self.precio_nuevo
@@ -163,22 +166,22 @@ class ProductOffer(models.Model):
             self.save()
             self.is_active = True
             self.save()
-            # print("es true con cambios")
+
             return True
 
         if self.is_active and self.start_date <= now and (self.end_date is None or self.end_date >= now):
-            # print("es true sin cambios")
+
             return True
 
         if self.end_date is not None and self.end_date < now:
             self.product.price = self.precio_viejo
             self.product.save()
             self.delete()
-            # print("es false con cambios")
+
             return False
         self.is_active = False
         self.save()
-        # print("es false sin cambios")
+
         return False
 
     def eliminar_oferta(self):
@@ -247,3 +250,16 @@ class Likes(models.Model):
     class Meta:
         unique_together = ['user', 'product']  # Un usuario solo puede dar like a un producto una vez
 
+
+
+class Venta(models.Model):
+    producto = models.ForeignKey(Product, on_delete=models.CASCADE)
+    precio = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    cantidad = models.PositiveIntegerField()
+    fecha_venta = models.DateTimeField(auto_now_add=True)
+
+    def total_venta(self):
+        return self.cantidad * self.precio
+
+    def __str__(self):
+        return f"Venta de {self.cantidad} unidades de {self.producto.name} el {self.fecha_venta}"

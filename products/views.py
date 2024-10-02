@@ -18,8 +18,7 @@ from usuario.decorator import role_required
 # Create your views here.
 from .form import ProductUpdateForm, ProductAttachmentInlineFormSet, ProductOfferForm, ProductForm
 from .models import Product, ProductImage, ClasificacionPadre, ProductView, Rating, ProductOffer, Rating_product, Likes, \
-    ClasificacionHija
-
+    ClasificacionHija, Venta
 
 from django.db.models import Sum, Count
 from django.utils import timezone
@@ -373,6 +372,7 @@ def product_attachment_download_view(request,handle=None,pk=None):
 def mis_productos_table(request):
     today = timezone.now().date()
     carro = Carro(request)
+    total_sales = 0
 
     productos = Product.objects.filter(user=request.user)
 
@@ -389,39 +389,13 @@ def mis_productos_table(request):
         page_solicitudes = paginator.page(paginator.num_pages)
 
 
-
-    # ventas = SolicitudStripeItem.objects.filter(product__in=productos,solicitud__completed=True)
-
-    # total_sales = ventas.aggregate(
-    #     total=Sum('total_price')
-    # )['total'] or 0
-
-    product_sales = {}
-    product_quantities = {}
-    ventas_dia= {}
-
-    # for product in productos:
-    #     #ingreso total de las ventasd de un producto
-    #     product_ventas = SolicitudStripeItem.objects.filter(product=product, solicitud__completed=True).aggregate(
-    #         total_price=Sum('total_price')
-    #     )
-    #     #cantidad de productos vendidos
-    #     product_cantidad = SolicitudStripeItem.objects.filter(product=product, solicitud__completed=True).aggregate(
-    #         quantity=Sum('quantity')
-    #     )
-    #
-    #
-    #     product_sales[product.id] = product_ventas['total_price'] or 0
-    #     product_quantities[product.id] = product_cantidad['quantity'] or 0
-
     for product in page_solicitudes:
-        product.total_sales = product_sales.get(product.id, 0)
-        product.cantidad = product_quantities.get(product.id, 0)
-
         # promedio de ventas al dia de un producto
+        # print(product.total_ventas())
+        total_sales= product.total_ingresos() + total_sales
         days_in_circulation = int((today - product.timestamp.date()).days)
         try:
-            ventas_por_dias = product.cantidad / days_in_circulation
+            ventas_por_dias = product.total_ventas() / days_in_circulation
         except:
             ventas_por_dias = 0
 
@@ -435,7 +409,7 @@ def mis_productos_table(request):
         try:
             if meses_en_circulacion < 1:
                 meses_en_circulacion=1
-            ventas_mes = product.cantidad / meses_en_circulacion
+            ventas_mes = product.total_ventas() / meses_en_circulacion
         except:
             ventas_mes=0
 
@@ -447,11 +421,12 @@ def mis_productos_table(request):
             porcentaje = 0
 
         product.porcentaje = int(porcentaje)
+        print(product.ventas_dia)
 
     context = {
         'productos': page_solicitudes,
         'carro': carro,
-        # 'total_sales': total_sales,
+        'total_sales': total_sales,
     }
     return render(request, 'products/mis_productos_table.html',context)
 
@@ -542,16 +517,16 @@ def crear_oferta(request, product_id):
 @role_required(['Proveedor'])
 def eliminar_oferta(request,product_id):
     product = Product.objects.get(id=product_id)
-    print(product)
+
     if request.method == 'POST':
-        print("el metodo es post")
+
         if request.user == product.user:
-            print("el usuario es el que es")
+
             try:
-                print("la oferta se va a eliminar")
+
                 product.offer.eliminar_oferta()
             except:
-                print("la oferta no se elimino")
+
                 return redirect('products:detail', handle=product.handle)
         else:
             return redirect('products:detail', handle=product.handle)
