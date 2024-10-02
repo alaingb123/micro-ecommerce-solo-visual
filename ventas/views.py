@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 
 from products.models import Product, Venta
@@ -51,6 +52,7 @@ def ventas_exitosas(request):
 def listar_ventas(request):
     # Obtener las ventas del usuario autenticado
     ventas = Venta.objects.filter(producto__user=request.user, producto__active=True).order_by('-fecha_venta')
+    total_sales=0
 
     # Filtrado por producto y fecha
     form = VentaFilterForm(request.GET or None, user=request.user)
@@ -60,25 +62,17 @@ def listar_ventas(request):
         fecha_fin = form.cleaned_data.get('fecha_fin')
 
         if producto:
-            # Asegúrate de que el producto pertenece al usuario
             if producto.user == request.user:
                 ventas = ventas.filter(producto=producto)
             else:
-                ventas = ventas.none()  # No hay ventas si el producto no pertenece al usuario
+                ventas = ventas.none()
 
         if fecha_inicio and fecha_fin:
             ventas = ventas.filter(fecha_venta__range=[fecha_inicio, fecha_fin])
 
-    # Paginación
-    paginator = Paginator(ventas, 10)  # 10 ventas por página
-    page_number = request.GET.get('page')  # Obtener el número de página de la consulta
-    try:
-        ventas_paginated = paginator.page(page_number)
-    except PageNotAnInteger:
-        # Si no es un número entero, mostrar la primera página
-        ventas_paginated = paginator.page(1)
-    except EmptyPage:
-        # Si la página está fuera de rango, mostrar la última página
-        ventas_paginated = paginator.page(paginator.num_pages)
+    for venta in ventas:
+        total_sales = total_sales + venta.producto.total_ingresos()
+        print(":el prodiucto es : ",venta.producto.name, " ", venta.producto.total_ventas())
 
-    return render(request, 'ventas/listar_ventas.html', {'ventas': ventas_paginated, 'form': form})
+
+    return render(request, 'ventas/listar_ventas.html', {'ventas': ventas, 'form': form, 'total_sales': total_sales})

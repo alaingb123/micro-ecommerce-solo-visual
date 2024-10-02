@@ -11,6 +11,10 @@
         </div>
     </form>
 
+    <div class="total-sales">
+        <h2>Total de Ventas: ${{ total_sales|floatformat:2 }}</h2>
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -60,6 +64,12 @@
     <style>
         h1 {
             color: #333;
+        }
+
+        .total-sales {
+            margin: 20px 0;
+            font-size: 1.5em;
+            font-weight: bold;
         }
 
         .filter-form {
