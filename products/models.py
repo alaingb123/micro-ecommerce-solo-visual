@@ -79,8 +79,12 @@ class Product(models.Model):
         return [like.user for like in self.like.all()]
 
     def total_ventas(self):
-        return Venta.objects.filter(producto=self).aggregate(total=models.Sum('cantidad')).get('total',
-                                                                                               0)  # Devuelve 0 si no hay ventas
+        ventas = Venta.objects.filter(producto=self).aggregate(total=models.Sum('cantidad')).get('total', 0)
+        cero = 0
+        if ventas:
+            return ventas
+        else:
+            return cero
 
     @property
     def display_name(self):

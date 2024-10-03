@@ -90,11 +90,10 @@ def product_list_view(request,provider_id=None,promotion_id=None):
 
 
     # productos mas vendidos
-    # top_products = (
-    #     Product.objects.filter(active=True).annotate(total_sold=Sum('solicitudstripeitem__quantity'))
-    #     .order_by('-total_sold')[:10]
-    # )
-    #------------------------------------------------------------------------------
+
+
+    top_productos = sorted(object_list, key=lambda p: p.total_ventas(), reverse=True)[:5]
+    # ------------------------------------------------------------------------------
 
 
 
@@ -208,7 +207,7 @@ def product_list_view(request,provider_id=None,promotion_id=None):
         'carro': carro,
         'classifications': classifications,
         'promociones': promociones,
-        # 'top_products': top_products,
+        'top_products': top_productos,
         'new_products': new_products,
         'trending_products': trending_products,
         'top_rated': top_rated,
