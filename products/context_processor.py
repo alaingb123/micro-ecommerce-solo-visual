@@ -1,3 +1,4 @@
+from extra.models import StoreSettings
 from products.models import Product
 
 
@@ -9,7 +10,12 @@ def cantidad_like(request):
         cantidad_like = liked_products.count()
     else:
         cantidad_like=0
-    return {'cantidad_like': cantidad_like}
+
+    settings = StoreSettings.get_instance()
+    return {
+        'cantidad_like': cantidad_like,
+        'store_settings': settings
+    }
 
 
 

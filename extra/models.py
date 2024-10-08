@@ -75,3 +75,24 @@ class Promocion(models.Model):
 
 class PromocionText(models.Model):
     texto = models.CharField(max_length=255)
+
+
+
+class StoreSettings(models.Model):
+    header_text = models.CharField(max_length=255)
+    is_open = models.BooleanField(default=False)
+    facebook_link = models.URLField(max_length=200, blank=True, null=True)
+    linkedin_link = models.URLField(max_length=200, blank=True, null=True)
+    instagram_link = models.URLField(max_length=200, blank=True, null=True)
+    twitter_link = models.URLField(max_length=200, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    email = models.EmailField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.header_text
+
+    @classmethod
+    def get_instance(cls):
+        instance, created = cls.objects.get_or_create(id=1)
+        return instance

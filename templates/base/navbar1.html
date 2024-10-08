@@ -6,25 +6,25 @@
       <ul class="header-social-container">
 
         <li>
-          <a href="#" class="social-link">
+          <a href="{{ store_settings.facebook_link }}" class="social-link">
             <ion-icon name="logo-facebook"></ion-icon>
           </a>
         </li>
 
         <li>
-          <a href="#" class="social-link">
+          <a href="{{ store_settings.twitter_link}}" class="social-link">
             <ion-icon name="logo-twitter"></ion-icon>
           </a>
         </li>
 
         <li>
-          <a href="#" class="social-link">
+          <a href="{{ store_settings.instagram_link }}" class="social-link">
             <ion-icon name="logo-instagram"></ion-icon>
           </a>
         </li>
 
         <li>
-          <a href="#" class="social-link">
+          <a href="{{ store_settings.linkedin_link }}" class="social-link">
             <ion-icon name="logo-linkedin"></ion-icon>
           </a>
         </li>
@@ -33,8 +33,8 @@
 
       <div class="header-alert-news">
         <p>
-          <b>Envio Gratis!</b>
-          Esta semana para un pedido sobre - $55
+{#          <b>Envio Gratis!</b>#}
+         {{ store_settings.header_text }}
         </p>
       </div>
 
@@ -377,11 +377,12 @@
   <a class="action-btn" href="{% url 'products:list' %}">
       <ion-icon name="home-outline"></ion-icon>
   </a>
-  
+  {% if  request.user.is_authenticated %}
   <a class="action-btn" href="{% url 'products:list' %}?liked_product={{ cantidad_like }}">
       <ion-icon name="heart-outline"></ion-icon>
       <span id="like-count2" class="count">{{ cantidad_like }}</span>
   </a>
+  {% endif %}
 
   
     {% if request.user.is_authenticated %}
@@ -412,6 +413,7 @@
 
       <li class="menu-category">
         <a href="{% url 'products:list' %}" class="menu-title">Home</a>
+
       </li>
 
      
@@ -490,25 +492,26 @@
       <ul class="menu-social-container">
 
         <li>
-          <a href="#" class="social-link">
+
+          <a href="{{ store_settings.facebook_link }}" class="social-link">
             <ion-icon name="logo-facebook"></ion-icon>
           </a>
         </li>
 
         <li>
-          <a href="#" class="social-link">
+          <a href="{{ store_settings.twitter_link}}" class="social-link">
             <ion-icon name="logo-twitter"></ion-icon>
           </a>
         </li>
 
         <li>
-          <a href="#" class="social-link">
+           <a href="{{ store_settings.instagram_link }}" class="social-link">
             <ion-icon name="logo-instagram"></ion-icon>
           </a>
         </li>
 
         <li>
-          <a href="#" class="social-link">
+           <a href="{{ store_settings.linkedin_link }}" class="social-link">
             <ion-icon name="logo-linkedin"></ion-icon>
           </a>
         </li>

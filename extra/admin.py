@@ -1,10 +1,11 @@
 from django.contrib import admin
 
-from extra.models import Municipio, Destinatario, Promocion
+from extra.models import Municipio, Destinatario, Promocion, StoreSettings
 from products.models import Product
 
 # Register your models here.
 admin.site.register(Municipio)
+admin.site.register(StoreSettings)
 
 
 @admin.register(Promocion)

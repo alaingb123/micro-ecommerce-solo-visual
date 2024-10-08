@@ -30,7 +30,7 @@
 }
 
 /* Títulos */
-h2 {
+.titulo {
     color: #333;
     font-size: 2.5rem;
     text-align: center;
@@ -47,14 +47,14 @@ h3 {
     color: #666;
 }
 
-/* Botones */
-button {
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-button:hover {
-    transform: translateY(-2px);
-}
+{#/* Botones */#}
+{#button {#}
+{#    transition: background-color 0.3s, transform 0.2s;#}
+{#}#}
+{##}
+{#button:hover {#}
+{#    transform: translateY(-2px);#}
+{#}#}
 
 /* Estilos de botones específicos */
 .bg-green-500 {
@@ -89,7 +89,7 @@ button:hover {
         width: 100%; /* Asegurar que el contenedor ocupe el ancho completo */
     }
 
-    h2 {
+    .titulo{
         font-size: 2rem;
     }
 
@@ -114,10 +114,10 @@ button:hover {
         width: 100%; /* Asegurar que ocupe el ancho completo */
     }
 
-    button {
-        width: 100%; /* Botones ocupan el ancho completo */
-        height: 40px;
-    }
+    {#button {#}
+    {#    width: 100%; /* Botones ocupan el ancho completo */#}
+    {#    height: 40px;#}
+    {#}#}
 
     .button-container {
         display: flex;
@@ -138,7 +138,7 @@ button:hover {
 
    <div class="container-333">
     <div class="text-center mb-8">
-        <h2 class="mb-4">Carrito de compras</h2>
+        <h2 class="mb-4 titulo">Carrito de compras</h2>
         <p class="font-light text-gray-500 mb-16" style="text-align: center;margin-bottom: 10px">Revisa los productos que has agregado a tu carrito.</p>
 
     </div>

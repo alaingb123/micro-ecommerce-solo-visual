@@ -48,7 +48,7 @@ def product_create_view(request):
                         Rating_product.objects.create(product=obj)
                     form.save_m2m()
                 except Exception as e:
-                    # Manejo de otras excepciones
+                    # Manejo de otras excepciones   
                     conexion_error =  f'Ocurrió un error inesperado: {str(e)}'
                     context = {
                         'conexion_error': conexion_error,
