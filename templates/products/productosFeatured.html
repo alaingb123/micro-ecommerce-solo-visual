@@ -59,9 +59,9 @@
                   {% endif %}
 
                     <div class="price-box">
-                      <p class="price">${{ offer.product.price }}</p>
+                      <p class="price">{{ offer.product.price }} cup</p>
 
-                      <del>${{ offer.precio_viejo }}</del>
+                      <del>{{ offer.precio_viejo }} cup</del>
                     </div>
 <form id="add-to-cart-form2" onsubmit="event.preventDefault(); addToCart({{ offer.product.id }}, 1);">
       {% csrf_token %}

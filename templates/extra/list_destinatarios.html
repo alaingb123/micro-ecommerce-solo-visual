@@ -135,6 +135,16 @@
 <h1 class="page-title">Lista de Destinatarios</h1>
 
 
+       <div class="button-container">
+    <a href="{% url 'extra:crear_destinatario' %}" class="add-button">
+        Agregar
+    </a>
+    <form id="purchase-form" class="purchase-form" method="post" action="">
+        {% csrf_token %}
+        <button type="submit" class="purchase-button" onclick="setPurchaseUrl(event)">Realizar Compra</button>
+    </form>
+</div>
+
 
 <ul id="destinatarios-list" class="destinatarios-list">
     {% for destinatario in destinatarios %}

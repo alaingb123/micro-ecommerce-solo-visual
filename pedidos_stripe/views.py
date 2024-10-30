@@ -211,15 +211,16 @@ def purchase_success_cart_view(request):
         del request.session['purchase_id']
 
         # Enviar email al usuario si tiene
-        if purchase.user.email:
+        if purchase.correo_electronico:
+            print('tiene email')
             context = {
                 "total": purchase.stripe_price,
                 "products": purchase.items.all(),
             }
             html_message = render_to_string('purchases/email/pago_con_exito_stripe.html', context)
             plain_message = strip_tags(html_message)
-            subject_email = "Pago efectuado con exito"
-            user_email = purchase.user.email
+            subject_email = "Compra efectuada con exito"
+            user_email = purchase.correo_electronico
 
             send_mail(
                 subject=subject_email,
@@ -229,6 +230,7 @@ def purchase_success_cart_view(request):
                 html_message=html_message,
                 fail_silently=False,
             )
+            print("el email se envio a ",user_email)
         return HttpResponseRedirect(reverse("pedidos_stripe:purchases_stripe"))
     return HttpResponseRedirect(reverse("products:list"))
 
