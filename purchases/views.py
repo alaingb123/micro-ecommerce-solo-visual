@@ -11,10 +11,11 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from carro.carro import Carro
+from extra.models import Destinatario
 from products.models import Product
 from usuario.decorator import role_required
 from .form import SolicitudZelleForm
-from .models import SolicitudZelle, SolicitudZelleItem
+from .models import Solicitud, SolicitudItem
 
 
 from django.core.mail import send_mail
@@ -25,69 +26,91 @@ from django.utils.html import strip_tags
 
 
 
-def create_solicitud_zelle(request):
+def buy_cart_solicitud(request,destinatario_id):
     if not request.user.is_authenticated:
         messages.warning(request, 'Debes estar registrado para poder realizar compras.')
         return HttpResponseRedirect(reverse('usuario:login'))
-    total = 0
-    session = request.session
-    carro = session.get('carro', {})
-    cart_items = carro.items()
+
+
 
     if request.method == 'POST':
-        form = SolicitudZelleForm(request.POST, request.FILES, user=request.user)
-        if form.is_valid():
-            solicitud_zelle = form.save(commit=False)
+        destinatario = get_object_or_404(Destinatario, pk=destinatario_id)
 
-            solicitud_zelle.amount = total
-            solicitud_zelle.save()
 
-            products = []
-            for item_id, item in cart_items:
-                product = get_object_or_404(Product, pk=item["product_id"])
-                solicitud_zelle.products.add(product)
-                solicitud_zelle.guardar_producto(product=product, quantity=item["cantidad"], solicitud=solicitud_zelle)
-                total = total + item["subtotal"]
-                products.append({
-                    "name": product.name,
-                    "price": product.price,
-                    "quantity": item["cantidad"],
-                    "image": product.image.url
-                })
 
-            solicitud_zelle.amount = total
-            solicitud_zelle.save()
-            carro = Carro(request)
-            carro.limpiar_carro()
+    total = 0
+    if not request.method == "POST":
+        return HttpResponseBadRequest()
 
-            context = {
-                "total": total,
-                "products": products,
-            }
-            html_message = render_to_string('purchases/email/email_template.html', context)
-            plain_message = strip_tags(html_message)
-            subject_email = "Solicitud de compra con E-commerce con éxito"
-            user_email = solicitud_zelle.email
+    purchase = Solicitud.objects.create(user=request.user)
+    request.session['purchase_id'] = purchase.id
+    if destinatario:
+        if destinatario.nombre:
+            purchase.nombre = destinatario.nombre
+        if destinatario.apellidos:
+            purchase.apellidos = destinatario.apellidos
+        if destinatario.telefono:
+            purchase.telefono = destinatario.telefono
+        if destinatario.carnet_de_identidad:
+            purchase.carnet_de_identidad = destinatario.carnet_de_identidad
+        if destinatario.correo_electronico:
+            purchase.correo_electronico = destinatario.correo_electronico
+        if destinatario.direccion:
+            purchase.direccion = destinatario.direccion
+        if destinatario.municipio:
+            purchase.municipio = destinatario.municipio
+        if destinatario.instrucciones_entrega:
+            purchase.instrucciones_entrega = destinatario.instrucciones_entrega
 
-            send_mail(
-                subject=subject_email,
-                message=plain_message,
-                from_email=EMAIL_HOST_USER,
-                recipient_list=[user_email],
-                html_message=html_message,
-                fail_silently=False,
-            )
-            return redirect('purchases:ver_solicitud', id_solicitud=solicitud_zelle.pk)
+
+    session = request.session
+    carro = session.get('carro', {})
+
+    if not carro:
+        return HttpResponseBadRequest("El carrito está vacío.")
+
+    cart_items = carro.items()
+    stock_error_products = []
+    line_items = []
+    for item_id, item in cart_items:
+        product = get_object_or_404(Product, pk=item["product_id"])
+        line_items.append({
+            "price": product.price,
+            "quantity": item["cantidad"],
+        })
+        if product.supply < item["cantidad"]:
+            stock_error_products.append(product.name)
+
+    if stock_error_products:
+        stock_error = "Lo sentimos, no hay suficiente disponibilidad de los siguientes productos: " + ", ".join(
+            stock_error_products) + ". Te recomendamos que los retires del carrito para continuar con tu compra."
+        context = {
+            "stock_error": stock_error
+        }
+        return render(request, "purchases/cart.html", context)
     else:
-        form = SolicitudZelleForm(user=request.user)
+        stock_error = None
 
-    return render(request, 'purchases/crear_solicitud_zelle.html', {'form': form})
+
+
+
+    for item_id, item in cart_items:
+        product = get_object_or_404(Product, pk=item["product_id"])
+        purchase.product.add(product)
+        purchase.guardar_producto(product=product, quantity=item["cantidad"], purchase=purchase)
+        total = total + item["subtotal"]
+
+    purchase.stripe_price = total
+    purchase.save()
+
+
+    return redirect('purchases:success_cart')
 
 
 
 @login_required
 def view_solicitud_zelle(request, id_solicitud):
-    solicitud = get_object_or_404(SolicitudZelle, id=id_solicitud)
+    solicitud = get_object_or_404(Solicitud, id=id_solicitud)
 
     # Check if the user has permission to view the solicitud
     if request.user != solicitud.user and request.user.usuario.rol.nombre != 'admin':
@@ -95,7 +118,7 @@ def view_solicitud_zelle(request, id_solicitud):
 
     # Get the SolicitudZelleItem objects associated with the solicitud
 
-    solicitud_items = SolicitudZelleItem.objects.filter(solicitud=solicitud)
+    solicitud_items = SolicitudItem.objects.filter(solicitud=solicitud)
 
 
 
@@ -120,11 +143,11 @@ def solicitud_list(request):
 
         # Filtrar las solicitudes en base a los parámetros
         if filter_usuario:
-            solicitudes = SolicitudZelle.objects.filter(user__username__icontains=filter_usuario)
+            solicitudes = Solicitud.objects.filter(user__username__icontains=filter_usuario)
         else:
-            solicitudes = SolicitudZelle.objects.all()
+            solicitudes = Solicitud.objects.all()
     else:
-        solicitudes = SolicitudZelle.objects.filter(user=request.user)
+        solicitudes = Solicitud.objects.filter(user=request.user)
 
 
 
@@ -158,7 +181,7 @@ def solicitud_list(request):
 
 @role_required(['admin'])
 def aceptar_solicitud(request,id_solicitud):
-    solicitud = get_object_or_404(SolicitudZelle, id=id_solicitud)
+    solicitud = get_object_or_404(Solicitud, id=id_solicitud)
     solicitud.accept()
 
     context = {
@@ -182,7 +205,7 @@ def aceptar_solicitud(request,id_solicitud):
 
 @role_required(['admin'])
 def cancelar_solicitud(request,id_solicitud):
-    solicitud = get_object_or_404(SolicitudZelle, id=id_solicitud)
+    solicitud = get_object_or_404(Solicitud, id=id_solicitud)
 
     context = {
         "id": id_solicitud,
@@ -206,9 +229,158 @@ def cancelar_solicitud(request,id_solicitud):
 
 
 
+# def buy_cart(request,destinatario_id):
+#     if not request.user.is_authenticated:
+#         messages.warning(request, 'Debes estar registrado para poder realizar compras.')
+#         return HttpResponseRedirect(reverse('usuario:login'))
+#
+#     if request.method == 'POST':
+#         destinatario = get_object_or_404(Destinatario, pk=destinatario_id)
+#
+#     total = 0
+#     if not request.method == "POST":
+#         return HttpResponseBadRequest()
+#
+#     purchase = Solicitud.objects.create(user=request.user)
+#     request.session['purchase_id'] = purchase.id
+#     if destinatario:
+#         if destinatario.nombre:
+#             purchase.nombre = destinatario.nombre
+#         if destinatario.apellidos:
+#             purchase.apellidos = destinatario.apellidos
+#         if destinatario.telefono:
+#             purchase.telefono = destinatario.telefono
+#         if destinatario.carnet_de_identidad:
+#             purchase.carnet_de_identidad = destinatario.carnet_de_identidad
+#         if destinatario.correo_electronico:
+#             purchase.correo_electronico = destinatario.correo_electronico
+#         if destinatario.direccion:
+#             purchase.direccion = destinatario.direccion
+#         if destinatario.municipio:
+#             purchase.municipio = destinatario.municipio
+#         if destinatario.instrucciones_entrega:
+#             purchase.instrucciones_entrega = destinatario.instrucciones_entrega
+#
+#
+#     session = request.session
+#     carro = session.get('carro', {})
+#
+#     if not carro:
+#         return HttpResponseBadRequest("El carrito está vacío.")
+#
+#     cart_items = carro.items()
+#     stock_error_products = []
+#     line_items = []
+#
+#     for item_id, item in cart_items:
+#         product = get_object_or_404(Product, pk=item["product_id"])
+#         purchase.product.add(product)
+#         purchase.guardar_producto(product=product, quantity=item["cantidad"], purchase=purchase)
+#         total = total + item["subtotal"]
+#
+#     purchase.stripe_price = total
+#     purchase.save()
+#
+#     return redirect('solicitud_list')
+
+
+
+def purchase_success_cart_view(request):
+    purchase_id = request.session.get("purchase_id")
+    session = request.session
+    carro = session.get('carro', {})
+    cart_items = carro.items()
+
+
+    for item_id, item in cart_items:
+        product = get_object_or_404(Product, pk=item["product_id"])
+        product.supply = product.supply - item["cantidad"]
+        product.save()
+
+
+    carro = Carro(request)
+    carro.limpiar_carro()
+
+    if purchase_id:
+        purchase = Solicitud.objects.get(id=int(purchase_id))
+        purchase.completed = True
+        purchase.save()
+        del request.session['purchase_id']
+
+        # Enviar email al usuario si tiene
+        if purchase.user.email:
+            context = {
+                "total": purchase.stripe_price,
+                "products": purchase.items.all(),
+            }
+            html_message = render_to_string('purchases/email/pago_con_exito_stripe.html', context)
+            plain_message = strip_tags(html_message)
+            subject_email = "Pago efectuado con exito"
+            user_email = purchase.user.email
+
+            send_mail(
+                subject=subject_email,
+                message=plain_message,
+                from_email=EMAIL_HOST_USER,
+                recipient_list=[user_email],
+                html_message=html_message,
+                fail_silently=False,
+            )
+        return HttpResponseRedirect(reverse("purchases:purchases_stripe"))
+    return HttpResponseRedirect(reverse("products:list"))
+
+
+
+@login_required
+def pedidos_stripe(request):
+    filter_usuario = request.GET.get('usuario' or None)
+    if request.user.usuario.rol.nombre == 'admin':
+        # Filtrar las solicitudes en base a los parámetros
+        if filter_usuario:
+            solicitudes = Solicitud.objects.filter(user__username__icontains=filter_usuario)
+        else:
+            solicitudes = Solicitud.objects.all()
+    else:
+        solicitudes = Solicitud.objects.filter(user=request.user)
+
+    entrega = request.GET.get('estado' or None)
+    if entrega:
+        solicitudes = solicitudes.filter(entrega=entrega)
+
+    solicitudes = solicitudes.order_by('-timestamp')
+
+    completado = request.GET.get('completado' or None)
+
+
+    if completado:
+        if completado == 'false':
+            solicitudes = solicitudes.filter(completed=False)
+        else:
+            solicitudes = solicitudes.filter(completed=True)
+    else:
+        solicitudes = solicitudes.filter(completed=True)
 
 
 
 
+    # Paginar las solicitudes
+    page_size = 20  # Número de solicitudes por página
+    paginator = Paginator(solicitudes, page_size)
+    page_number = request.GET.get('page', 1)
+
+    try:
+        page_solicitudes = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_solicitudes = paginator.page(1)
+    except EmptyPage:
+        page_solicitudes = paginator.page(paginator.num_pages)
+
+
+
+    context = {
+        'pedidos_stripe': page_solicitudes,
+        'filter_usuario': filter_usuario,
+    }
+    return render(request, 'purchases/solicitud_list.html', context)
 
 

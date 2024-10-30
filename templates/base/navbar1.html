@@ -59,16 +59,16 @@
 {#        {% if request.user.username %}#}
 {#        <select name="pedidos" class="form-select" aria-label="Opciones" onchange="location = this.value;">#}
 {#          <option value="" disabled selected>Pedidos</option>#}
-{#         #}
-{#              <option value="{% url 'pedidos_stripe:purchases_stripe' %}">Pedidos Stripe</option>#}
+{##}
+{#              <option value="{% url 'pedidos_stripe:purchases_stripe' %}">Pedidos</option>#}
 {#      </select>#}
 {#      {% endif %}#}
 
-{#       {% if request.user.username %}#}
-{##}
-{##}
-{#              <a class="form-select" href="{% url 'pedidos_stripe:purchases_stripe' %}" style="font-size: 14px;color: gray;">PEDIDOS</a>#}
-{#      {% endif %}#}
+       {% if request.user.username %}
+
+
+              <a class="form-select" href="{% url 'pedidos_stripe:purchases_stripe' %}" style="font-size: 14px;color: gray;">PEDIDOS</a>
+      {% endif %}
 
       {% if request.user.usuario.rol.nombre == 'Proveedor' %}
       <select name="pedidos" class="form-select" aria-label="Opciones" onchange="location = this.value;">

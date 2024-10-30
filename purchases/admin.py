@@ -2,11 +2,11 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import SolicitudZelle, SolicitudZelleItem
+from .models import Solicitud, SolicitudItem
 
 
-@admin.register(SolicitudZelle)
-class SolicitudZelleAdmin(admin.ModelAdmin):
+@admin.register(Solicitud)
+class SolicitudAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'email', 'file', 'phone', 'payment_verification_code', 'amount', 'status', 'created_at', 'updated_at']
     list_filter = ['status', 'created_at', 'updated_at']
     search_fields = ['user__username', 'user__email', 'email', 'phone']
@@ -23,8 +23,8 @@ class SolicitudZelleAdmin(admin.ModelAdmin):
         }),
     )
 
-@admin.register(SolicitudZelleItem)
-class SolicitudZelleItemAdmin(admin.ModelAdmin):
+@admin.register(SolicitudItem)
+class SolicitudItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'solicitud', 'product', 'quantity', 'total_price')
     list_display_links = ('id', 'solicitud', 'product')
     readonly_fields = ('total_price',)

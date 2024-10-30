@@ -1,11 +1,11 @@
 from django import forms
 
-from purchases.models import SolicitudZelle
+from purchases.models import Solicitud
 
 
 class SolicitudZelleForm(forms.ModelForm):
     class Meta:
-        model = SolicitudZelle
+        model = Solicitud
         fields = ['email', 'file', 'phone', 'payment_verification_code']
 
     def __init__(self, *args, **kwargs):

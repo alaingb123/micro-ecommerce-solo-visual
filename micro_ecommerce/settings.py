@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'usuario',
     'extra',
     'ventas',
+    'pedidos_stripe',
 ]
 
 MIDDLEWARE = [

@@ -245,7 +245,7 @@ def product_manage_detail_view(request,handle=None):
             instance = form.save(commit=False)
             try:
                 price_changed = instance.price != obj.offer.precio_viejo  # Compara el nuevo precio con el actual
-                if price_changed and obj.offer:  # Suponiendo que tienes un método para verificar ofertas
+                if price_changed and obj.offer:
                     context['conexion_error'] = 'Debes eliminar la oferta activa antes de cambiar el precio.'
                     context['form'] = form
                     return render(request, 'products/manager.html', context)

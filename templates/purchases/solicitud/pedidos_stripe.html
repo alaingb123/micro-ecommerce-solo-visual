@@ -97,10 +97,10 @@ th, td {
         <th>Id</th>
         <th>Usuario</th>
         <th>Email</th>
-        <th>Completada</th>
-        <th>Precio de Stripe</th>
+{#        <th>Completada</th>#}
+        <th>Precio </th>
         <th>Entrega</th>
-        <th>Timestamp</th>
+        <th>Fecha</th>
     </tr>
   </thead>
   <tbody>
@@ -108,13 +108,13 @@ th, td {
     <tr>
       <td data-label="Id"><a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">{{ purchase.handle }}</a></td>
       <td data-label="Usuario"><a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">{{ purchase.user.username }}</a></td>
-      <td data-label="Email"><a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">{{ purchase.user.email }}</a></td>
-      <td data-label="Completada" class="{% if purchase.completed %}completed{% else %}not-completed{% endif %}">
-          <a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">{% if purchase.completed %}Sí{% else %}No{% endif %}</a>
-      </td>
-      <td data-label="Precio de Stripe"><a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">${{ purchase.stripe_price }}</a></td>
+      <td data-label="Email"><a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">{{ purchase.correo_electronico }}</a></td>
+{#      <td data-label="Completada" class="{% if purchase.completed %}completed{% else %}not-completed{% endif %}">#}
+{#          <a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">{% if purchase.completed %}Sí{% else %}No{% endif %}</a>#}
+{#      </td>#}
+      <td data-label="Precio"><a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">${{ purchase.stripe_price }}</a></td>
       <td data-label="Entrega"><a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">{% if purchase.completed %} {{ purchase.get_entrega_display }} {% endif %}</a></td>
-      <td data-label="Timestamp"><a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">{{ purchase.timestamp|date:"d. M, Y" }}</a></td>
+      <td data-label="Fecha"><a href="{% url 'pedidos_stripe:ver_solicitud_stripe' purchase.pk %}">{{ purchase.created_at|date:"d. M, Y" }}</a></td>
     </tr>
     {% endfor %}
   </tbody>
