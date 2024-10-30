@@ -349,6 +349,14 @@
       </li>
 
 
+         {% if request.user.username %}
+
+     <li class="menu-category">
+              <a class="menu-title" href="{% url 'pedidos_stripe:purchases_stripe' %}" style="font-size: 14px;color: gray;">Pedidos</a>
+              </li>
+      {% endif %}
+
+
 
       </ul>
 
