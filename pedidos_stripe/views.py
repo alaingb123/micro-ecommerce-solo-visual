@@ -4,6 +4,7 @@ import stripe
 from django.conf.global_settings import EMAIL_HOST_USER
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -212,7 +213,7 @@ def purchase_success_cart_view(request):
 
         # Enviar email al usuario si tiene
         if purchase.correo_electronico:
-            print('tiene email')
+
             context = {
                 "total": purchase.stripe_price,
                 "products": purchase.items.all(),
@@ -230,7 +231,32 @@ def purchase_success_cart_view(request):
                 html_message=html_message,
                 fail_silently=False,
             )
-            print("el email se envio a ",user_email)
+
+            # Obtener todos los administradores
+            admin_emails = User.objects.filter(usuario__rol__nombre='admin').values_list('email', flat=True)
+            print(admin_emails)
+
+            if admin_emails:
+                admin_subject = "Nueva solicitud de compra"
+                admin_context = {
+                    "user_email": user_email,
+                    "phone": purchase.telefono,
+                    "total": purchase.stripe_price,
+                    "products": purchase.items.all(),
+                }
+                admin_html_message = render_to_string('purchases/email/nueva_solicitud_admin.html', admin_context)
+                admin_plain_message = strip_tags(admin_html_message)
+
+                # Enviar correo a todos los administradores
+                send_mail(
+                    subject=admin_subject,
+                    message=admin_plain_message,
+                    from_email=EMAIL_HOST_USER,
+                    recipient_list=list(admin_emails),  # Convertir a lista
+                    html_message=admin_html_message,
+                    fail_silently=False,
+                )
+
         return HttpResponseRedirect(reverse("pedidos_stripe:purchases_stripe"))
     return HttpResponseRedirect(reverse("products:list"))
 

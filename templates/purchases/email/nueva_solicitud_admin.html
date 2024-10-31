@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Nueva Solicitud de Compra</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .product {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        .product-details h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+        .product-details p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Nueva Solicitud de Compra</h1>
+    <p>Estimados administradores,</p>
+    <p>Se ha recibido una nueva solicitud de compra. A continuación, se detallan los productos adquiridos:</p>
+
+    <div class="products">
+        {% for product in products %}
+        <div class="product">
+            {% if product.product.image %}
+            <img class="product-image" src="{{ product.product.image }}" alt="{{ product.product.name }}">
+            {% else %}
+            <img class="product-image" src="{% static 'product_placeholder.jpg' %}" alt="{{ product.product.name }}">
+            {% endif %}
+            <div class="product-details">
+                <h3>{{ product.product.name }}</h3>
+                <p>Precio: {{ product.product.price }} cup</p>
+                <p>Cantidad: {{ product.quantity }}</p>
+                <p>Subtotal: {{ product.total_price }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="total">Total: {{ total }} cup</div>
+
+    <p>A continuación, se muestra la información del cliente:</p>
+    <p>Email del cliente: {{ user_email }}</p>
+    <p>Numero del cliente: {{ phone }}</p>
+
+    <p>Por favor, revisen la solicitud y tomen las acciones necesarias.</p>
+    <p>Gracias por su atención.</p>
+</div>
+
+</body>
+</html>
