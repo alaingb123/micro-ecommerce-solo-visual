@@ -308,7 +308,28 @@ def aceptar_pedido(request, purchase_id):
     purchase = get_object_or_404(Purchase, id=purchase_id)
     if purchase.entrega == 'pending':
         purchase.entrega = 'onway'
-        purchase.save()
+
+        try:
+            purchase.save()
+        except:
+            pass
+
+    context = {
+        "id": purchase_id,
+    }
+    html_message = render_to_string('purchases/email/solicitud_aceptada.html', context)
+    plain_message = strip_tags(html_message)
+    subject_email = "Solicitud de compra con E-commerce aceptada con éxito"
+    user_email = purchase.correo_electronico
+
+    send_mail(
+        subject=subject_email,
+        message=plain_message,
+        from_email=EMAIL_HOST_USER,
+        recipient_list=[user_email],
+        html_message=html_message,
+        fail_silently=False,
+    )
 
     return redirect('pedidos_stripe:ver_solicitud_stripe', purchase_id=purchase_id)
 

@@ -183,6 +183,7 @@ def solicitud_list(request):
 def aceptar_solicitud(request,id_solicitud):
     solicitud = get_object_or_404(Solicitud, id=id_solicitud)
     solicitud.accept()
+    print("se acepto la solicitud")
 
     context = {
         "id": id_solicitud,
@@ -190,7 +191,7 @@ def aceptar_solicitud(request,id_solicitud):
     html_message = render_to_string('purchases/email/solicitud_aceptada.html', context)
     plain_message = strip_tags(html_message)
     subject_email = "Solicitud de compra con E-commerce aceptada con éxito"
-    user_email = solicitud.email
+    user_email = solicitud.correo_electronico
 
     send_mail(
         subject=subject_email,
@@ -200,6 +201,7 @@ def aceptar_solicitud(request,id_solicitud):
         html_message=html_message,
         fail_silently=False,
     )
+    print("se mando el email")
     return redirect('purchases:solicitud_list')
 
 

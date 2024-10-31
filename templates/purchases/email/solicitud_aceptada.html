@@ -44,7 +44,7 @@
         <p>Nos complace informarte que tu solicitud de compra ha sido aceptada. Estamos emocionados de poder atender tus necesidades y brindarte un excelente servicio.</p>
         <p>Tu pedido se encuentra en proceso de preparación y envío. Puedes seguir el estado de tu pedido a través de tu cuenta en nuestra plataforma.</p>
         <p>Si tienes alguna pregunta o necesitas asistencia adicional, no dudes en comunicarte con nuestro equipo de atención al cliente. Estaremos encantados de ayudarte.</p>
-        <a href="{% url 'purchases:ver_solicitud' id_solicitud=id %}" class="cta">Ver mi pedido</a>
+        <a href="{% url 'pedidos_stripe:ver_solicitud_stripe' id %}" class="cta">Ver mi pedido</a>
     </div>
 </body>
 </html>
