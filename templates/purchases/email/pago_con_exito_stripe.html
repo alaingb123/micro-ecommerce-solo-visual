@@ -76,14 +76,14 @@
                 {% endif %}
                 <div class="product-details">
                     <h3>{{ product.product.name }}</h3>
-                    <p>Precio: ${{ product.product.price }}</p>
+                    <p>Precio:{{ product.product.price }} cup</p>
                     <p>Cantidad: {{ product.quantity }}</p>
                     <p>Subtotal: {{ product.total_price }}</p>
                 </div>
             </div>
             {% endfor %}
         </div>
-        <div class="total">Total: ${{ total }}</div>
+        <div class="total">Total: {{ total }} cup</div>
     </div>
 
 
