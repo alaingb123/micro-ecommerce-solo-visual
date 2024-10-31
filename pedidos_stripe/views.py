@@ -199,6 +199,8 @@ def purchase_success_cart_view(request):
     for item_id, item in cart_items:
         product = get_object_or_404(Product, pk=item["product_id"])
         product.supply = product.supply - item["cantidad"]
+        if product.supply == 0:
+            product.active = False
         product.save()
 
 
@@ -234,7 +236,7 @@ def purchase_success_cart_view(request):
 
             # Obtener todos los administradores
             admin_emails = User.objects.filter(usuario__rol__nombre='admin').values_list('email', flat=True)
-            print(admin_emails)
+
 
             if admin_emails:
                 admin_subject = "Nueva solicitud de compra"
@@ -269,24 +271,6 @@ def purchase_stopped_view(request):
         return HttpResponseRedirect(reverse("products:list"))
     return HttpResponseRedirect(reverse("products:list"))
 
-
-
-def purchase_success_view(request):
-    purchase_id = request.session.get("purchase_id")
-
-
-    if purchase_id:
-        purchase = Purchase.objects.get(id=purchase_id)
-        global cantidad
-        product = purchase.product
-        product.supply = product.supply - cantidad
-        cantidad = 0
-        product.save()
-        purchase.completed = True
-        purchase.save()
-        del request.session['purchase_id']
-        return HttpResponseRedirect(purchase.product.get_absolute_url())
-    return HttpResponse(f"Finished {purchase_id}")
 
 
 @role_required(['Proveedor'])
@@ -366,6 +350,14 @@ def cancelar_pedido(request, purchase_id):
 
     if purchase.entrega == 'pending':
         purchase.entrega = 'canceled'
+
+        for item in purchase.items.all():
+            product = get_object_or_404(Product, pk=item.product.pk)
+            product.supply = product.supply + item.quantity
+            if product.active == False:
+                product.active = True
+            product.save()
+
         purchase.save()
 
     return redirect('pedidos_stripe:ver_solicitud_stripe', purchase_id=purchase_id)
