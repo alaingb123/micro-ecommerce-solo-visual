@@ -39,23 +39,7 @@ class Destinatario(models.Model):
 def crear_municipios_iniciales(sender, **kwargs):
     if kwargs['app_config'].name == 'extra':
         municipios_iniciales = [
-            "Centro Habana",
-            "Cerro",
-            "Plaza de la Revolución",
-            "La Habana Vieja",
-            "Arroyo Naranjo",
-            "Boyeros",
-            "Cotorro",
-            "Diez de Octubre",
-            "Guanabacoa",
-            "Habana del Este",
-            "La Lisa",
-            "Marianao",
-            "Playa",
-            "Regla",
-            "San Miguel del Padrón",
-            "Santa Cruz del Norte",
-            "Santa Fe"
+            "Santa Clara",
         ]
         for nombre in municipios_iniciales:
             Municipio.objects.get_or_create(nombre=nombre)
