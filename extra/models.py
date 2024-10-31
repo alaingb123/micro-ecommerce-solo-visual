@@ -77,6 +77,12 @@ class PromocionText(models.Model):
     texto = models.CharField(max_length=255)
 
 
+class Delivery (models.Model):
+    limit = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=9.99)
+
+
+
 
 class StoreSettings(models.Model):
     header_text = models.CharField(max_length=255)
