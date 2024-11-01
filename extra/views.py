@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from extra.forms import DestinatarioForm
-from extra.models import Destinatario
+from extra.models import Destinatario, Delivery
 from products.models import Product
 
 
@@ -13,6 +13,7 @@ from products.models import Product
 
 MAX_DESTINATARIOS_ALCANZADO = "maximo de destinatarios alcanzado"
 def crear_destinatario(request):
+    deliveries = Delivery.objects.all()
     if request.user.destinatario_set.count() >= 5:
         messages.add_message(request, messages.WARNING, MAX_DESTINATARIOS_ALCANZADO)
         return redirect('extra:list_destinatario')
@@ -26,7 +27,7 @@ def crear_destinatario(request):
             return redirect('extra:list_destinatario')
     else:
         form = DestinatarioForm()
-    return render(request, 'extra/crear_destinatario.html', {'form': form})
+    return render(request, 'extra/crear_destinatario.html', {'form': form,'deliveries': deliveries})
 
 
 def lista_destinatarios(request):

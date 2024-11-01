@@ -5,6 +5,43 @@
 {#<link rel="stylesheet" href="{% static 'css/extra/list_destinatario.css' %}">#}
 <style>
 
+.info-section {
+    background-color: #f9f9f9; /* Fondo claro */
+    border: 1px solid #ddd; /* Borde gris claro */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 20px; /* Espaciado interno */
+    margin: 20px auto; /* Margen superior e inferior, centrado horizontalmente */
+    max-width: 600px; /* Ancho máximo */
+    width: 90%; /* Ancho adaptable */
+    text-align: center; /* Centrar texto */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.info-section h3 {
+    margin-bottom: 10px; /* Espacio debajo del encabezado */
+    font-size: 24px; /* Tamaño de fuente del encabezado */
+    color: #2c3e50; /* Color del texto */
+}
+
+.info-section p {
+    color: #666; /* Color de texto más suave */
+    line-height: 1.5; /* Espaciado entre líneas */
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 480px) {
+    .info-section {
+        padding: 15px; /* Menos espaciado en pantallas pequeñas */
+    }
+
+    .info-section h3 {
+        font-size: 20px; /* Tamaño de fuente más pequeño en pantallas pequeñas */
+    }
+
+    .info-section p {
+        font-size: 14px; /* Tamaño de fuente más pequeño para el párrafo */
+    }
+}
 
 .page-title {
     text-align: center;
@@ -134,6 +171,12 @@
 
 <h1 class="page-title">Lista de Destinatarios</h1>
 
+
+<!-- Sección de Información -->
+<div class="info-section">
+    <h3>Información</h3>
+    <p>Solo se hacen entregas a domicilio en Santa Clara. Las entregas son planificadas con antelación y se le contactará previamente para precisar fecha y hora.</p>
+</div>
 
        <div class="button-container">
     <a href="{% url 'extra:crear_destinatario' %}" class="add-button">

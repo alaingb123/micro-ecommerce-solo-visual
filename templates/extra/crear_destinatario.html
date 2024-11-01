@@ -121,6 +121,14 @@
             font-size: 0.9em;
         }
     }
+.delivery-options {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
 </style>
 
 <div class="form-container">
@@ -145,6 +153,18 @@
             <div class="form-group">{{ form.instrucciones_entrega.label }} {{ form.instrucciones_entrega }}</div>
         </div>
 
+        <!-- Mostrar opciones de entrega -->
+        <div class="form-row">
+            <div class="form-group">
+                <label>Opciones de Entrega:</label>
+                <div class="delivery-options">
+                    {% for delivery in deliveries %}
+                        <p>{{ delivery.limit }} - ${{ delivery.price }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
         <div class="button-container">
             <button type="submit" class="form-button">Guardar</button>
             <a href="javascript:history.back()" class="back-button">Volver</a>
@@ -153,3 +173,4 @@
 </div>
 
 {% endblock %}
+
