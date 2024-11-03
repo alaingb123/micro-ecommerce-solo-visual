@@ -122,12 +122,13 @@
           <ul class="footer-nav-list">
           
             <li class="footer-nav-item">
-              <h2 class="nav-title">Our Company</h2>
+              <h2 class="nav-title">Sobre Nosotros</h2>
             </li>
           
-            <li class="footer-nav-item">
-              <a href="#" class="footer-nav-link">Delivery</a>
-            </li>
+           <!-- Enlace para abrir la Modal -->
+<li class="footer-nav-item">
+    <a href="javascript:void(0);" class="footer-nav-link" onclick="openModal()">Domicilio</a>
+</li>
           
             <li class="footer-nav-item">
               <a href="#" class="footer-nav-link">Legal Notice</a>
@@ -293,6 +294,16 @@
   
     </footer>
 
+
+<!-- Modal -->
+<div id="deliveryModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h2>Información sobre Domicilio</h2>
+        <p>Solo se hacen entregas a domicilio en Santa Clara. Las entregas son planificadas con antelación y se le contactará previamente para precisar fecha y hora.</p>
+    </div>
+</div>
+
 <style>
 .payment-method {
     display: inline-block; /* Muestra las imágenes en línea */
@@ -300,5 +311,83 @@
     /* Agrega más estilos específicos para las imágenes de los métodos de pago aquí */
 }
 
+
+/* Estilos para la Modal */
+.modal {
+    display: none; /* Oculta la modal por defecto */
+    position: fixed; /* Mantiene la modal en posición fija */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Alto completo */
+    overflow: auto; /* Permite el desplazamiento si es necesario */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con opacidad */
+}
+
+.modal-content {
+    background-color: #fff; /* Fondo blanco */
+    margin: 10% auto; /* Centra la modal */
+    padding: 20px;
+    border: 1px solid #888; /* Borde gris */
+    width: 90%; /* Ancho adaptable */
+    max-width: 500px; /* Ancho máximo */
+    border-radius: 5px; /* Bordes redondeados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+}
+
+.close-button {
+    color: #aaa; /* Color del botón de cerrar */
+    float: right; /* Alinea a la derecha */
+    font-size: 28px; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    cursor: pointer; /* Cambia el cursor al pasar el ratón */
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black; /* Cambia a negro al pasar el ratón */
+    text-decoration: none; /* Sin subrayado */
+    cursor: pointer; /* Cambia el cursor */
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 480px) {
+    .modal-content {
+        margin: 5% auto; /* Reduce el margen en pantallas pequeñas */
+        padding: 15px; /* Menos espaciado en pantallas pequeñas */
+    }
+
+    .close-button {
+        font-size: 24px; /* Tamaño de fuente más pequeño para el botón de cerrar */
+    }
+
+    .modal-content h2 {
+        font-size: 20px; /* Tamaño de fuente más pequeño para el título */
+    }
+
+    .modal-content p {
+        font-size: 14px; /* Tamaño de fuente más pequeño para el párrafo */
+    }
+}
+
 </style>
 
+
+<script>
+function openModal() {
+    document.getElementById("deliveryModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("deliveryModal").style.display = "none";
+}
+
+// Cierra la modal si el usuario hace clic fuera de ella
+window.onclick = function(event) {
+    const modal = document.getElementById("deliveryModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
