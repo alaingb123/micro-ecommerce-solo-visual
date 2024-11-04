@@ -37,8 +37,8 @@
 
                 <div class="showcase-banner">
 
-                  <img src="{{ object.image.url }}" alt="{{ object.name }}" width="300" class="product-img default">
-                  <img src="{{ object.image.url }}" alt="{{ object.name }}" width="300" class="product-img hover">
+                  <img src={%  if object.image %}"{{ object.image.url }}" {% endif %} alt="{{ object.name }}" width="300" class="product-img default">
+                  <img src={%  if object.image %}"{{ object.image.url }}" {% endif %} alt="{{ object.name }}" width="300" class="product-img hover">
 
                     {% if object.offer %}
                   <p class="showcase-badge">{{ object.offer.descuento }}%</p>

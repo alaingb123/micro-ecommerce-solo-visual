@@ -22,7 +22,9 @@
             <div class="showcase">
 
               <a href="{% url 'products:detail' product.handle %}" class="showcase-img-box">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" width="70" class="showcase-img">
+
+                   <img src=" {% if product.image %}  {{ product.image.url }}"   {% endif %} alt="{{ product.name }}" width="70" class="showcase-img">
+
               </a>
 
               <div class="showcase-content">

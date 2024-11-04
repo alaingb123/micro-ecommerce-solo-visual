@@ -31,12 +31,14 @@ from django.db import models
 @role_required(['Proveedor'])
 def product_create_view(request):
     context={}
+    clasificacion_hija = None
     form = ProductForm(request.POST or None,  request.FILES or None)
     if request.method == 'POST':
         if form.is_valid():
-            clasi=int(request.POST.get('clasificacion'))
+            if request.POST.get('clasificacion'):
+                clasi = int(request.POST.get('clasificacion'))
+                clasificacion_hija = ClasificacionHija.objects.get(id=clasi)
             obj = form.save(commit=False)
-            clasificacion_hija = ClasificacionHija.objects.get(id=clasi)
             if request.user.is_authenticated:
                 obj.user = request.user
                 try:

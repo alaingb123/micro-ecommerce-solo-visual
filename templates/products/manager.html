@@ -170,9 +170,8 @@
     </div>
     {% endif %}
     <h2 class="form-title titulo">Gestionar</h2>
-
-    <form method="POST" action="" enctype="multipart/form-data">
-        {% csrf_token %}
+<form method="POST" action="" enctype="multipart/form-data">
+    {% csrf_token %}
 
     <div class="form-row">
         <div class="column full-width">
@@ -191,22 +190,22 @@
         </div>
     </div>
     <div class="form-row">
-    <div class="column">
-        <label for="clasificaciones_padre">Clasificaciones Padre:</label>
-        <select name="clasificaciones_padre" id="clasificaciones_padre" onchange="cargarHijas()">
-            <option value="">Seleccione una clasificación padre</option>
-            {% for clasificacion in form.clasificaciones_padre.field.queryset %}
-                <option value="{{ clasificacion.id }}" {% if padre == clasificacion.id %} selected {% endif %}>{{ clasificacion }}</option>
-            {% endfor %}
-        </select>
+        <div class="column">
+            <label for="clasificaciones_padre">Clasificaciones Padre:</label>
+            <select name="clasificaciones_padre" id="clasificaciones_padre" onchange="cargarHijas()">
+                <option value="">Seleccione una clasificación padre</option>
+                {% for clasificacion in form.clasificaciones_padre.field.queryset %}
+                    <option value="{{ clasificacion.id }}" {% if padre == clasificacion.id %} selected {% endif %}>{{ clasificacion }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="column">
+            <label for="clasificacion">Clasificación:</label>
+            <select name="clasificacion" id="clasificacion">
+                <option value="">Seleccione una clasificación</option>
+            </select>
+        </div>
     </div>
-    <div class="column">
-        <label for="clasificacion">Clasificación:</label>
-        <select name="clasificacion" id="clasificacion">
-            <option value="">Seleccione una clasificación</option>
-        </select>
-    </div>
-</div>
     <div class="form-row">
         <div class="column">
             <label for="price">Precio:</label>
@@ -217,31 +216,41 @@
             {{ form.supply }}
         </div>
     </div>
+
     <div class="form-row">
-    <div class="column">
-        <label for="description">Descripción corta:</label>
-         {{ form.short_description }}
+        <div class="column">
+            <label for="description">Descripción corta:</label>
+            {{ form.short_description }}
+        </div>
     </div>
-</div>
+
+    <div class="form-row">
+        <div class="column">
+            <label for="keywords">Palabras clave:</label>
+            {{ form.keywords }} <!-- Ensure this matches the structure/style of short_description -->
+        </div>
+    </div>
+
     <div class="form-row">
         <div class="column">
             <label for="description">Descripción:</label>
             {{ form.description }}
         </div>
     </div>
+
     <div class="form-row">
         <div class="column">
             {{ form.active.label_tag }}
             {{ form.active }}
         </div>
-     
     </div>
+
     <div class="form-row">
         <div class="column">
             <button type="submit" class="btn-submit">Guardar</button>
         </div>
         <div class="column">
-           <button type="submit" name="action" value="save_and_add" class="btn-submit2">Guardar y agregar otro</button>
+            <button type="submit" name="action" value="save_and_add" class="btn-submit2">Guardar y agregar otro</button>
         </div>
     </div>
 </form>
