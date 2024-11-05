@@ -1,40 +1,70 @@
-{%load static%}
+{% load static %}
 
 <style>
-   .responsive-banner {
-    width: 100%;
-    overflow: hidden; /* Evitar el desbordamiento */
-}
+    .responsive-banner {
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+    }
 
-.responsive-container {
-    max-width: 1200px; /* Ajusta según el diseño deseado */
-    margin: 0 auto; /* Centra el contenedor */
-    padding: 0 15px; /* Espaciado lateral */
-}
+    .responsive-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
 
-.responsive-slider {
-    display: flex; /* Permite que los elementos se dispongan en línea */
-    overflow-x: auto; /* Permite desplazamiento horizontal si es necesario */
-}
+    .responsive-slider {
+        display: flex;
+        transition: transform 0.5s ease;
+        width: 100%;
+        position: relative; /* Para permitir el desplazamiento */
+    }
 
-.responsive-item {
-    flex: 0 0 auto; /* Evita que los elementos se reduzcan */
-    width: 100%; /* Cada elemento ocupa el 100% del contenedor */
-}
+    .responsive-item {
+        flex: 0 0 100%;
+        position: relative;
+        text-align: center;
+    }
 
-.responsive-image {
-    width: 100%; /* La imagen ocupará el 100% del contenedor */
-    height: auto; /* Mantiene la relación de aspecto */
-    object-fit: cover; /* Asegura que la imagen cubra el contenedor */
-}
+    .responsive-image {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .button-container {
+        position: absolute;
+        bottom: 15px;
+        left: 110px;
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+    }
+
+    :root {
+        --salmon-pink: hsl(353, 100%, 78%);
+    }
+
+    .promo-button {
+        padding: 8px 16px;
+        background-color: var(--salmon-pink);
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .promo-button:hover {
+        background-color: rgba(0, 0, 0, 0.9);
+    }
 </style>
 
 <div class="responsive-banner">
-
     <div class="responsive-container">
-
-        <div class="responsive-slider has-scrollbar">
-
+        <div class="responsive-slider" id="slider">
             {% for promocion in promociones %}
                 {% if promocion.imagen_peque and promocion.imagen %}
                     <div class="responsive-item">
@@ -50,9 +80,48 @@
                     </div>
                 {% endif %}
             {% endfor %}
-
         </div>
-
+        
+        <div class="button-container">
+            <a href="#" class="promo-button">
+                <ion-icon name="location-outline"></ion-icon> Santa Clara, Villa Clara
+            </a>
+            <a href="#" class="promo-button">
+                <ion-icon name="bicycle-outline"></ion-icon> Domicilio
+            </a>
+        </div>
     </div>
-
 </div>
+
+<script>
+    let currentIndex = 0; // Inicia en el primer elemento
+    const slides = document.querySelectorAll('.responsive-item');
+    const totalSlides = slides.length; // Total de imágenes
+    const slider = document.getElementById('slider');
+
+    function showSlide(index) {
+        const offset = -index * 100; // Mover el carrusel a la izquierda
+        slider.style.transform = `translateX(${offset}%)`;
+    }
+
+    function nextSlide() {
+        currentIndex++;
+        if (currentIndex >= totalSlides) {
+            currentIndex = 0; // Reiniciar al primer elemento
+        }
+        showSlide(currentIndex);
+    }
+
+    // Cambiar cada 4 segundos
+    let autoSlide = setInterval(nextSlide, 4000);
+
+    // Añadir soporte para pausar el carrusel al pasar el ratón sobre la imagen
+    slides.forEach(slide => {
+        slide.addEventListener('mouseover', () => {
+            clearInterval(autoSlide); // Detener el intervalo
+        });
+        slide.addEventListener('mouseout', () => {
+            autoSlide = setInterval(nextSlide, 4000); // Reiniciar el intervalo
+        });
+    });
+</script>
