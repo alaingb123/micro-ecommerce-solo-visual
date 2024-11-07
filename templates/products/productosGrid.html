@@ -2,6 +2,15 @@
             - PRODUCT GRID
           -->
 <style>
+.product-img {
+    width: 100%;  /* Hace que la imagen ocupe todo el contenedor */
+    max-height: 166px;
+    min-height: 166px;
+    object-fit: cover;  /* Asegura que la imagen cubra todo el contenedor */
+    display: block;
+}
+
+
     .product-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Dos columnas en pantallas pequeñas */
@@ -37,8 +46,8 @@
 
                 <div class="showcase-banner">
 
-                  <img src={%  if object.image %}"{{ object.image.url }}" {% endif %} alt="{{ object.name }}" width="300" class="product-img default">
-                  <img src={%  if object.image %}"{{ object.image.url }}" {% endif %} alt="{{ object.name }}" width="300" class="product-img hover">
+                  <img src="{% if object.image %}{{ object.image.url }}{% endif %}" alt="{{ object.name }}" class="product-img default">
+<img src="{% if object.image %}{{ object.image.url }}{% endif %}" alt="{{ object.name }}" class="product-img hover">
 
                     {% if object.offer %}
                   <p class="showcase-badge">{{ object.offer.descuento }}%</p>
