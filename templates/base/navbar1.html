@@ -272,11 +272,11 @@
             </a>
         </li>
 
-        {% for classification in classifications %}
-            {% if classification.productos_padre.count > 0 %}
+        {% for cate in category %}
+            {% if cate.has_products %}
             <li class="menu-category-cell">
               <a class="menu-title-cell" >
-                <a class="menu-title-cell" href="{% url 'products:list' %}?classification_id_padre={{ classification.id }}" > {{ classification.nombre }}</a>
+                <a class="menu-title-cell" href="{% url 'products:list' %}?category={{ cate.pk }}" > {{ cate }}</a>
                     </a>
           </li>
           
@@ -296,7 +296,7 @@
   </div>
 
 
-{% if classifications %}
+{% if category %}
 
   <nav class="desktop-navigation-menu">
 
@@ -317,25 +317,25 @@
 
 
 
-{% for classification in classifications %}
-    {% if classification.productos_padre.count > 0 %}
+{% for cate in category %}
+    {% if cate.has_products %}
         <li class="menu-category">
-            <a class="menu-title" href="{% url 'products:list' %}?classification_id_padre={{ classification.pk }}">
-        {{ classification.nombre }}
+            <a class="menu-title" href="{% url 'products:list' %}?category={{ cate.pk }}">
+        {{ cate }}
             </a>
-            {% if not classification.parent %}
-                {% if classification.hijos.all %}
+{#            {% if not classification.parent %}#}
+                {% if cate.get_children %}
                     <ul class="dropdown-list">
-                        {% for child_classification in classification.hijos.all %}
-                            {% if child_classification.pro.exists %}
+                        {% for child in cate.get_children %}  <!-- Itera sobre las hijas -->
+                            {% if child.products.exists %}
                                 <li class="dropdown-item">
-                                    <a href="{% url 'products:list' %}?classification_id={{ child_classification.pk  }}" > {{ child_classification.nombre }}</a>
+                                    <a href="{% url 'products:list' %}?category={{ child.pk  }}" > {{ child }}</a>
                                 </li>
                             {% endif %}
                         {% endfor %}
                     </ul>
                 {% endif %}
-            {% endif %}
+{#            {% endif %}#}
         </li>
     {% endif %}
 {% endfor %}
@@ -427,25 +427,25 @@
      
 
       <li class="menu-category">
-        {% for clasification in classifications %}
-            {% if clasification.productos_padre.count > 0 %}
+       {% for cate in category %}
+            {% if cate.has_products %}
                 <div class="accordion-menu" data-accordion-btn>
-                    <a href="{% url 'products:list' %}?classification_id_padre={{ clasification.id }}" class="menu-title">
-                        <p>{{ clasification.nombre }}</p>
+                    <a href="{% url 'products:list' %}?category={{ cate.pk }}" class="menu-title">
+                        <p>{{ cate }}</p>
                     </a>
                     <div>
                         <ion-icon name="add-outline" class="add-icon"></ion-icon>
                         <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
                     </div>
                 </div>
-    
-                {% if clasification.hijos.all %}
+
+                {% if cate.get_children %}
                     <ul class="submenu-category-list" data-accordion>
-                        {% for child_classification in clasification.hijos.all %}
-                            {% if child_classification.pro.exists %}
+                        {% for child in cate.get_children %}
+                            {% if child.products.exists %}
                                 <li class="submenu-category">
-                                    <a href="{% url 'products:list' %}?classification_id={{ child_classification.id }}" class="sidebar-submenu-title submenu-title">
-                                        {{ child_classification.nombre }}
+                                    <a href="{% url 'products:list' %}?category={{ child.pk }}" class="sidebar-submenu-title submenu-title">
+                                        {{ child }}
                                     </a>
                                 </li>
                             {% endif %}

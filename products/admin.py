@@ -2,25 +2,28 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Product, ProductImage, ClasificacionPadre, ClasificacionHija, ProductOffer, ClasificacionNieta, \
-    Rating_product, Rating, Likes
+from .models import Product, ProductImage, ProductOffer, \
+    Rating_product, Rating, Likes,Category
 
+
+from django.contrib import admin
+from .models import Product
 
 class ProductAdmin(admin.ModelAdmin):
-    readonly_fields = [f.name for f in Product._meta.fields]  # Todos los campos son de solo lectura
-    list_display = ['name', 'user', 'price', 'active', 'handle', 'timestamp' ]  # Campos a mostrar en la lista
-    search_fields = ['name', 'user__username','handle']  # Campos por los que se puede buscar
+    readonly_fields = [f.name for f in Product._meta.fields if f.name != 'categories']  # Todos los campos son de solo lectura, excepto 'categories'
+    list_display = ['name', 'user', 'price', 'active', 'handle', 'timestamp']  # Campos a mostrar en la lista
+    search_fields = ['name', 'user__username', 'handle']  # Campos por los que se puede buscar
     list_filter = ['active']  # Campos por los que se puede filtrar
 
     def has_change_permission(self, request, obj=None):
-        return False  # Evita que se pueda cambiar el modelo en su totalidad
+        return True  # Permitir el cambio del objeto si es necesario
 
     def has_delete_permission(self, request, obj=None):
         return False  # Evita que se pueda eliminar el modelo
 
+
 admin.site.register(Product, ProductAdmin)
 
-admin.site.register(ClasificacionNieta)
 
 
 
@@ -75,28 +78,7 @@ class LikesAdmin(admin.ModelAdmin):
 
 
 
-# Modelo ClasificacionPadre
-@admin.register(ClasificacionPadre)
-class ClasificacionPadreAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'num_hijos')
-    search_fields = ('nombre',)
 
-    def num_hijos(self, obj):
-        return obj.hijos.count()
-
-    num_hijos.short_description = 'Número de hijos'
-
-
-# Modelo ClasificacionHija
-@admin.register(ClasificacionHija)
-class ClasificacionHijaAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'padre')
-    search_fields = ('nombre', 'padre__nombre')
-    list_filter = ('padre',)
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.select_related('padre')
 
 
 
@@ -108,3 +90,12 @@ from django.utils.translation import gettext_lazy as _
 admin.site.site_header = _("Administración de E-commerce")
 admin.site.site_title = _("E-commerce")
 admin.site.index_title = _("Bienvenido al panel de administración de E-Commerce")
+
+
+from treebeard.admin import TreeAdmin
+from treebeard.forms import movenodeform_factory
+from .models import Category
+class MyAdmin(TreeAdmin):
+    form = movenodeform_factory(Category)
+
+admin.site.register(Category, MyAdmin)

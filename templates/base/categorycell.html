@@ -28,27 +28,27 @@
             </a>
         </li>
 
-        {% for classification in classifications %}
-            {% if classification.productos_padre.count > 0 %}
+        {% for cate in category %}
+            {% if cate.has_products %}
                 <li class="menu-category">
-                    <a class="menu-title" href="{% url 'products:list' %}?classification_id_padre={{ classification.pk }}">
-                        {{ classification.nombre }}
+                    <a class="menu-title" href="{% url 'products:list' %}?category={{ cate.pk }}">
+                        {{ cate }}
                     </a>
-                    {% if not classification.parent %}
-                        {% if classification.hijos.exists %}
+{#                    {% if not classification.parent %}#}
+                        {% if cate.get_children %}
                             <ul class="dropdown-list">
-                                {% for child_classification in classification.hijos.all %}
-                                    {% if child_classification.pro.exists %}
+                                {% for child in cate.get_children %}
+                                    {% if child.products.exists %}
                                         <li class="dropdown-item">
-                                            <a href="{% url 'products:list' %}?classification_id={{ child_classification.pk }}">
-                                                {{ child_classification.nombre }}
+                                            <a href="{% url 'products:list' %}?category={{ cate.pk }}">
+                                                {{ cate }}
                                             </a>
                                         </li>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
                         {% endif %}
-                    {% endif %}
+{#                    {% endif %}#}
                 </li>
             {% endif %}
         {% endfor %}

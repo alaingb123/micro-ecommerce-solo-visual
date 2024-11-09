@@ -1,45 +1,41 @@
 from django import forms
 from django.forms import modelformset_factory, inlineformset_factory, NumberInput
-from .models import Product, ProductImage, ProductOffer, ClasificacionPadre, ClasificacionHija
+from .models import Product, ProductImage, ProductOffer , Category
+
+
 
 
 
 
 
 class ProductForm(forms.ModelForm):
-    clasificaciones_padre = forms.ModelChoiceField(
-        queryset=ClasificacionPadre.objects.all(),
-        empty_label="Seleccione una clasificación padre",
-        required=False
-    )
-    class Meta:
-        model = Product
-        fields = ['name', 'image','clasificaciones_padre','handle', 'price', 'supply', 'description']
-
-
-
-
-
-class ProductUpdateForm(forms.ModelForm):
-    clasificaciones_padre = forms.ModelChoiceField(
-        queryset=ClasificacionPadre.objects.all(),
+    category = forms.ModelChoiceField(
+        queryset=Category.get_root_nodes(),
         empty_label="Seleccione una clasificación",
         required=False
     )
 
     class Meta:
         model = Product
-        fields = [
-            "image", 'name', 'keywords', 'clasificaciones_padre',
-             'handle', 'price', 'supply',
-            'description', 'short_description', 'active'
-        ]
+        fields = ['name', 'image', 'category', 'handle', 'price', 'supply', 'description', 'keywords']
 
-    def __init__(self, *args, **kwargs):
-        super(ProductUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['clasificaciones_padre'].queryset = ClasificacionPadre.objects.all()  # O fil
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({'class': 'form-control'})
+
+
+
+
+class ProductUpdateForm(forms.ModelForm):
+    category = forms.ModelChoiceField(
+        queryset=Category.get_root_nodes(),
+        empty_label="Seleccione una clasificación",
+        required=False
+    )
+    class Meta:
+        model = Product
+        fields = [
+            "image", 'name',
+             'handle', 'price', 'supply',
+            'description', 'short_description', 'category','active','keywords'
+        ]
 
 
 

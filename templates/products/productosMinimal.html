@@ -33,19 +33,11 @@
                   <h4 class="showcase-title">{{ product.name}}</h4>
                 </a>
 
-                {% if product.clasificacion.all %}
+                {% if product.category %}
 
-              {% for clasi in product.clasificacion.all|slice:":1" %}
+                <a href="{% url 'products:list' %}?category={{ product.category.pk }}" class="showcase-category">{{ product.category }}</a>
 
-                <a href="{% url 'products:list' %}?classification_id={{ clasi.id }}" class="showcase-category">{{ clasi.nombre }}</a>
-                    {% endfor %}
-                    {% else %}
-                     {% if product.clasificaciones_padre %}
-
-                     <a href="{% url 'products:list' %}?classification_id_padre={{ product.clasificaciones_padre.id }}" class="showcase-category">{{ product.clasificaciones_padre.nombre }}</a>
-
-                         {% endif %}
-                  {% endif %}
+                   {% endif %}
 
 
                 <div class="price-box">
@@ -83,7 +75,7 @@
             <div class="showcase">
 
               <a href="{% url 'products:detail' product.handle %}" class="showcase-img-box">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="showcase-img"
+                <img src=" {% if product.image %}{{ product.image.url }} {% endif %}" alt="{{ product.name }}" class="showcase-img"
                   width="70">
               </a>
 
@@ -93,19 +85,11 @@
                   <h4 class="showcase-title">{{ product.name }}</h4>
                 </a>
 
-               {% if product.clasificacion.all %}
+               {% if product.category %}
 
-              {% for clasi in product.clasificacion.all|slice:":1" %}
+                <a href="{% url 'products:list' %}?category={{ product.category.pk }}" class="showcase-category">{{ product.category }}</a>
 
-                <a href="{% url 'products:list' %}?classification_id={{ clasi.id }}" class="showcase-category">{{ clasi.nombre }}</a>
-                    {% endfor %}
-                    {% else %}
-                     {% if product.clasificaciones_padre %}
-
-                     <a href="{% url 'products:list' %}?classification_id_padre={{ product.clasificaciones_padre.id }}" class="showcase-category">{{ product.clasificaciones_padre.nombre }}</a>
-
-                         {% endif %}
-                  {% endif %}
+                   {% endif %}
 
                 <div class="price-box">
 
@@ -144,7 +128,7 @@
             <div class="showcase">
 
               <a href="{% url 'products:detail' product.handle %}" class="showcase-img-box">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="showcase-img"
+                <img src=" {% if product.image %}{{ product.image.url }} {% endif %}" alt="{{ product.name }}" class="showcase-img"
                   width="70">
               </a>
 
@@ -154,19 +138,11 @@
                   <h4 class="showcase-title">{{ product.name }}</h4>
                 </a>
 
-               {% if product.clasificacion.all %}
+               {% if product.category %}
 
-              {% for clasi in product.clasificacion.all|slice:":1" %}
+                <a href="{% url 'products:list' %}?category={{ product.category.pk }}" class="showcase-category">{{ product.category }}</a>
 
-                <a href="{% url 'products:list' %}?classification_id={{ clasi.id }}" class="showcase-category">{{ clasi.nombre }}</a>
-                    {% endfor %}
-                    {% else %}
-                     {% if product.clasificaciones_padre %}
-
-                     <a href="{% url 'products:list' %}?classification_id_padre={{ product.clasificaciones_padre.id }}" class="showcase-category">{{ product.clasificaciones_padre.nombre }}</a>
-
-                         {% endif %}
-                  {% endif %}
+                   {% endif %}
 
                 <div class="price-box">
 

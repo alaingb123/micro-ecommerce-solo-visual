@@ -94,20 +94,12 @@
                 <div class="showcase-content">
 
 
-                    {% if object.clasificacion.all %}
+                    {% if object.category %}
 
-              {% for clasi in object.clasificacion.all|slice:":1" %}
-
-                <a href="{% url 'products:list' %}?classification_id={{ clasi.id }}" class="showcase-category">{{ clasi.nombre }}</a>
-                    {% endfor %}
-                    {% else %}
-                     {% if object.clasificaciones_padre %}
+                <a href="{% url 'products:list' %}?category={{ object.category.pk }}" class="showcase-category">{{ object.category }} </a>
 
 
-                                 <a href="{% url 'products:list' %}?classification_id_padre={{ object.clasificaciones_padre.id }}" class="showcase-category">{{ object.clasificaciones_padre.nombre }}</a>
-
-                         {% endif %}
-                  {% endif %}
+{% endif %}
 
 
                   <a href="{% url 'products:detail' object.handle %}">

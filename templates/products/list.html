@@ -13,24 +13,24 @@
 
 
 
-{% if classifications %}
-{% include 'products/category2.html' with classifications=classifications %}
+{% if category %}
+{% include 'products/category2.html' with category=category %}
     {% endif %}
 
-{% if classifications %}
-{% include 'products/productos.html' with classifications=classifications top_products=top_products %}
+{% if category %}
+{% include 'products/productos.html' with category=category top_products=top_products %}
     {% endif %}
 
 {% if filtrado == False %}
 {% include 'products/productosMinimal.html' %}
 
 
-{% include 'products/productosFeatured.html' with classifications=classifications %}
+{% include 'products/productosFeatured.html' with category=category %}
     {% endif %}
 
 {% include 'products/productosGrid.html' %}
 
-{% include 'products/tcs.html' with classifications=classifications %}
+{% include 'products/tcs.html' with category=category %}
 
 {#{% include 'products/blog.html' with classifications=classifications %}#}
 

@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'extra',
     'ventas',
     'pedidos_stripe',
+    'treebeard',
 ]
 
 MIDDLEWARE = [

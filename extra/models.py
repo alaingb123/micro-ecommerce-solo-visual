@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
@@ -86,3 +87,8 @@ class StoreSettings(models.Model):
     def get_instance(cls):
         instance, created = cls.objects.get_or_create(id=1)
         return instance
+
+    def save(self, *args, **kwargs):
+        if not self.pk and StoreSettings.objects.exists():
+            raise ValidationError('Ya existe un objeto de configuración.')
+        super().save(*args, **kwargs)

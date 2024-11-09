@@ -24,17 +24,17 @@
               </div>
 
               <ul class="sidebar-menu-category-list">
-                {% for clasification in classifications %}
-                    {% if clasification.productos_padre.count > 0 %}
+                 {% for cate in category %}
+                    {% if cate.has_products %}
                         <li class="sidebar-menu-category">
                             <div>
                                 <button class="sidebar-accordion-menu" data-accordion-btn>
                                     <div class="menu-title-flex">
-                                        {% if clasification.image %}
-                                            <img src="{{ clasification.image.url }}" alt="{{ clasification.nombre }}" width="20" height="20" class="menu-title-img">
+                                        {% if cate.image %}
+                                            <img src="{{ cate.image.url }}" alt="{{ cate }}" width="20" height="20" class="menu-title-img">
                                         {% endif %}
-                                        <a href="{% url 'products:list' %}?classification_id_padre={{ clasification.id }}">
-                                            <p class="menu-title">{{ clasification.nombre }}</p>
+                                        <a href="{% url 'products:list' %}?category={{ cate.pk }}">
+                                            <p class="menu-title">{{ cate }}</p>
                                         </a>
                                     </div>
                                     <div>
@@ -42,16 +42,16 @@
                                         <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
                                     </div>
                                 </button>
-                                {% if clasification.hijos.all %}
+                                {% if cate.get_children %}
                                 <ul class="sidebar-submenu-category-list" data-accordion>
-                                    {% for child_classification in clasification.hijos.all %}
-                                        {% if child_classification.pro.exists %}
+                                    {% for child in cate.get_children %}
+                                        {% if child.products.exists %}
                                             <li class="sidebar-submenu-category">
-                                                <a href="{% url 'products:list' %}?classification_id={{ child_classification.id }}" class="sidebar-submenu-title">
-                                                    <p class="product-name">{{ child_classification.nombre }}</p>
-                                                    {% with product_count=child_classification.pro.count %}
-                                                        <data value="300" class="stock" title="Available Stock">{{ product_count }}</data>
-                                                    {% endwith %}
+                                                <a href="{% url 'products:list' %}?category={{ child.pk }}" class="sidebar-submenu-title">
+                                                    <p class="product-name">{{ child }}</p>
+
+{#                                                        <data value="300" class="stock" title="Available Stock">{{ child.product_count }}</data>#}
+
                                                 </a>
                                             </li>
                                         {% endif %}
@@ -78,7 +78,7 @@
                   <div class="showcase">
 
                     <a href="{% url 'products:detail' top.handle %}" class="showcase-img-box">
-                      <img src="{{top.image.url}}" alt="{{ top.name }}" width="75" height="75"
+                      <img src="{% if top.image %}{{top.image.url}} {% endif %}" alt="{{ top.name }}" width="75" height="75"
                         class="showcase-img">
                     </a>
 

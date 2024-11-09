@@ -17,29 +17,30 @@
 
         <div class="category-item-container has-scrollbar">
 
-            {% for clasification in classifications %}
-                {% if clasification.productos_padre.count > 0 %}
+            {% for cate in category %}
+                {% if cate.has_products  %}
                     <div class="category-item">
 
 
-                        <div class="category-img-box" style="{% if clasification.image %} background-image: url('{{ clasification.image.url }}'); {% endif %}">
-                            <a href="{% url 'products:list' %}?classification_id_padre={{ clasification.id }}">
+                        <div class="category-img-box" style="{% if cate.image %} background-image: url('{{ cate.image.url }}'); {% endif %}">
+                            <a href="{% url 'products:list' %}?category={{ cate.pk }}">
                                 <!-- Contenido adicional si es necesario -->
+
                             </a>
                         </div>
-                        
+
 
                         <div class="category-content-box">
 
                             <div class="category-content-flex">
-                                <h3 class="category-item-title">{{ clasification.nombre }}</h3>
+                                <h3 class="category-item-title">{{ cate }}</h3>
 
-                                {% with product_count=clasification.productos_padre.count %}
-                                    <p class="category-item-amount">{{ product_count }}</p>
-                                {% endwith %}
+
+                                    <p class="category-item-amount">{{ cate.product_count }}</p>
+
                             </div>
 
-                            <a href="{% url 'products:list' %}?classification_id_padre={{ clasification.id }}" class="category-btn">Mostrar</a>
+                            <a href="{% url 'products:list' %}?category={{ cate.pk }}" class="category-btn">Mostrar</a>
 
                         </div>
 
