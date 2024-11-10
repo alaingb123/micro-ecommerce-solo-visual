@@ -60,6 +60,24 @@
     .promo-button:hover {
         background-color: rgba(0, 0, 0, 0.9);
     }
+
+
+    @media (max-width: 600px) {
+    .button-container {
+        bottom: 10px; /* Ajusta la posición vertical */
+        left: 35%; /* Centra el contenedor en la pantalla */
+        transform: translateX(-50%);
+        gap: 5px; /* Reduce el espacio entre botones */
+        flex-direction: column; /* Cambia la disposición a columna */
+        align-items: left;
+    }
+
+    .promo-button {
+        padding: 6px 12px; /* Reduce el tamaño del botón */
+        font-size: 12px; /* Reduce el tamaño de la fuente */
+    }
+}
+
 </style>
 
 <div class="responsive-banner">
