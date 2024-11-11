@@ -1,3 +1,5 @@
+import os
+
 import requests
 from django.core.checks import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -274,13 +276,18 @@ def product_manage_detail_view(request,handle=None):
 
             try:
                 clasi2 = int(request.POST.get('category'))
-                print("las clasi padre es ",clasi2)
+
                 clasificacion_padre = get_object_or_404(Category, pk=clasi2)
             except:
                 clasificacion_padre = None
 
         if form.is_valid():
+
             instance = form.save(commit=False)
+            if 'image' in request.FILES:
+                # Si hay una imagen antigua y es diferente, eliminarla
+                if instance.image and os.path.isfile(instance.image.path):
+                    os.remove(instance.image.path)
             try:
                 price_changed = instance.price != obj.offer.precio_viejo  # Compara el nuevo precio con el actual
                 if price_changed and obj.offer:
@@ -355,7 +362,7 @@ def product_manage_detail_view(request,handle=None):
         else:
             padre = obj.category.pk
             context['padre'] = padre
-            print("la padre es", padre)
+
     except:
         pass
     context['form'] = form
