@@ -65,11 +65,11 @@
     @media (max-width: 768px) {
     .button-container {
         bottom: 15px; /* Ajusta la posición vertical */
-        left: 50%; /* Centra el contenedor horizontalmente */
+        left: 25%; /* Centra el contenedor horizontalmente */
         transform: translateX(-50%);
-        gap: 8px; /* Reduce el espacio entre botones */
-        flex-direction: row; /* Mantiene los botones en una fila */
-        align-items: center;
+        display: flex;
+        gap: 10px;
+        z-index: 10;
     }
 
     .promo-button {
@@ -81,11 +81,11 @@
 @media (max-width: 600px) {
     .button-container {
         bottom: 10px;
-        left: 50%; /* Centra el contenedor horizontalmente */
+        left: 35%; /* Centra el contenedor horizontalmente */
         transform: translateX(-50%);
-        gap: 5px;
-        flex-direction: column; /* Cambia a disposición en columna */
-        align-items: center;
+        display: flex;
+        gap: 10px;
+        z-index: 10;
     }
 
     .promo-button {
