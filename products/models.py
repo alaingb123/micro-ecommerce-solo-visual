@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import User
 from django.utils import timezone
 import pathlib
@@ -63,7 +65,7 @@ class Product(models.Model):
     )
 
     handle = models.SlugField(unique=True)  # slug
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=9.99)
+    price = models.DecimalField(max_digits=10, decimal_places=0, default=9)
     og_price = models.DecimalField(max_digits=10, decimal_places=2, default=9.99)
     stripe_price_id = models.CharField(max_length=220, blank=True, null=True)
     stripe_price = models.IntegerField(default=999)  # 100 * price
@@ -73,6 +75,11 @@ class Product(models.Model):
     active = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def count_views(self):
+        """Cuenta las vistas del producto en los últimos 7 días."""
+        week_ago = timezone.now() - timedelta(days=7)
+        return self.productview_set.filter(timestamp__gte=week_ago).count()
 
     def total_ingresos(self):
         return sum(venta.total_venta() for venta in self.venta_set.all())

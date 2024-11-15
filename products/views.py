@@ -228,6 +228,8 @@ def product_list_view(request,provider_id=None,promotion_id=None):
                 cate.products.count() +
                 cate.get_children().aggregate(total=Count('products'))['total'] or 0
         )
+    # Ordenar el object_list por el conteo de vistas
+    object_list = (Product.objects.filter(id__in=object_list.values_list('id', flat=True)).annotate(view_count=models.Count('productview', filter=models.Q(productview__timestamp__gte=week_ago, active=True)))).order_by('-view_count')  # Ordenar por el conteo de vistas
 
     context = {
         'object_list': object_list,
