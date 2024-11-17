@@ -19,8 +19,13 @@ from treebeard.mp_tree import MP_Node
 class Category(MP_Node):
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to="clasificacion/", blank=True, null=True)
+    search_count = models.PositiveIntegerField(default=0)
 
     node_order_by = ['name']
+
+    def increment_search_count(self):
+        self.search_count += 1
+        self.save()
 
     def __str__(self):
         return self.name

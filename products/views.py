@@ -120,6 +120,7 @@ def product_list_view(request,provider_id=None,promotion_id=None):
 
     # ofertas premuim
     premium_offer = ProductOffer.objects.filter(is_premium=True,is_active=True)
+    premium_offer = sorted(premium_offer, key=lambda offer: offer.product.count_views(), reverse=True)
     # ---------------------------------------------------------------
 
     # productos mejor evaluados
@@ -171,6 +172,7 @@ def product_list_view(request,provider_id=None,promotion_id=None):
 
     category = Category.get_root_nodes()
     carro = Carro(request)
+    category = sorted(category, key=lambda x: x.search_count, reverse=True)
 
 
 
@@ -187,6 +189,8 @@ def product_list_view(request,provider_id=None,promotion_id=None):
         filtrado = True
         # Obtener la categoría seleccionada
         categoria_seleccionada = Category.objects.get(pk=classification_id)
+        categoria_seleccionada.increment_search_count()
+        print(categoria_seleccionada.search_count)
         # Filtrar los productos por la categoría y sus descendientes
         descendants = categoria_seleccionada.get_descendants()
         object_list1 = object_list.filter(category__in=descendants)
@@ -232,7 +236,7 @@ def product_list_view(request,provider_id=None,promotion_id=None):
     object_list = (Product.objects.filter(id__in=object_list.values_list('id', flat=True)).annotate(view_count=models.Count('productview', filter=models.Q(productview__timestamp__gte=week_ago, active=True)))).order_by('-view_count')  # Ordenar por el conteo de vistas
 
     context = {
-        'object_list': object_list,
+        'object_list': object_list[:50],
         'carro': carro,
         'category': category,
         'promociones': promociones,
