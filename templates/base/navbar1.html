@@ -296,6 +296,47 @@
   </div>
 
 
+
+
+
+<style>
+.desktop-navigation-menu {
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin; /* Scroll delgado en Firefox */
+}
+
+.desktop-navigation-menu::-webkit-scrollbar {
+  height: 6px; /* Altura del scrollbar horizontal */
+}
+
+.desktop-navigation-menu::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color del scrollbar */
+  border-radius: 3px; /* Bordes redondeados */
+}
+
+.desktop-navigation-menu::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Fondo del track */
+}
+
+
+
+.desktop-menu-category-list {
+  display: flex; /* Coloca los elementos en una fila */
+  gap: 25px; /* Espacio entre elementos */
+}
+
+.menu-category {
+  flex: 0 0 auto; /* Evita que los elementos cambien de tamaño */
+}
+
+.dropdown-list {
+  position: absolute; /* Asegura que los dropdowns no interfieran con el scroll horizontal */
+  white-space: normal; /* Restablece el comportamiento normal dentro del dropdown */
+}
+
+</style>
+
 {% if category %}
 
   <nav class="desktop-navigation-menu">

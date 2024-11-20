@@ -2707,17 +2707,19 @@
       display: -webkit-flex;
       display: -ms-flexbox;
       display: flex;
-      -webkit-box-pack: center;
-      -webkit-justify-content: center;
-          -ms-flex-pack: center;
-              justify-content: center;
+      -webkit-box-pack: start; /* Cambiado a start para permitir desplazamiento */
+      -webkit-justify-content: start;
+          -ms-flex-pack: start;
+              justify-content: start;
       -webkit-box-align: center;
       -webkit-align-items: center;
           -ms-flex-align: center;
               align-items: center;
       gap: 30px;
+      overflow-x: auto; /* Agrega scroll horizontal */
+      white-space: nowrap; /* Evita que los elementos se envuelvan */
     }
-  
+    
     .desktop-menu-category-list .menu-category:not(:nth-child(2)) { position: relative; }
   
     .desktop-menu-category-list .menu-category > .menu-title {
