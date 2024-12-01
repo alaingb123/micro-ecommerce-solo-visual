@@ -26,9 +26,12 @@
               <ul class="sidebar-menu-category-list">
                  {% for cate in category %}
                     {% if cate.has_products %}
+
                         <li class="sidebar-menu-category">
                             <div>
+
                                 <button class="sidebar-accordion-menu" data-accordion-btn>
+
                                     <div class="menu-title-flex">
                                         {% if cate.image %}
                                             <img src="{{ cate.image.url }}" alt="{{ cate }}" width="20" height="20" class="menu-title-img">
@@ -38,8 +41,10 @@
                                         </a>
                                     </div>
                                     <div>
+                                        {% if cate.get_children %}
                                         <ion-icon name="add-outline" class="add-icon"></ion-icon>
                                         <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
+                                            {% endif %}
                                     </div>
                                 </button>
                                 {% if cate.get_children %}
