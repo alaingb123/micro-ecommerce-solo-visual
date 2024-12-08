@@ -22,7 +22,7 @@ from .form import ProductUpdateForm, ProductAttachmentInlineFormSet, ProductOffe
 from .models import Product, ProductImage, ProductView, Rating, ProductOffer, Rating_product, Likes, \
      Venta, Category
 
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Q
 from django.utils import timezone
 from datetime import datetime, timedelta
 
@@ -181,7 +181,9 @@ def product_list_view(request,provider_id=None,promotion_id=None):
     search_query = request.GET.get('search')
     if search_query:
         filtrado=True
-        object_list = object_list.filter(keywords__icontains=search_query)
+        object_list = object_list.filter(
+            Q(keywords__icontains=search_query) | Q(name__icontains=search_query)
+        )
 
     # Handle classification filter
     classification_id = request.GET.get('category')
@@ -233,7 +235,10 @@ def product_list_view(request,provider_id=None,promotion_id=None):
                 cate.get_children().aggregate(total=Count('products'))['total'] or 0
         )
     # Ordenar el object_list por el conteo de vistas
-    object_list = (Product.objects.filter(id__in=object_list.values_list('id', flat=True)).annotate(view_count=models.Count('productview', filter=models.Q(productview__timestamp__gte=week_ago, active=True)))).order_by('-view_count')  # Ordenar por el conteo de vistas
+    object_list = (
+        Product.objects.filter(id__in=object_list.values_list('id', flat=True))
+        .order_by('-views')  # Ordenar por el campo views
+    )
 
     context = {
         'object_list': object_list[:50],
@@ -377,6 +382,7 @@ def product_manage_detail_view(request,handle=None):
 def product_detail_view(request,handle=None):
     obj = get_object_or_404(Product,handle=handle)
     user_rating = None
+    obj.views  = obj.views + 1
     if obj.active == False:
         return redirect('products:list')
     attachments = ProductImage.objects.filter(product=obj)

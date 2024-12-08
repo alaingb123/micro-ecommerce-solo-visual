@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'ventas',
     'pedidos_stripe',
     'treebeard',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

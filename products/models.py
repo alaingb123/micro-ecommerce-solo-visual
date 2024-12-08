@@ -80,6 +80,7 @@ class Product(models.Model):
     active = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    views = models.IntegerField(default=0)
 
     def count_views(self):
         """Cuenta las vistas del producto en los últimos 7 días."""
