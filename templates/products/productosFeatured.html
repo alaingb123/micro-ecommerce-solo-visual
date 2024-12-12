@@ -6,7 +6,7 @@
 
             <h2 class="title">Ofertas Premium</h2>
 
-            <div class="showcase-wrapper has-scrollbar">
+            <div class="showcase-wrapper has-scrollbar" id="carousel">
 
                 {% for offer in  premium_offer %}
 
@@ -132,5 +132,46 @@
     font-weight: bold; /* Texto en negrita */
     text-align: center; /* Alineación centrada */
 }
+
+
+
+
+#carousel {
+  display: flex;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+.showcase-container {
+  min-width: 100%; /* Cada elemento ocupa todo el ancho del contenedor */
+  transition: transform 0.5s ease-in-out;
+}
+
 </style>
+
+<script>
+ document.addEventListener("DOMContentLoaded", () => {
+  const carousel = document.getElementById("carousel");
+  let scrollAmount = 0;
+  const scrollStep = 300; // Cantidad de desplazamiento en píxeles
+  const scrollInterval = 3000; // Intervalo de tiempo en milisegundos
+
+  function autoScroll() {
+    scrollAmount += scrollStep;
+    if (scrollAmount >= carousel.scrollWidth) {
+      scrollAmount = 0; // Reinicia el scroll al inicio
+    }
+    carousel.scrollTo({
+      left: scrollAmount,
+      behavior: "smooth",
+    });
+  }
+
+  // Configura el intervalo
+  setInterval(autoScroll, scrollInterval);
+});
+
+</script>
+
 

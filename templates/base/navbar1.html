@@ -295,119 +295,100 @@
 
   </div>
 
-
-
-
-
 <style>
-.desktop-navigation-menu {
-  overflow-x: auto;
-  overflow-y: hidden; /* Evitar scroll vertical */
-  white-space: nowrap; /* Evitar que los elementos bajen a una nueva línea */
-  scrollbar-width: thin; /* Scroll delgado en Firefox */
-}
+  .desktop-navigation-menu {
+    overflow-x: hidden; /* Oculta el scroll inicialmente */
+    overflow-y: hidden; /* Asegura que el scroll vertical no esté presente */
+    white-space: nowrap; /* Evita que los elementos se envuelvan */
+    scrollbar-width: none; /* Oculta el scrollbar en Firefox */
+    position: relative;
+    transition: all 0.3s ease; /* Transición suave para los cambios */
+  }
 
-.desktop-navigation-menu::-webkit-scrollbar {
-  height: 6px; /* Altura del scrollbar horizontal */
-}
+  .desktop-navigation-menu:hover {
+    overflow-x: auto; /* Activa el scroll horizontal al pasar el mouse */
+  }
 
-.desktop-navigation-menu::-webkit-scrollbar-thumb {
-  background-color: #888; /* Color del scrollbar */
-  border-radius: 3px; /* Bordes redondeados */
-}
+  .desktop-navigation-menu::-webkit-scrollbar {
+    height: 6px; /* Altura del scrollbar horizontal */
+    background-color: transparent; /* Oculta el scrollbar inicialmente */
+    transition: background-color 0.3s ease; /* Suaviza la transición */
+  }
 
-.desktop-navigation-menu::-webkit-scrollbar-track {
-  background: #f0f0f0; /* Fondo del track */
-}
+  .desktop-navigation-menu:hover::-webkit-scrollbar {
+    background-color: #f0f0f0; /* Muestra el fondo del track */
+  }
 
+  .desktop-navigation-menu::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color del scrollbar */
+    border-radius: 3px; /* Bordes redondeados */
+  }
 
+  .desktop-navigation-menu::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Cambia el color del scrollbar al pasar el mouse */
+  }
 
-.desktop-menu-category-list {
-  display: flex; /* Coloca los elementos en una fila */
-  gap: 25px; /* Espacio entre elementos */
-}
+  .desktop-menu-category-list {
+    display: flex; /* Coloca los elementos en fila */
+    gap: 25px; /* Espaciado entre elementos */
+  }
 
-.menu-category {
-  flex: 0 0 auto; /* Evita que los elementos cambien de tamaño */
-}
-
-.dropdown-list {
-  position: absolute; /* Asegura que los dropdowns no interfieran con el scroll horizontal */
-  white-space: normal; /* Restablece el comportamiento normal dentro del dropdown */
-}
-
+  .menu-category {
+    flex: 0 0 auto; /* Evita que los elementos cambien de tamaño */
+  }
 </style>
 
-{% if category %}
-
-  <nav class="desktop-navigation-menu">
-
-    <div class="container">
-
-      <ul class="desktop-menu-category-list">
-
-        <li class="menu-category">
-          <a href="{% url 'products:list' %}" class="menu-title">
-              Todo
-          </a>
-      </li>
-
-
-  <li class="menu-category">
-
-      </li>
-
-
-
-{% for cate in category %}
-    {% if cate.has_products %}
-        <li class="menu-category">
-            <a class="menu-title" href="{% url 'products:list' %}?category={{ cate.pk }}">
-        {{ cate }}
-            </a>
-{#            {% if not classification.parent %}#}
-                {% if cate.get_children %}
-                    <ul class="dropdown-list">
-                        {% for child in cate.get_children %}  <!-- Itera sobre las hijas -->
-                            {% if child.products.exists %}
-                                <li class="dropdown-item">
-                                    <a href="{% url 'products:list' %}?category={{ child.pk  }}" > {{ child }}</a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-{#            {% endif %}#}
-        </li>
-    {% endif %}
-{% endfor %}
-
-
-
+<nav class="desktop-navigation-menu">
+  <div class="container">
+    <ul class="desktop-menu-category-list">
       <li class="menu-category">
-          <a href="{% url 'products:list' %}?descuento=True" class="menu-title">
-              Descuentos
-          </a>
+        <a href="{% url 'products:list' %}" class="menu-title">Todo</a>
       </li>
-
-
-         {% if request.user.username %}
-
-     <li class="menu-category">
-              <a class="menu-title" href="{% url 'pedidos_stripe:purchases_stripe' %}" style="font-size: 14px;color: gray;">Pedidos</a>
-              </li>
+      {% for cate in category %}
+      {% if cate.has_products %}
+      <li class="menu-category">
+        <a class="menu-title" href="{% url 'products:list' %}?category={{ cate.pk }}">
+          {{ cate }}
+        </a>
+        {% if cate.get_children %}
+        <ul class="dropdown-list">
+          {% for child in cate.get_children %}
+          {% if child.products.exists %}
+          <li class="dropdown-item">
+            <a href="{% url 'products:list' %}?category={{ child.pk }}">{{ child }}</a>
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </li>
       {% endif %}
+      {% endfor %}
+      <li class="menu-category">
+        <a href="{% url 'products:list' %}?descuento=True" class="menu-title">Descuentos</a>
+      </li>
+      {% if request.user.username %}
+      <li class="menu-category">
+        <a class="menu-title" href="{% url 'pedidos_stripe:purchases_stripe' %}" style="font-size: 14px; color: gray;">Pedidos</a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+<script>
+  // JavaScript para asegurar que los estilos se aplican correctamente
+  document.addEventListener('DOMContentLoaded', () => {
+    const navMenu = document.querySelector('.desktop-navigation-menu');
 
+    navMenu.addEventListener('mouseenter', () => {
+      navMenu.style.overflowX = 'auto'; // Activa el scroll al entrar el mouse
+    });
 
-
-      </ul>
-
-    </div>
-
-  </nav>
-
-<!--Aqui termina-->
-{% endif %}
+    navMenu.addEventListener('mouseleave', () => {
+      navMenu.style.overflowX = 'hidden'; // Oculta el scroll al salir el mouse
+    });
+  });
+</script>
 
 
 <!--Empieza la vista telefono-->

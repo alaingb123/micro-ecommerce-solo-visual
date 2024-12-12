@@ -204,9 +204,10 @@
               <div class="icon-box">
                 <ion-icon name="mail-outline"></ion-icon>
               </div>
-  
-              <a href="mailto:{{ store_settings.email }}" class="footer-nav-link">{{ store_settings.email }}</a>
+            
+              <a href="mailto:{{ store_settings.email | lower }}" class="footer-nav-link">{{ store_settings.email | lower }}</a>
             </li>
+            
   
           </ul>
   

@@ -4,6 +4,14 @@
       - PRODUCT MINIMAL
     -->
 
+<style>
+  html {
+  scroll-behavior: smooth;
+}
+
+</style>
+
+
     <div class="product-minimal">
 
         {% if new_products %}
@@ -163,3 +171,28 @@
       </div>
 
     </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+  const showcases = document.querySelectorAll(".product-showcase");
+
+  showcases.forEach((showcase, index) => {
+    const container = showcase.querySelector(".showcase-wrapper");
+
+    if (container) {
+      container.addEventListener("scroll", () => {
+        // Calcular si el usuario ha llegado al final del scroll
+        const isAtEnd =
+          Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
+
+        if (isAtEnd && showcases[index + 1]) {
+          // Mover al siguiente showcase si existe
+          showcases[index + 1].scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    }
+  });
+});
+
+
+    </script>
