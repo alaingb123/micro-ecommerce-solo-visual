@@ -9,6 +9,9 @@ def agregar_producto(request, product_id):
 
     if not product.active:
         return JsonResponse({'error': 'Producto no disponible'}, status=400)
+    if (len(carro.carro)) > 19 :
+        return JsonResponse({'error': 'Solo puede llevar 20 productos en cada compra'}, status=400)
+
 
     quantity = int(request.POST.get('quantity', 1))
     carro.agregar(product=product, quantity=quantity)
@@ -18,14 +21,13 @@ def agregar_producto(request, product_id):
 def agregar_producto_cantidad(request, product_id,quantity):
     carro = Carro(request)
     product = get_object_or_404(Product, pk=product_id)
-    print(quantity)
-    print(product)
 
     if not product.active:
         return JsonResponse({'error': 'Producto no disponible'}, status=400)
+    if (len(carro.carro)) > 19 :
+        return JsonResponse({'error': 'Solo puede llevar 20 productos en cada compra'}, status=400)
 
     carro.agregar(product=product, quantity=quantity)
-    print("se agrego")
 
     return JsonResponse({'message': 'Producto agregado al carrito'}, status=200)
 
@@ -35,7 +37,6 @@ def agregar_producto_desde_carro(request,product_id):
     product = Product.objects.get(pk=product_id)
 
     quantity = int(request.POST.get('quantity', 1))
-    print(" la cantidad es : ", quantity)
     carro.agregar(product=product, quantity=quantity)
 
     return redirect("carro:ver_carro")

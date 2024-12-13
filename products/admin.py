@@ -3,8 +3,7 @@ from django.contrib import admin
 # Register your models here.
 
 from .models import Product, ProductImage, ProductOffer, \
-    Rating_product, Rating, Likes,Category
-
+    Rating_product, Rating, Likes, Category, ProductView
 
 from django.contrib import admin
 from .models import Product
@@ -23,6 +22,8 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Product, ProductAdmin)
+
+admin.site.register(ProductView)
 
 
 

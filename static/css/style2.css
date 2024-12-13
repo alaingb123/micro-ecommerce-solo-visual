@@ -2244,9 +2244,9 @@
       overflow-x: auto; /* Agrega scroll horizontal */
       white-space: nowrap; /* Evita que los elementos se envuelvan */
     }
-  
+
     .desktop-menu-category-list .menu-category:not(:nth-child(2)) { position: relative; }
-  
+
     .desktop-menu-category-list .menu-category > .menu-title {
       position: relative;
       color: var(--onyx);
@@ -2256,9 +2256,9 @@
       padding: 15px 0;
       transition: var(--transition-timing);
     }
-  
+
     .desktop-menu-category-list .menu-category > .menu-title:hover { color: var(--salmon-pink); }
-    
+
     .desktop-menu-category-list .menu-category > .menu-title::after {
       content: '';
       position: absolute;
@@ -2271,7 +2271,7 @@
       transform-origin: left;
       transition: var(--transition-timing);
     }
-  
+
     .desktop-menu-category-list .menu-category > .menu-title:hover::after { transform: scaleX(1); }
   
     .dropdown-panel {
